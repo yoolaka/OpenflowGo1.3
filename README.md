@@ -3,8 +3,10 @@
 Goloxi is generated using [loxigen](https://github.com/floodlight/loxigen). Is it still in
 an experimental state.
 
-It supports serializing and deserializing OpenFlow messages and structures from version
-1.0 to version 1.5. It supports Big Switch and Nicira extensions.
+The original project supports serializing and deserializing OpenFlow messages and structures from version
+1.0 to version 1.5. It also supports Big Switch and Nicira extensions.
+
+OpenflowGo1.3 has been developed for out internal projects. Therefore, it only focuses on Openflow 1.3 and trying to support additional functions.
 
 ## License
 
