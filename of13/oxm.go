@@ -11,9 +11,8 @@ package of13
 
 import (
 	"fmt"
+	"github.com/yoolaka/openflow"
 	"net"
-
-	"github.com/skydive-project/goloxi"
 )
 
 type Oxm struct {
@@ -21,7 +20,7 @@ type Oxm struct {
 }
 
 type IOxm interface {
-	goloxi.Serializable
+	openflow.Serializable
 	GetTypeLen() uint32
 	GetOXMName() string
 	GetOXMValue() interface{}
@@ -35,14 +34,14 @@ func (self *Oxm) SetTypeLen(v uint32) {
 	self.TypeLen = v
 }
 
-func (self *Oxm) Serialize(encoder *goloxi.Encoder) error {
+func (self *Oxm) Serialize(encoder *openflow.Encoder) error {
 
 	encoder.PutUint32(uint32(self.TypeLen))
 
 	return nil
 }
 
-func DecodeOxm(decoder *goloxi.Decoder) (goloxi.IOxm, error) {
+func DecodeOxm(decoder *openflow.Decoder) (openflow.IOxm, error) {
 	_oxm := &Oxm{}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("Oxm packet too short: %d < 4", decoder.Length())
@@ -867,7 +866,7 @@ type NxmArpOp struct {
 }
 
 type INxmArpOp interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -879,7 +878,7 @@ func (self *NxmArpOp) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *NxmArpOp) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmArpOp) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -889,7 +888,7 @@ func (self *NxmArpOp) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmArpOp(parent *Oxm, decoder *goloxi.Decoder) (*NxmArpOp, error) {
+func DecodeNxmArpOp(parent *Oxm, decoder *openflow.Decoder) (*NxmArpOp, error) {
 	_nxmarpop := &NxmArpOp{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("NxmArpOp packet too short: %d < 2", decoder.Length())
@@ -926,7 +925,7 @@ type NxmArpSha struct {
 }
 
 type INxmArpSha interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 }
 
@@ -938,7 +937,7 @@ func (self *NxmArpSha) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
-func (self *NxmArpSha) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmArpSha) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -948,7 +947,7 @@ func (self *NxmArpSha) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmArpSha(parent *Oxm, decoder *goloxi.Decoder) (*NxmArpSha, error) {
+func DecodeNxmArpSha(parent *Oxm, decoder *openflow.Decoder) (*NxmArpSha, error) {
 	_nxmarpsha := &NxmArpSha{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("NxmArpSha packet too short: %d < 6", decoder.Length())
@@ -986,7 +985,7 @@ type NxmArpShaMasked struct {
 }
 
 type INxmArpShaMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 	GetValueMask() net.HardwareAddr
 }
@@ -1007,7 +1006,7 @@ func (self *NxmArpShaMasked) SetValueMask(v net.HardwareAddr) {
 	self.ValueMask = v
 }
 
-func (self *NxmArpShaMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmArpShaMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1018,7 +1017,7 @@ func (self *NxmArpShaMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmArpShaMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmArpShaMasked, error) {
+func DecodeNxmArpShaMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmArpShaMasked, error) {
 	_nxmarpshamasked := &NxmArpShaMasked{Oxm: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("NxmArpShaMasked packet too short: %d < 12", decoder.Length())
@@ -1064,7 +1063,7 @@ type NxmArpSpa struct {
 }
 
 type INxmArpSpa interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -1076,7 +1075,7 @@ func (self *NxmArpSpa) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmArpSpa) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmArpSpa) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1086,7 +1085,7 @@ func (self *NxmArpSpa) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmArpSpa(parent *Oxm, decoder *goloxi.Decoder) (*NxmArpSpa, error) {
+func DecodeNxmArpSpa(parent *Oxm, decoder *openflow.Decoder) (*NxmArpSpa, error) {
 	_nxmarpspa := &NxmArpSpa{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmArpSpa packet too short: %d < 4", decoder.Length())
@@ -1124,7 +1123,7 @@ type NxmArpSpaMasked struct {
 }
 
 type INxmArpSpaMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -1145,7 +1144,7 @@ func (self *NxmArpSpaMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmArpSpaMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmArpSpaMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1156,7 +1155,7 @@ func (self *NxmArpSpaMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmArpSpaMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmArpSpaMasked, error) {
+func DecodeNxmArpSpaMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmArpSpaMasked, error) {
 	_nxmarpspamasked := &NxmArpSpaMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmArpSpaMasked packet too short: %d < 8", decoder.Length())
@@ -1202,7 +1201,7 @@ type NxmArpTha struct {
 }
 
 type INxmArpTha interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 }
 
@@ -1214,7 +1213,7 @@ func (self *NxmArpTha) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
-func (self *NxmArpTha) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmArpTha) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1224,7 +1223,7 @@ func (self *NxmArpTha) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmArpTha(parent *Oxm, decoder *goloxi.Decoder) (*NxmArpTha, error) {
+func DecodeNxmArpTha(parent *Oxm, decoder *openflow.Decoder) (*NxmArpTha, error) {
 	_nxmarptha := &NxmArpTha{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("NxmArpTha packet too short: %d < 6", decoder.Length())
@@ -1262,7 +1261,7 @@ type NxmArpThaMasked struct {
 }
 
 type INxmArpThaMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 	GetValueMask() net.HardwareAddr
 }
@@ -1283,7 +1282,7 @@ func (self *NxmArpThaMasked) SetValueMask(v net.HardwareAddr) {
 	self.ValueMask = v
 }
 
-func (self *NxmArpThaMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmArpThaMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1294,7 +1293,7 @@ func (self *NxmArpThaMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmArpThaMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmArpThaMasked, error) {
+func DecodeNxmArpThaMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmArpThaMasked, error) {
 	_nxmarpthamasked := &NxmArpThaMasked{Oxm: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("NxmArpThaMasked packet too short: %d < 12", decoder.Length())
@@ -1340,7 +1339,7 @@ type NxmArpTpa struct {
 }
 
 type INxmArpTpa interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -1352,7 +1351,7 @@ func (self *NxmArpTpa) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmArpTpa) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmArpTpa) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1362,7 +1361,7 @@ func (self *NxmArpTpa) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmArpTpa(parent *Oxm, decoder *goloxi.Decoder) (*NxmArpTpa, error) {
+func DecodeNxmArpTpa(parent *Oxm, decoder *openflow.Decoder) (*NxmArpTpa, error) {
 	_nxmarptpa := &NxmArpTpa{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmArpTpa packet too short: %d < 4", decoder.Length())
@@ -1400,7 +1399,7 @@ type NxmArpTpaMasked struct {
 }
 
 type INxmArpTpaMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -1421,7 +1420,7 @@ func (self *NxmArpTpaMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmArpTpaMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmArpTpaMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1432,7 +1431,7 @@ func (self *NxmArpTpaMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmArpTpaMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmArpTpaMasked, error) {
+func DecodeNxmArpTpaMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmArpTpaMasked, error) {
 	_nxmarptpamasked := &NxmArpTpaMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmArpTpaMasked packet too short: %d < 8", decoder.Length())
@@ -1478,7 +1477,7 @@ type NxmConjId struct {
 }
 
 type INxmConjId interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -1490,7 +1489,7 @@ func (self *NxmConjId) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmConjId) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmConjId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1500,7 +1499,7 @@ func (self *NxmConjId) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmConjId(parent *Oxm, decoder *goloxi.Decoder) (*NxmConjId, error) {
+func DecodeNxmConjId(parent *Oxm, decoder *openflow.Decoder) (*NxmConjId, error) {
 	_nxmconjid := &NxmConjId{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmConjId packet too short: %d < 4", decoder.Length())
@@ -1537,7 +1536,7 @@ type NxmCtIpv6Dst struct {
 }
 
 type INxmCtIpv6Dst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -1549,7 +1548,7 @@ func (self *NxmCtIpv6Dst) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmCtIpv6Dst) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtIpv6Dst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1559,7 +1558,7 @@ func (self *NxmCtIpv6Dst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtIpv6Dst(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtIpv6Dst, error) {
+func DecodeNxmCtIpv6Dst(parent *Oxm, decoder *openflow.Decoder) (*NxmCtIpv6Dst, error) {
 	_nxmctipv6dst := &NxmCtIpv6Dst{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("NxmCtIpv6Dst packet too short: %d < 16", decoder.Length())
@@ -1597,7 +1596,7 @@ type NxmCtIpv6DstMasked struct {
 }
 
 type INxmCtIpv6DstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -1618,7 +1617,7 @@ func (self *NxmCtIpv6DstMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmCtIpv6DstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtIpv6DstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1629,7 +1628,7 @@ func (self *NxmCtIpv6DstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtIpv6DstMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtIpv6DstMasked, error) {
+func DecodeNxmCtIpv6DstMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmCtIpv6DstMasked, error) {
 	_nxmctipv6dstmasked := &NxmCtIpv6DstMasked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("NxmCtIpv6DstMasked packet too short: %d < 32", decoder.Length())
@@ -1675,7 +1674,7 @@ type NxmCtIpv6Src struct {
 }
 
 type INxmCtIpv6Src interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -1687,7 +1686,7 @@ func (self *NxmCtIpv6Src) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmCtIpv6Src) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtIpv6Src) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1697,7 +1696,7 @@ func (self *NxmCtIpv6Src) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtIpv6Src(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtIpv6Src, error) {
+func DecodeNxmCtIpv6Src(parent *Oxm, decoder *openflow.Decoder) (*NxmCtIpv6Src, error) {
 	_nxmctipv6src := &NxmCtIpv6Src{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("NxmCtIpv6Src packet too short: %d < 16", decoder.Length())
@@ -1735,7 +1734,7 @@ type NxmCtIpv6SrcMasked struct {
 }
 
 type INxmCtIpv6SrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -1756,7 +1755,7 @@ func (self *NxmCtIpv6SrcMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmCtIpv6SrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtIpv6SrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1767,7 +1766,7 @@ func (self *NxmCtIpv6SrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtIpv6SrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtIpv6SrcMasked, error) {
+func DecodeNxmCtIpv6SrcMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmCtIpv6SrcMasked, error) {
 	_nxmctipv6srcmasked := &NxmCtIpv6SrcMasked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("NxmCtIpv6SrcMasked packet too short: %d < 32", decoder.Length())
@@ -1813,7 +1812,7 @@ type NxmCtLabel struct {
 }
 
 type INxmCtLabel interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint128
 }
 
@@ -1825,7 +1824,7 @@ func (self *NxmCtLabel) SetValue(v uint128) {
 	self.Value = v
 }
 
-func (self *NxmCtLabel) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtLabel) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1835,7 +1834,7 @@ func (self *NxmCtLabel) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtLabel(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtLabel, error) {
+func DecodeNxmCtLabel(parent *Oxm, decoder *openflow.Decoder) (*NxmCtLabel, error) {
 	_nxmctlabel := &NxmCtLabel{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("NxmCtLabel packet too short: %d < 16", decoder.Length())
@@ -1873,7 +1872,7 @@ type NxmCtLabelMasked struct {
 }
 
 type INxmCtLabelMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint128
 	GetValueMask() uint128
 }
@@ -1894,7 +1893,7 @@ func (self *NxmCtLabelMasked) SetValueMask(v uint128) {
 	self.ValueMask = v
 }
 
-func (self *NxmCtLabelMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtLabelMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1905,7 +1904,7 @@ func (self *NxmCtLabelMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtLabelMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtLabelMasked, error) {
+func DecodeNxmCtLabelMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmCtLabelMasked, error) {
 	_nxmctlabelmasked := &NxmCtLabelMasked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("NxmCtLabelMasked packet too short: %d < 32", decoder.Length())
@@ -1951,7 +1950,7 @@ type NxmCtMark struct {
 }
 
 type INxmCtMark interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -1963,7 +1962,7 @@ func (self *NxmCtMark) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmCtMark) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtMark) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1973,7 +1972,7 @@ func (self *NxmCtMark) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtMark(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtMark, error) {
+func DecodeNxmCtMark(parent *Oxm, decoder *openflow.Decoder) (*NxmCtMark, error) {
 	_nxmctmark := &NxmCtMark{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmCtMark packet too short: %d < 4", decoder.Length())
@@ -2011,7 +2010,7 @@ type NxmCtMarkMasked struct {
 }
 
 type INxmCtMarkMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -2032,7 +2031,7 @@ func (self *NxmCtMarkMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmCtMarkMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtMarkMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2043,7 +2042,7 @@ func (self *NxmCtMarkMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtMarkMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtMarkMasked, error) {
+func DecodeNxmCtMarkMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmCtMarkMasked, error) {
 	_nxmctmarkmasked := &NxmCtMarkMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmCtMarkMasked packet too short: %d < 8", decoder.Length())
@@ -2089,7 +2088,7 @@ type NxmCtNwDst struct {
 }
 
 type INxmCtNwDst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -2101,7 +2100,7 @@ func (self *NxmCtNwDst) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmCtNwDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtNwDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2111,7 +2110,7 @@ func (self *NxmCtNwDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtNwDst(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtNwDst, error) {
+func DecodeNxmCtNwDst(parent *Oxm, decoder *openflow.Decoder) (*NxmCtNwDst, error) {
 	_nxmctnwdst := &NxmCtNwDst{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmCtNwDst packet too short: %d < 4", decoder.Length())
@@ -2149,7 +2148,7 @@ type NxmCtNwDstMasked struct {
 }
 
 type INxmCtNwDstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -2170,7 +2169,7 @@ func (self *NxmCtNwDstMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmCtNwDstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtNwDstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2181,7 +2180,7 @@ func (self *NxmCtNwDstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtNwDstMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtNwDstMasked, error) {
+func DecodeNxmCtNwDstMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmCtNwDstMasked, error) {
 	_nxmctnwdstmasked := &NxmCtNwDstMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmCtNwDstMasked packet too short: %d < 8", decoder.Length())
@@ -2227,7 +2226,7 @@ type NxmCtNwProto struct {
 }
 
 type INxmCtNwProto interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -2239,7 +2238,7 @@ func (self *NxmCtNwProto) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *NxmCtNwProto) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtNwProto) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2249,7 +2248,7 @@ func (self *NxmCtNwProto) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtNwProto(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtNwProto, error) {
+func DecodeNxmCtNwProto(parent *Oxm, decoder *openflow.Decoder) (*NxmCtNwProto, error) {
 	_nxmctnwproto := &NxmCtNwProto{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("NxmCtNwProto packet too short: %d < 1", decoder.Length())
@@ -2286,7 +2285,7 @@ type NxmCtNwSrc struct {
 }
 
 type INxmCtNwSrc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -2298,7 +2297,7 @@ func (self *NxmCtNwSrc) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmCtNwSrc) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtNwSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2308,7 +2307,7 @@ func (self *NxmCtNwSrc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtNwSrc(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtNwSrc, error) {
+func DecodeNxmCtNwSrc(parent *Oxm, decoder *openflow.Decoder) (*NxmCtNwSrc, error) {
 	_nxmctnwsrc := &NxmCtNwSrc{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmCtNwSrc packet too short: %d < 4", decoder.Length())
@@ -2346,7 +2345,7 @@ type NxmCtNwSrcMasked struct {
 }
 
 type INxmCtNwSrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -2367,7 +2366,7 @@ func (self *NxmCtNwSrcMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmCtNwSrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtNwSrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2378,7 +2377,7 @@ func (self *NxmCtNwSrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtNwSrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtNwSrcMasked, error) {
+func DecodeNxmCtNwSrcMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmCtNwSrcMasked, error) {
 	_nxmctnwsrcmasked := &NxmCtNwSrcMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmCtNwSrcMasked packet too short: %d < 8", decoder.Length())
@@ -2424,7 +2423,7 @@ type NxmCtState struct {
 }
 
 type INxmCtState interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -2436,7 +2435,7 @@ func (self *NxmCtState) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmCtState) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtState) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2446,7 +2445,7 @@ func (self *NxmCtState) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtState(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtState, error) {
+func DecodeNxmCtState(parent *Oxm, decoder *openflow.Decoder) (*NxmCtState, error) {
 	_nxmctstate := &NxmCtState{Oxm: parent}
 	_nxmctstate.Value = decoder.Read(int(_nxmctstate.TypeLen & 0xFF))
 	return _nxmctstate, nil
@@ -2481,7 +2480,7 @@ type NxmCtStateMasked struct {
 }
 
 type INxmCtStateMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -2502,7 +2501,7 @@ func (self *NxmCtStateMasked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmCtStateMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtStateMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2513,7 +2512,7 @@ func (self *NxmCtStateMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtStateMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtStateMasked, error) {
+func DecodeNxmCtStateMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmCtStateMasked, error) {
 	_nxmctstatemasked := &NxmCtStateMasked{Oxm: parent}
 	_nxmctstatemasked.Value = decoder.Read(int(_nxmctstatemasked.TypeLen & 0xFF))
 	_nxmctstatemasked.ValueMask = decoder.Read(int(_nxmctstatemasked.TypeLen & 0xFF))
@@ -2556,7 +2555,7 @@ type NxmCtTpDst struct {
 }
 
 type INxmCtTpDst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -2568,7 +2567,7 @@ func (self *NxmCtTpDst) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *NxmCtTpDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtTpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2578,7 +2577,7 @@ func (self *NxmCtTpDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtTpDst(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtTpDst, error) {
+func DecodeNxmCtTpDst(parent *Oxm, decoder *openflow.Decoder) (*NxmCtTpDst, error) {
 	_nxmcttpdst := &NxmCtTpDst{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("NxmCtTpDst packet too short: %d < 2", decoder.Length())
@@ -2616,7 +2615,7 @@ type NxmCtTpDstMasked struct {
 }
 
 type INxmCtTpDstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -2637,7 +2636,7 @@ func (self *NxmCtTpDstMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *NxmCtTpDstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtTpDstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2648,7 +2647,7 @@ func (self *NxmCtTpDstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtTpDstMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtTpDstMasked, error) {
+func DecodeNxmCtTpDstMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmCtTpDstMasked, error) {
 	_nxmcttpdstmasked := &NxmCtTpDstMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmCtTpDstMasked packet too short: %d < 4", decoder.Length())
@@ -2694,7 +2693,7 @@ type NxmCtTpSrc struct {
 }
 
 type INxmCtTpSrc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -2706,7 +2705,7 @@ func (self *NxmCtTpSrc) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *NxmCtTpSrc) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtTpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2716,7 +2715,7 @@ func (self *NxmCtTpSrc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtTpSrc(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtTpSrc, error) {
+func DecodeNxmCtTpSrc(parent *Oxm, decoder *openflow.Decoder) (*NxmCtTpSrc, error) {
 	_nxmcttpsrc := &NxmCtTpSrc{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("NxmCtTpSrc packet too short: %d < 2", decoder.Length())
@@ -2754,7 +2753,7 @@ type NxmCtTpSrcMasked struct {
 }
 
 type INxmCtTpSrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -2775,7 +2774,7 @@ func (self *NxmCtTpSrcMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *NxmCtTpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtTpSrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2786,7 +2785,7 @@ func (self *NxmCtTpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtTpSrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtTpSrcMasked, error) {
+func DecodeNxmCtTpSrcMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmCtTpSrcMasked, error) {
 	_nxmcttpsrcmasked := &NxmCtTpSrcMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmCtTpSrcMasked packet too short: %d < 4", decoder.Length())
@@ -2832,7 +2831,7 @@ type NxmCtZone struct {
 }
 
 type INxmCtZone interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -2844,7 +2843,7 @@ func (self *NxmCtZone) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *NxmCtZone) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmCtZone) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2854,7 +2853,7 @@ func (self *NxmCtZone) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmCtZone(parent *Oxm, decoder *goloxi.Decoder) (*NxmCtZone, error) {
+func DecodeNxmCtZone(parent *Oxm, decoder *openflow.Decoder) (*NxmCtZone, error) {
 	_nxmctzone := &NxmCtZone{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("NxmCtZone packet too short: %d < 2", decoder.Length())
@@ -2891,7 +2890,7 @@ type NxmDpHash struct {
 }
 
 type INxmDpHash interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -2903,7 +2902,7 @@ func (self *NxmDpHash) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmDpHash) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmDpHash) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2913,7 +2912,7 @@ func (self *NxmDpHash) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmDpHash(parent *Oxm, decoder *goloxi.Decoder) (*NxmDpHash, error) {
+func DecodeNxmDpHash(parent *Oxm, decoder *openflow.Decoder) (*NxmDpHash, error) {
 	_nxmdphash := &NxmDpHash{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmDpHash packet too short: %d < 4", decoder.Length())
@@ -2951,7 +2950,7 @@ type NxmDpHashMasked struct {
 }
 
 type INxmDpHashMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -2972,7 +2971,7 @@ func (self *NxmDpHashMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmDpHashMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmDpHashMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2983,7 +2982,7 @@ func (self *NxmDpHashMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmDpHashMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmDpHashMasked, error) {
+func DecodeNxmDpHashMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmDpHashMasked, error) {
 	_nxmdphashmasked := &NxmDpHashMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmDpHashMasked packet too short: %d < 8", decoder.Length())
@@ -3029,7 +3028,7 @@ type NxmEthDst struct {
 }
 
 type INxmEthDst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 }
 
@@ -3041,7 +3040,7 @@ func (self *NxmEthDst) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
-func (self *NxmEthDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmEthDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3051,7 +3050,7 @@ func (self *NxmEthDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmEthDst(parent *Oxm, decoder *goloxi.Decoder) (*NxmEthDst, error) {
+func DecodeNxmEthDst(parent *Oxm, decoder *openflow.Decoder) (*NxmEthDst, error) {
 	_nxmethdst := &NxmEthDst{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("NxmEthDst packet too short: %d < 6", decoder.Length())
@@ -3089,7 +3088,7 @@ type NxmEthDstMasked struct {
 }
 
 type INxmEthDstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 	GetValueMask() net.HardwareAddr
 }
@@ -3110,7 +3109,7 @@ func (self *NxmEthDstMasked) SetValueMask(v net.HardwareAddr) {
 	self.ValueMask = v
 }
 
-func (self *NxmEthDstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmEthDstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3121,7 +3120,7 @@ func (self *NxmEthDstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmEthDstMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmEthDstMasked, error) {
+func DecodeNxmEthDstMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmEthDstMasked, error) {
 	_nxmethdstmasked := &NxmEthDstMasked{Oxm: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("NxmEthDstMasked packet too short: %d < 12", decoder.Length())
@@ -3167,7 +3166,7 @@ type NxmEthSrc struct {
 }
 
 type INxmEthSrc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 }
 
@@ -3179,7 +3178,7 @@ func (self *NxmEthSrc) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
-func (self *NxmEthSrc) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmEthSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3189,7 +3188,7 @@ func (self *NxmEthSrc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmEthSrc(parent *Oxm, decoder *goloxi.Decoder) (*NxmEthSrc, error) {
+func DecodeNxmEthSrc(parent *Oxm, decoder *openflow.Decoder) (*NxmEthSrc, error) {
 	_nxmethsrc := &NxmEthSrc{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("NxmEthSrc packet too short: %d < 6", decoder.Length())
@@ -3227,7 +3226,7 @@ type NxmEthSrcMasked struct {
 }
 
 type INxmEthSrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 	GetValueMask() net.HardwareAddr
 }
@@ -3248,7 +3247,7 @@ func (self *NxmEthSrcMasked) SetValueMask(v net.HardwareAddr) {
 	self.ValueMask = v
 }
 
-func (self *NxmEthSrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmEthSrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3259,7 +3258,7 @@ func (self *NxmEthSrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmEthSrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmEthSrcMasked, error) {
+func DecodeNxmEthSrcMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmEthSrcMasked, error) {
 	_nxmethsrcmasked := &NxmEthSrcMasked{Oxm: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("NxmEthSrcMasked packet too short: %d < 12", decoder.Length())
@@ -3305,7 +3304,7 @@ type NxmEthType struct {
 }
 
 type INxmEthType interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -3317,7 +3316,7 @@ func (self *NxmEthType) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *NxmEthType) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmEthType) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3327,7 +3326,7 @@ func (self *NxmEthType) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmEthType(parent *Oxm, decoder *goloxi.Decoder) (*NxmEthType, error) {
+func DecodeNxmEthType(parent *Oxm, decoder *openflow.Decoder) (*NxmEthType, error) {
 	_nxmethtype := &NxmEthType{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("NxmEthType packet too short: %d < 2", decoder.Length())
@@ -3364,7 +3363,7 @@ type NxmIcmpCode struct {
 }
 
 type INxmIcmpCode interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -3376,7 +3375,7 @@ func (self *NxmIcmpCode) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *NxmIcmpCode) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIcmpCode) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3386,7 +3385,7 @@ func (self *NxmIcmpCode) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIcmpCode(parent *Oxm, decoder *goloxi.Decoder) (*NxmIcmpCode, error) {
+func DecodeNxmIcmpCode(parent *Oxm, decoder *openflow.Decoder) (*NxmIcmpCode, error) {
 	_nxmicmpcode := &NxmIcmpCode{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("NxmIcmpCode packet too short: %d < 1", decoder.Length())
@@ -3423,7 +3422,7 @@ type NxmIcmpType struct {
 }
 
 type INxmIcmpType interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -3435,7 +3434,7 @@ func (self *NxmIcmpType) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *NxmIcmpType) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIcmpType) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3445,7 +3444,7 @@ func (self *NxmIcmpType) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIcmpType(parent *Oxm, decoder *goloxi.Decoder) (*NxmIcmpType, error) {
+func DecodeNxmIcmpType(parent *Oxm, decoder *openflow.Decoder) (*NxmIcmpType, error) {
 	_nxmicmptype := &NxmIcmpType{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("NxmIcmpType packet too short: %d < 1", decoder.Length())
@@ -3482,7 +3481,7 @@ type NxmIcmpv6Code struct {
 }
 
 type INxmIcmpv6Code interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -3494,7 +3493,7 @@ func (self *NxmIcmpv6Code) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *NxmIcmpv6Code) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIcmpv6Code) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3504,7 +3503,7 @@ func (self *NxmIcmpv6Code) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIcmpv6Code(parent *Oxm, decoder *goloxi.Decoder) (*NxmIcmpv6Code, error) {
+func DecodeNxmIcmpv6Code(parent *Oxm, decoder *openflow.Decoder) (*NxmIcmpv6Code, error) {
 	_nxmicmpv6code := &NxmIcmpv6Code{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("NxmIcmpv6Code packet too short: %d < 1", decoder.Length())
@@ -3541,7 +3540,7 @@ type NxmIcmpv6Type struct {
 }
 
 type INxmIcmpv6Type interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -3553,7 +3552,7 @@ func (self *NxmIcmpv6Type) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *NxmIcmpv6Type) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIcmpv6Type) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3563,7 +3562,7 @@ func (self *NxmIcmpv6Type) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIcmpv6Type(parent *Oxm, decoder *goloxi.Decoder) (*NxmIcmpv6Type, error) {
+func DecodeNxmIcmpv6Type(parent *Oxm, decoder *openflow.Decoder) (*NxmIcmpv6Type, error) {
 	_nxmicmpv6type := &NxmIcmpv6Type{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("NxmIcmpv6Type packet too short: %d < 1", decoder.Length())
@@ -3600,7 +3599,7 @@ type NxmInPort struct {
 }
 
 type INxmInPort interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() Port
 }
 
@@ -3612,7 +3611,7 @@ func (self *NxmInPort) SetValue(v Port) {
 	self.Value = v
 }
 
-func (self *NxmInPort) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmInPort) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3622,7 +3621,7 @@ func (self *NxmInPort) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmInPort(parent *Oxm, decoder *goloxi.Decoder) (*NxmInPort, error) {
+func DecodeNxmInPort(parent *Oxm, decoder *openflow.Decoder) (*NxmInPort, error) {
 	_nxminport := &NxmInPort{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmInPort packet too short: %d < 4", decoder.Length())
@@ -3659,7 +3658,7 @@ type NxmIpDst struct {
 }
 
 type INxmIpDst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -3671,7 +3670,7 @@ func (self *NxmIpDst) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmIpDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3681,7 +3680,7 @@ func (self *NxmIpDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIpDst(parent *Oxm, decoder *goloxi.Decoder) (*NxmIpDst, error) {
+func DecodeNxmIpDst(parent *Oxm, decoder *openflow.Decoder) (*NxmIpDst, error) {
 	_nxmipdst := &NxmIpDst{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmIpDst packet too short: %d < 4", decoder.Length())
@@ -3719,7 +3718,7 @@ type NxmIpDstMasked struct {
 }
 
 type INxmIpDstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -3740,7 +3739,7 @@ func (self *NxmIpDstMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmIpDstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIpDstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3751,7 +3750,7 @@ func (self *NxmIpDstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIpDstMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmIpDstMasked, error) {
+func DecodeNxmIpDstMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmIpDstMasked, error) {
 	_nxmipdstmasked := &NxmIpDstMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmIpDstMasked packet too short: %d < 8", decoder.Length())
@@ -3797,7 +3796,7 @@ type NxmIpFrag struct {
 }
 
 type INxmIpFrag interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -3809,7 +3808,7 @@ func (self *NxmIpFrag) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmIpFrag) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIpFrag) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3819,7 +3818,7 @@ func (self *NxmIpFrag) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIpFrag(parent *Oxm, decoder *goloxi.Decoder) (*NxmIpFrag, error) {
+func DecodeNxmIpFrag(parent *Oxm, decoder *openflow.Decoder) (*NxmIpFrag, error) {
 	_nxmipfrag := &NxmIpFrag{Oxm: parent}
 	_nxmipfrag.Value = decoder.Read(int(_nxmipfrag.TypeLen & 0xFF))
 	return _nxmipfrag, nil
@@ -3854,7 +3853,7 @@ type NxmIpFragMasked struct {
 }
 
 type INxmIpFragMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -3875,7 +3874,7 @@ func (self *NxmIpFragMasked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmIpFragMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIpFragMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3886,7 +3885,7 @@ func (self *NxmIpFragMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIpFragMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmIpFragMasked, error) {
+func DecodeNxmIpFragMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmIpFragMasked, error) {
 	_nxmipfragmasked := &NxmIpFragMasked{Oxm: parent}
 	_nxmipfragmasked.Value = decoder.Read(int(_nxmipfragmasked.TypeLen & 0xFF))
 	_nxmipfragmasked.ValueMask = decoder.Read(int(_nxmipfragmasked.TypeLen & 0xFF))
@@ -3929,7 +3928,7 @@ type NxmIpSrc struct {
 }
 
 type INxmIpSrc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -3941,7 +3940,7 @@ func (self *NxmIpSrc) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmIpSrc) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3951,7 +3950,7 @@ func (self *NxmIpSrc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIpSrc(parent *Oxm, decoder *goloxi.Decoder) (*NxmIpSrc, error) {
+func DecodeNxmIpSrc(parent *Oxm, decoder *openflow.Decoder) (*NxmIpSrc, error) {
 	_nxmipsrc := &NxmIpSrc{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmIpSrc packet too short: %d < 4", decoder.Length())
@@ -3989,7 +3988,7 @@ type NxmIpSrcMasked struct {
 }
 
 type INxmIpSrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -4010,7 +4009,7 @@ func (self *NxmIpSrcMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmIpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIpSrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4021,7 +4020,7 @@ func (self *NxmIpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIpSrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmIpSrcMasked, error) {
+func DecodeNxmIpSrcMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmIpSrcMasked, error) {
 	_nxmipsrcmasked := &NxmIpSrcMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmIpSrcMasked packet too short: %d < 8", decoder.Length())
@@ -4067,7 +4066,7 @@ type NxmIpv6Dst struct {
 }
 
 type INxmIpv6Dst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -4079,7 +4078,7 @@ func (self *NxmIpv6Dst) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmIpv6Dst) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIpv6Dst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4089,7 +4088,7 @@ func (self *NxmIpv6Dst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIpv6Dst(parent *Oxm, decoder *goloxi.Decoder) (*NxmIpv6Dst, error) {
+func DecodeNxmIpv6Dst(parent *Oxm, decoder *openflow.Decoder) (*NxmIpv6Dst, error) {
 	_nxmipv6dst := &NxmIpv6Dst{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("NxmIpv6Dst packet too short: %d < 16", decoder.Length())
@@ -4127,7 +4126,7 @@ type NxmIpv6DstMasked struct {
 }
 
 type INxmIpv6DstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -4148,7 +4147,7 @@ func (self *NxmIpv6DstMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmIpv6DstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIpv6DstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4159,7 +4158,7 @@ func (self *NxmIpv6DstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIpv6DstMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmIpv6DstMasked, error) {
+func DecodeNxmIpv6DstMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmIpv6DstMasked, error) {
 	_nxmipv6dstmasked := &NxmIpv6DstMasked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("NxmIpv6DstMasked packet too short: %d < 32", decoder.Length())
@@ -4205,7 +4204,7 @@ type NxmIpv6Label struct {
 }
 
 type INxmIpv6Label interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -4217,7 +4216,7 @@ func (self *NxmIpv6Label) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmIpv6Label) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIpv6Label) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4227,7 +4226,7 @@ func (self *NxmIpv6Label) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIpv6Label(parent *Oxm, decoder *goloxi.Decoder) (*NxmIpv6Label, error) {
+func DecodeNxmIpv6Label(parent *Oxm, decoder *openflow.Decoder) (*NxmIpv6Label, error) {
 	_nxmipv6label := &NxmIpv6Label{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmIpv6Label packet too short: %d < 4", decoder.Length())
@@ -4265,7 +4264,7 @@ type NxmIpv6LabelMasked struct {
 }
 
 type INxmIpv6LabelMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -4286,7 +4285,7 @@ func (self *NxmIpv6LabelMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmIpv6LabelMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIpv6LabelMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4297,7 +4296,7 @@ func (self *NxmIpv6LabelMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIpv6LabelMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmIpv6LabelMasked, error) {
+func DecodeNxmIpv6LabelMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmIpv6LabelMasked, error) {
 	_nxmipv6labelmasked := &NxmIpv6LabelMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmIpv6LabelMasked packet too short: %d < 8", decoder.Length())
@@ -4343,7 +4342,7 @@ type NxmIpv6Src struct {
 }
 
 type INxmIpv6Src interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -4355,7 +4354,7 @@ func (self *NxmIpv6Src) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmIpv6Src) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIpv6Src) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4365,7 +4364,7 @@ func (self *NxmIpv6Src) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIpv6Src(parent *Oxm, decoder *goloxi.Decoder) (*NxmIpv6Src, error) {
+func DecodeNxmIpv6Src(parent *Oxm, decoder *openflow.Decoder) (*NxmIpv6Src, error) {
 	_nxmipv6src := &NxmIpv6Src{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("NxmIpv6Src packet too short: %d < 16", decoder.Length())
@@ -4403,7 +4402,7 @@ type NxmIpv6SrcMasked struct {
 }
 
 type INxmIpv6SrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -4424,7 +4423,7 @@ func (self *NxmIpv6SrcMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmIpv6SrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmIpv6SrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4435,7 +4434,7 @@ func (self *NxmIpv6SrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmIpv6SrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmIpv6SrcMasked, error) {
+func DecodeNxmIpv6SrcMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmIpv6SrcMasked, error) {
 	_nxmipv6srcmasked := &NxmIpv6SrcMasked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("NxmIpv6SrcMasked packet too short: %d < 32", decoder.Length())
@@ -4481,7 +4480,7 @@ type NxmMplsTtl struct {
 }
 
 type INxmMplsTtl interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -4493,7 +4492,7 @@ func (self *NxmMplsTtl) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *NxmMplsTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmMplsTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4503,7 +4502,7 @@ func (self *NxmMplsTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmMplsTtl(parent *Oxm, decoder *goloxi.Decoder) (*NxmMplsTtl, error) {
+func DecodeNxmMplsTtl(parent *Oxm, decoder *openflow.Decoder) (*NxmMplsTtl, error) {
 	_nxmmplsttl := &NxmMplsTtl{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("NxmMplsTtl packet too short: %d < 1", decoder.Length())
@@ -4540,7 +4539,7 @@ type NxmNdSll struct {
 }
 
 type INxmNdSll interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 }
 
@@ -4552,7 +4551,7 @@ func (self *NxmNdSll) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
-func (self *NxmNdSll) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmNdSll) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4562,7 +4561,7 @@ func (self *NxmNdSll) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmNdSll(parent *Oxm, decoder *goloxi.Decoder) (*NxmNdSll, error) {
+func DecodeNxmNdSll(parent *Oxm, decoder *openflow.Decoder) (*NxmNdSll, error) {
 	_nxmndsll := &NxmNdSll{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("NxmNdSll packet too short: %d < 6", decoder.Length())
@@ -4600,7 +4599,7 @@ type NxmNdSllMasked struct {
 }
 
 type INxmNdSllMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 	GetValueMask() net.HardwareAddr
 }
@@ -4621,7 +4620,7 @@ func (self *NxmNdSllMasked) SetValueMask(v net.HardwareAddr) {
 	self.ValueMask = v
 }
 
-func (self *NxmNdSllMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmNdSllMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4632,7 +4631,7 @@ func (self *NxmNdSllMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmNdSllMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmNdSllMasked, error) {
+func DecodeNxmNdSllMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmNdSllMasked, error) {
 	_nxmndsllmasked := &NxmNdSllMasked{Oxm: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("NxmNdSllMasked packet too short: %d < 12", decoder.Length())
@@ -4678,7 +4677,7 @@ type NxmNdTarget struct {
 }
 
 type INxmNdTarget interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -4690,7 +4689,7 @@ func (self *NxmNdTarget) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmNdTarget) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmNdTarget) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4700,7 +4699,7 @@ func (self *NxmNdTarget) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmNdTarget(parent *Oxm, decoder *goloxi.Decoder) (*NxmNdTarget, error) {
+func DecodeNxmNdTarget(parent *Oxm, decoder *openflow.Decoder) (*NxmNdTarget, error) {
 	_nxmndtarget := &NxmNdTarget{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("NxmNdTarget packet too short: %d < 16", decoder.Length())
@@ -4738,7 +4737,7 @@ type NxmNdTargetMasked struct {
 }
 
 type INxmNdTargetMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -4759,7 +4758,7 @@ func (self *NxmNdTargetMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmNdTargetMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmNdTargetMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4770,7 +4769,7 @@ func (self *NxmNdTargetMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmNdTargetMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmNdTargetMasked, error) {
+func DecodeNxmNdTargetMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmNdTargetMasked, error) {
 	_nxmndtargetmasked := &NxmNdTargetMasked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("NxmNdTargetMasked packet too short: %d < 32", decoder.Length())
@@ -4816,7 +4815,7 @@ type NxmNdTll struct {
 }
 
 type INxmNdTll interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 }
 
@@ -4828,7 +4827,7 @@ func (self *NxmNdTll) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
-func (self *NxmNdTll) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmNdTll) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4838,7 +4837,7 @@ func (self *NxmNdTll) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmNdTll(parent *Oxm, decoder *goloxi.Decoder) (*NxmNdTll, error) {
+func DecodeNxmNdTll(parent *Oxm, decoder *openflow.Decoder) (*NxmNdTll, error) {
 	_nxmndtll := &NxmNdTll{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("NxmNdTll packet too short: %d < 6", decoder.Length())
@@ -4876,7 +4875,7 @@ type NxmNdTllMasked struct {
 }
 
 type INxmNdTllMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 	GetValueMask() net.HardwareAddr
 }
@@ -4897,7 +4896,7 @@ func (self *NxmNdTllMasked) SetValueMask(v net.HardwareAddr) {
 	self.ValueMask = v
 }
 
-func (self *NxmNdTllMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmNdTllMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4908,7 +4907,7 @@ func (self *NxmNdTllMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmNdTllMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmNdTllMasked, error) {
+func DecodeNxmNdTllMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmNdTllMasked, error) {
 	_nxmndtllmasked := &NxmNdTllMasked{Oxm: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("NxmNdTllMasked packet too short: %d < 12", decoder.Length())
@@ -4954,7 +4953,7 @@ type NxmNwEcn struct {
 }
 
 type INxmNwEcn interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -4966,7 +4965,7 @@ func (self *NxmNwEcn) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *NxmNwEcn) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmNwEcn) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4976,7 +4975,7 @@ func (self *NxmNwEcn) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmNwEcn(parent *Oxm, decoder *goloxi.Decoder) (*NxmNwEcn, error) {
+func DecodeNxmNwEcn(parent *Oxm, decoder *openflow.Decoder) (*NxmNwEcn, error) {
 	_nxmnwecn := &NxmNwEcn{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("NxmNwEcn packet too short: %d < 1", decoder.Length())
@@ -5013,7 +5012,7 @@ type NxmNwProto struct {
 }
 
 type INxmNwProto interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -5025,7 +5024,7 @@ func (self *NxmNwProto) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *NxmNwProto) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmNwProto) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5035,7 +5034,7 @@ func (self *NxmNwProto) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmNwProto(parent *Oxm, decoder *goloxi.Decoder) (*NxmNwProto, error) {
+func DecodeNxmNwProto(parent *Oxm, decoder *openflow.Decoder) (*NxmNwProto, error) {
 	_nxmnwproto := &NxmNwProto{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("NxmNwProto packet too short: %d < 1", decoder.Length())
@@ -5072,7 +5071,7 @@ type NxmNwTos struct {
 }
 
 type INxmNwTos interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -5084,7 +5083,7 @@ func (self *NxmNwTos) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *NxmNwTos) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmNwTos) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5094,7 +5093,7 @@ func (self *NxmNwTos) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmNwTos(parent *Oxm, decoder *goloxi.Decoder) (*NxmNwTos, error) {
+func DecodeNxmNwTos(parent *Oxm, decoder *openflow.Decoder) (*NxmNwTos, error) {
 	_nxmnwtos := &NxmNwTos{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("NxmNwTos packet too short: %d < 1", decoder.Length())
@@ -5131,7 +5130,7 @@ type NxmNwTtl struct {
 }
 
 type INxmNwTtl interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -5143,7 +5142,7 @@ func (self *NxmNwTtl) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *NxmNwTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmNwTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5153,7 +5152,7 @@ func (self *NxmNwTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmNwTtl(parent *Oxm, decoder *goloxi.Decoder) (*NxmNwTtl, error) {
+func DecodeNxmNwTtl(parent *Oxm, decoder *openflow.Decoder) (*NxmNwTtl, error) {
 	_nxmnwttl := &NxmNwTtl{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("NxmNwTtl packet too short: %d < 1", decoder.Length())
@@ -5190,7 +5189,7 @@ type NxmPktMark struct {
 }
 
 type INxmPktMark interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -5202,7 +5201,7 @@ func (self *NxmPktMark) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmPktMark) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmPktMark) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5212,7 +5211,7 @@ func (self *NxmPktMark) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmPktMark(parent *Oxm, decoder *goloxi.Decoder) (*NxmPktMark, error) {
+func DecodeNxmPktMark(parent *Oxm, decoder *openflow.Decoder) (*NxmPktMark, error) {
 	_nxmpktmark := &NxmPktMark{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmPktMark packet too short: %d < 4", decoder.Length())
@@ -5250,7 +5249,7 @@ type NxmPktMarkMasked struct {
 }
 
 type INxmPktMarkMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -5271,7 +5270,7 @@ func (self *NxmPktMarkMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmPktMarkMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmPktMarkMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5282,7 +5281,7 @@ func (self *NxmPktMarkMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmPktMarkMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmPktMarkMasked, error) {
+func DecodeNxmPktMarkMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmPktMarkMasked, error) {
 	_nxmpktmarkmasked := &NxmPktMarkMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmPktMarkMasked packet too short: %d < 8", decoder.Length())
@@ -5328,7 +5327,7 @@ type NxmRecircId struct {
 }
 
 type INxmRecircId interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -5340,7 +5339,7 @@ func (self *NxmRecircId) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmRecircId) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmRecircId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5350,7 +5349,7 @@ func (self *NxmRecircId) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmRecircId(parent *Oxm, decoder *goloxi.Decoder) (*NxmRecircId, error) {
+func DecodeNxmRecircId(parent *Oxm, decoder *openflow.Decoder) (*NxmRecircId, error) {
 	_nxmrecircid := &NxmRecircId{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmRecircId packet too short: %d < 4", decoder.Length())
@@ -5387,7 +5386,7 @@ type NxmReg0 struct {
 }
 
 type INxmReg0 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -5399,7 +5398,7 @@ func (self *NxmReg0) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg0) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg0) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5409,7 +5408,7 @@ func (self *NxmReg0) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg0(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg0, error) {
+func DecodeNxmReg0(parent *Oxm, decoder *openflow.Decoder) (*NxmReg0, error) {
 	_nxmreg0 := &NxmReg0{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg0 packet too short: %d < 4", decoder.Length())
@@ -5447,7 +5446,7 @@ type NxmReg0Masked struct {
 }
 
 type INxmReg0Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -5468,7 +5467,7 @@ func (self *NxmReg0Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg0Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg0Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5479,7 +5478,7 @@ func (self *NxmReg0Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg0Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg0Masked, error) {
+func DecodeNxmReg0Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg0Masked, error) {
 	_nxmreg0masked := &NxmReg0Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg0Masked packet too short: %d < 8", decoder.Length())
@@ -5525,7 +5524,7 @@ type NxmReg1 struct {
 }
 
 type INxmReg1 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -5537,7 +5536,7 @@ func (self *NxmReg1) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg1) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg1) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5547,7 +5546,7 @@ func (self *NxmReg1) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg1(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg1, error) {
+func DecodeNxmReg1(parent *Oxm, decoder *openflow.Decoder) (*NxmReg1, error) {
 	_nxmreg1 := &NxmReg1{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg1 packet too short: %d < 4", decoder.Length())
@@ -5584,7 +5583,7 @@ type NxmReg10 struct {
 }
 
 type INxmReg10 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -5596,7 +5595,7 @@ func (self *NxmReg10) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg10) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg10) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5606,7 +5605,7 @@ func (self *NxmReg10) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg10(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg10, error) {
+func DecodeNxmReg10(parent *Oxm, decoder *openflow.Decoder) (*NxmReg10, error) {
 	_nxmreg10 := &NxmReg10{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg10 packet too short: %d < 4", decoder.Length())
@@ -5644,7 +5643,7 @@ type NxmReg10Masked struct {
 }
 
 type INxmReg10Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -5665,7 +5664,7 @@ func (self *NxmReg10Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg10Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg10Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5676,7 +5675,7 @@ func (self *NxmReg10Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg10Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg10Masked, error) {
+func DecodeNxmReg10Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg10Masked, error) {
 	_nxmreg10masked := &NxmReg10Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg10Masked packet too short: %d < 8", decoder.Length())
@@ -5722,7 +5721,7 @@ type NxmReg11 struct {
 }
 
 type INxmReg11 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -5734,7 +5733,7 @@ func (self *NxmReg11) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg11) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg11) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5744,7 +5743,7 @@ func (self *NxmReg11) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg11(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg11, error) {
+func DecodeNxmReg11(parent *Oxm, decoder *openflow.Decoder) (*NxmReg11, error) {
 	_nxmreg11 := &NxmReg11{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg11 packet too short: %d < 4", decoder.Length())
@@ -5782,7 +5781,7 @@ type NxmReg11Masked struct {
 }
 
 type INxmReg11Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -5803,7 +5802,7 @@ func (self *NxmReg11Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg11Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg11Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5814,7 +5813,7 @@ func (self *NxmReg11Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg11Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg11Masked, error) {
+func DecodeNxmReg11Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg11Masked, error) {
 	_nxmreg11masked := &NxmReg11Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg11Masked packet too short: %d < 8", decoder.Length())
@@ -5860,7 +5859,7 @@ type NxmReg12 struct {
 }
 
 type INxmReg12 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -5872,7 +5871,7 @@ func (self *NxmReg12) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg12) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg12) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5882,7 +5881,7 @@ func (self *NxmReg12) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg12(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg12, error) {
+func DecodeNxmReg12(parent *Oxm, decoder *openflow.Decoder) (*NxmReg12, error) {
 	_nxmreg12 := &NxmReg12{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg12 packet too short: %d < 4", decoder.Length())
@@ -5920,7 +5919,7 @@ type NxmReg12Masked struct {
 }
 
 type INxmReg12Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -5941,7 +5940,7 @@ func (self *NxmReg12Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg12Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg12Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5952,7 +5951,7 @@ func (self *NxmReg12Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg12Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg12Masked, error) {
+func DecodeNxmReg12Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg12Masked, error) {
 	_nxmreg12masked := &NxmReg12Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg12Masked packet too short: %d < 8", decoder.Length())
@@ -5998,7 +5997,7 @@ type NxmReg13 struct {
 }
 
 type INxmReg13 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -6010,7 +6009,7 @@ func (self *NxmReg13) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg13) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg13) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6020,7 +6019,7 @@ func (self *NxmReg13) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg13(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg13, error) {
+func DecodeNxmReg13(parent *Oxm, decoder *openflow.Decoder) (*NxmReg13, error) {
 	_nxmreg13 := &NxmReg13{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg13 packet too short: %d < 4", decoder.Length())
@@ -6058,7 +6057,7 @@ type NxmReg13Masked struct {
 }
 
 type INxmReg13Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -6079,7 +6078,7 @@ func (self *NxmReg13Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg13Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg13Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6090,7 +6089,7 @@ func (self *NxmReg13Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg13Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg13Masked, error) {
+func DecodeNxmReg13Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg13Masked, error) {
 	_nxmreg13masked := &NxmReg13Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg13Masked packet too short: %d < 8", decoder.Length())
@@ -6136,7 +6135,7 @@ type NxmReg14 struct {
 }
 
 type INxmReg14 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -6148,7 +6147,7 @@ func (self *NxmReg14) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg14) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg14) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6158,7 +6157,7 @@ func (self *NxmReg14) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg14(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg14, error) {
+func DecodeNxmReg14(parent *Oxm, decoder *openflow.Decoder) (*NxmReg14, error) {
 	_nxmreg14 := &NxmReg14{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg14 packet too short: %d < 4", decoder.Length())
@@ -6196,7 +6195,7 @@ type NxmReg14Masked struct {
 }
 
 type INxmReg14Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -6217,7 +6216,7 @@ func (self *NxmReg14Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg14Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg14Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6228,7 +6227,7 @@ func (self *NxmReg14Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg14Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg14Masked, error) {
+func DecodeNxmReg14Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg14Masked, error) {
 	_nxmreg14masked := &NxmReg14Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg14Masked packet too short: %d < 8", decoder.Length())
@@ -6274,7 +6273,7 @@ type NxmReg15 struct {
 }
 
 type INxmReg15 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -6286,7 +6285,7 @@ func (self *NxmReg15) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg15) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg15) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6296,7 +6295,7 @@ func (self *NxmReg15) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg15(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg15, error) {
+func DecodeNxmReg15(parent *Oxm, decoder *openflow.Decoder) (*NxmReg15, error) {
 	_nxmreg15 := &NxmReg15{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg15 packet too short: %d < 4", decoder.Length())
@@ -6334,7 +6333,7 @@ type NxmReg15Masked struct {
 }
 
 type INxmReg15Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -6355,7 +6354,7 @@ func (self *NxmReg15Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg15Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg15Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6366,7 +6365,7 @@ func (self *NxmReg15Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg15Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg15Masked, error) {
+func DecodeNxmReg15Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg15Masked, error) {
 	_nxmreg15masked := &NxmReg15Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg15Masked packet too short: %d < 8", decoder.Length())
@@ -6413,7 +6412,7 @@ type NxmReg1Masked struct {
 }
 
 type INxmReg1Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -6434,7 +6433,7 @@ func (self *NxmReg1Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg1Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg1Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6445,7 +6444,7 @@ func (self *NxmReg1Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg1Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg1Masked, error) {
+func DecodeNxmReg1Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg1Masked, error) {
 	_nxmreg1masked := &NxmReg1Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg1Masked packet too short: %d < 8", decoder.Length())
@@ -6491,7 +6490,7 @@ type NxmReg2 struct {
 }
 
 type INxmReg2 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -6503,7 +6502,7 @@ func (self *NxmReg2) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg2) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6513,7 +6512,7 @@ func (self *NxmReg2) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg2(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg2, error) {
+func DecodeNxmReg2(parent *Oxm, decoder *openflow.Decoder) (*NxmReg2, error) {
 	_nxmreg2 := &NxmReg2{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg2 packet too short: %d < 4", decoder.Length())
@@ -6551,7 +6550,7 @@ type NxmReg2Masked struct {
 }
 
 type INxmReg2Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -6572,7 +6571,7 @@ func (self *NxmReg2Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg2Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg2Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6583,7 +6582,7 @@ func (self *NxmReg2Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg2Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg2Masked, error) {
+func DecodeNxmReg2Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg2Masked, error) {
 	_nxmreg2masked := &NxmReg2Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg2Masked packet too short: %d < 8", decoder.Length())
@@ -6629,7 +6628,7 @@ type NxmReg3 struct {
 }
 
 type INxmReg3 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -6641,7 +6640,7 @@ func (self *NxmReg3) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg3) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg3) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6651,7 +6650,7 @@ func (self *NxmReg3) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg3(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg3, error) {
+func DecodeNxmReg3(parent *Oxm, decoder *openflow.Decoder) (*NxmReg3, error) {
 	_nxmreg3 := &NxmReg3{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg3 packet too short: %d < 4", decoder.Length())
@@ -6689,7 +6688,7 @@ type NxmReg3Masked struct {
 }
 
 type INxmReg3Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -6710,7 +6709,7 @@ func (self *NxmReg3Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg3Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg3Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6721,7 +6720,7 @@ func (self *NxmReg3Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg3Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg3Masked, error) {
+func DecodeNxmReg3Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg3Masked, error) {
 	_nxmreg3masked := &NxmReg3Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg3Masked packet too short: %d < 8", decoder.Length())
@@ -6767,7 +6766,7 @@ type NxmReg4 struct {
 }
 
 type INxmReg4 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -6779,7 +6778,7 @@ func (self *NxmReg4) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg4) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg4) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6789,7 +6788,7 @@ func (self *NxmReg4) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg4(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg4, error) {
+func DecodeNxmReg4(parent *Oxm, decoder *openflow.Decoder) (*NxmReg4, error) {
 	_nxmreg4 := &NxmReg4{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg4 packet too short: %d < 4", decoder.Length())
@@ -6827,7 +6826,7 @@ type NxmReg4Masked struct {
 }
 
 type INxmReg4Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -6848,7 +6847,7 @@ func (self *NxmReg4Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg4Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg4Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6859,7 +6858,7 @@ func (self *NxmReg4Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg4Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg4Masked, error) {
+func DecodeNxmReg4Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg4Masked, error) {
 	_nxmreg4masked := &NxmReg4Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg4Masked packet too short: %d < 8", decoder.Length())
@@ -6905,7 +6904,7 @@ type NxmReg5 struct {
 }
 
 type INxmReg5 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -6917,7 +6916,7 @@ func (self *NxmReg5) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg5) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg5) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6927,7 +6926,7 @@ func (self *NxmReg5) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg5(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg5, error) {
+func DecodeNxmReg5(parent *Oxm, decoder *openflow.Decoder) (*NxmReg5, error) {
 	_nxmreg5 := &NxmReg5{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg5 packet too short: %d < 4", decoder.Length())
@@ -6965,7 +6964,7 @@ type NxmReg5Masked struct {
 }
 
 type INxmReg5Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -6986,7 +6985,7 @@ func (self *NxmReg5Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg5Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg5Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6997,7 +6996,7 @@ func (self *NxmReg5Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg5Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg5Masked, error) {
+func DecodeNxmReg5Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg5Masked, error) {
 	_nxmreg5masked := &NxmReg5Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg5Masked packet too short: %d < 8", decoder.Length())
@@ -7043,7 +7042,7 @@ type NxmReg6 struct {
 }
 
 type INxmReg6 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -7055,7 +7054,7 @@ func (self *NxmReg6) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg6) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg6) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7065,7 +7064,7 @@ func (self *NxmReg6) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg6(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg6, error) {
+func DecodeNxmReg6(parent *Oxm, decoder *openflow.Decoder) (*NxmReg6, error) {
 	_nxmreg6 := &NxmReg6{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg6 packet too short: %d < 4", decoder.Length())
@@ -7103,7 +7102,7 @@ type NxmReg6Masked struct {
 }
 
 type INxmReg6Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -7124,7 +7123,7 @@ func (self *NxmReg6Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg6Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg6Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7135,7 +7134,7 @@ func (self *NxmReg6Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg6Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg6Masked, error) {
+func DecodeNxmReg6Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg6Masked, error) {
 	_nxmreg6masked := &NxmReg6Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg6Masked packet too short: %d < 8", decoder.Length())
@@ -7181,7 +7180,7 @@ type NxmReg7 struct {
 }
 
 type INxmReg7 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -7193,7 +7192,7 @@ func (self *NxmReg7) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg7) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg7) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7203,7 +7202,7 @@ func (self *NxmReg7) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg7(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg7, error) {
+func DecodeNxmReg7(parent *Oxm, decoder *openflow.Decoder) (*NxmReg7, error) {
 	_nxmreg7 := &NxmReg7{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg7 packet too short: %d < 4", decoder.Length())
@@ -7241,7 +7240,7 @@ type NxmReg7Masked struct {
 }
 
 type INxmReg7Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -7262,7 +7261,7 @@ func (self *NxmReg7Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg7Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg7Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7273,7 +7272,7 @@ func (self *NxmReg7Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg7Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg7Masked, error) {
+func DecodeNxmReg7Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg7Masked, error) {
 	_nxmreg7masked := &NxmReg7Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg7Masked packet too short: %d < 8", decoder.Length())
@@ -7319,7 +7318,7 @@ type NxmReg8 struct {
 }
 
 type INxmReg8 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -7331,7 +7330,7 @@ func (self *NxmReg8) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg8) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg8) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7341,7 +7340,7 @@ func (self *NxmReg8) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg8(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg8, error) {
+func DecodeNxmReg8(parent *Oxm, decoder *openflow.Decoder) (*NxmReg8, error) {
 	_nxmreg8 := &NxmReg8{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg8 packet too short: %d < 4", decoder.Length())
@@ -7379,7 +7378,7 @@ type NxmReg8Masked struct {
 }
 
 type INxmReg8Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -7400,7 +7399,7 @@ func (self *NxmReg8Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg8Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg8Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7411,7 +7410,7 @@ func (self *NxmReg8Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg8Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg8Masked, error) {
+func DecodeNxmReg8Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg8Masked, error) {
 	_nxmreg8masked := &NxmReg8Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg8Masked packet too short: %d < 8", decoder.Length())
@@ -7457,7 +7456,7 @@ type NxmReg9 struct {
 }
 
 type INxmReg9 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -7469,7 +7468,7 @@ func (self *NxmReg9) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *NxmReg9) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg9) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7479,7 +7478,7 @@ func (self *NxmReg9) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg9(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg9, error) {
+func DecodeNxmReg9(parent *Oxm, decoder *openflow.Decoder) (*NxmReg9, error) {
 	_nxmreg9 := &NxmReg9{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmReg9 packet too short: %d < 4", decoder.Length())
@@ -7517,7 +7516,7 @@ type NxmReg9Masked struct {
 }
 
 type INxmReg9Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -7538,7 +7537,7 @@ func (self *NxmReg9Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *NxmReg9Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmReg9Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7549,7 +7548,7 @@ func (self *NxmReg9Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmReg9Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmReg9Masked, error) {
+func DecodeNxmReg9Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmReg9Masked, error) {
 	_nxmreg9masked := &NxmReg9Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmReg9Masked packet too short: %d < 8", decoder.Length())
@@ -7595,7 +7594,7 @@ type NxmTcpDst struct {
 }
 
 type INxmTcpDst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -7607,7 +7606,7 @@ func (self *NxmTcpDst) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *NxmTcpDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTcpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7617,7 +7616,7 @@ func (self *NxmTcpDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTcpDst(parent *Oxm, decoder *goloxi.Decoder) (*NxmTcpDst, error) {
+func DecodeNxmTcpDst(parent *Oxm, decoder *openflow.Decoder) (*NxmTcpDst, error) {
 	_nxmtcpdst := &NxmTcpDst{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("NxmTcpDst packet too short: %d < 2", decoder.Length())
@@ -7655,7 +7654,7 @@ type NxmTcpDstMasked struct {
 }
 
 type INxmTcpDstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -7676,7 +7675,7 @@ func (self *NxmTcpDstMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *NxmTcpDstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTcpDstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7687,7 +7686,7 @@ func (self *NxmTcpDstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTcpDstMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTcpDstMasked, error) {
+func DecodeNxmTcpDstMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmTcpDstMasked, error) {
 	_nxmtcpdstmasked := &NxmTcpDstMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmTcpDstMasked packet too short: %d < 4", decoder.Length())
@@ -7733,7 +7732,7 @@ type NxmTcpFlags struct {
 }
 
 type INxmTcpFlags interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() TcpFlags
 }
 
@@ -7745,7 +7744,7 @@ func (self *NxmTcpFlags) SetValue(v TcpFlags) {
 	self.Value = v
 }
 
-func (self *NxmTcpFlags) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTcpFlags) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7755,7 +7754,7 @@ func (self *NxmTcpFlags) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTcpFlags(parent *Oxm, decoder *goloxi.Decoder) (*NxmTcpFlags, error) {
+func DecodeNxmTcpFlags(parent *Oxm, decoder *openflow.Decoder) (*NxmTcpFlags, error) {
 	_nxmtcpflags := &NxmTcpFlags{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("NxmTcpFlags packet too short: %d < 2", decoder.Length())
@@ -7793,7 +7792,7 @@ type NxmTcpFlagsMasked struct {
 }
 
 type INxmTcpFlagsMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() TcpFlags
 	GetValueMask() uint16
 }
@@ -7814,7 +7813,7 @@ func (self *NxmTcpFlagsMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *NxmTcpFlagsMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTcpFlagsMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7825,7 +7824,7 @@ func (self *NxmTcpFlagsMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTcpFlagsMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTcpFlagsMasked, error) {
+func DecodeNxmTcpFlagsMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmTcpFlagsMasked, error) {
 	_nxmtcpflagsmasked := &NxmTcpFlagsMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmTcpFlagsMasked packet too short: %d < 4", decoder.Length())
@@ -7871,7 +7870,7 @@ type NxmTcpSrc struct {
 }
 
 type INxmTcpSrc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -7883,7 +7882,7 @@ func (self *NxmTcpSrc) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *NxmTcpSrc) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTcpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7893,7 +7892,7 @@ func (self *NxmTcpSrc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTcpSrc(parent *Oxm, decoder *goloxi.Decoder) (*NxmTcpSrc, error) {
+func DecodeNxmTcpSrc(parent *Oxm, decoder *openflow.Decoder) (*NxmTcpSrc, error) {
 	_nxmtcpsrc := &NxmTcpSrc{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("NxmTcpSrc packet too short: %d < 2", decoder.Length())
@@ -7931,7 +7930,7 @@ type NxmTcpSrcMasked struct {
 }
 
 type INxmTcpSrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -7952,7 +7951,7 @@ func (self *NxmTcpSrcMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *NxmTcpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTcpSrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7963,7 +7962,7 @@ func (self *NxmTcpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTcpSrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTcpSrcMasked, error) {
+func DecodeNxmTcpSrcMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmTcpSrcMasked, error) {
 	_nxmtcpsrcmasked := &NxmTcpSrcMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmTcpSrcMasked packet too short: %d < 4", decoder.Length())
@@ -8009,7 +8008,7 @@ type NxmTunDst struct {
 }
 
 type INxmTunDst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -8021,7 +8020,7 @@ func (self *NxmTunDst) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmTunDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8031,7 +8030,7 @@ func (self *NxmTunDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunDst(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunDst, error) {
+func DecodeNxmTunDst(parent *Oxm, decoder *openflow.Decoder) (*NxmTunDst, error) {
 	_nxmtundst := &NxmTunDst{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmTunDst packet too short: %d < 4", decoder.Length())
@@ -8069,7 +8068,7 @@ type NxmTunDstMasked struct {
 }
 
 type INxmTunDstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -8090,7 +8089,7 @@ func (self *NxmTunDstMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunDstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunDstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8101,7 +8100,7 @@ func (self *NxmTunDstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunDstMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunDstMasked, error) {
+func DecodeNxmTunDstMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunDstMasked, error) {
 	_nxmtundstmasked := &NxmTunDstMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmTunDstMasked packet too short: %d < 8", decoder.Length())
@@ -8147,7 +8146,7 @@ type NxmTunFlags struct {
 }
 
 type INxmTunFlags interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -8159,7 +8158,7 @@ func (self *NxmTunFlags) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *NxmTunFlags) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunFlags) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8169,7 +8168,7 @@ func (self *NxmTunFlags) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunFlags(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunFlags, error) {
+func DecodeNxmTunFlags(parent *Oxm, decoder *openflow.Decoder) (*NxmTunFlags, error) {
 	_nxmtunflags := &NxmTunFlags{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("NxmTunFlags packet too short: %d < 2", decoder.Length())
@@ -8207,7 +8206,7 @@ type NxmTunFlagsMasked struct {
 }
 
 type INxmTunFlagsMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -8228,7 +8227,7 @@ func (self *NxmTunFlagsMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunFlagsMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunFlagsMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8239,7 +8238,7 @@ func (self *NxmTunFlagsMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunFlagsMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunFlagsMasked, error) {
+func DecodeNxmTunFlagsMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunFlagsMasked, error) {
 	_nxmtunflagsmasked := &NxmTunFlagsMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmTunFlagsMasked packet too short: %d < 4", decoder.Length())
@@ -8285,7 +8284,7 @@ type NxmTunGbpFlags struct {
 }
 
 type INxmTunGbpFlags interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -8297,7 +8296,7 @@ func (self *NxmTunGbpFlags) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *NxmTunGbpFlags) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunGbpFlags) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8307,7 +8306,7 @@ func (self *NxmTunGbpFlags) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunGbpFlags(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunGbpFlags, error) {
+func DecodeNxmTunGbpFlags(parent *Oxm, decoder *openflow.Decoder) (*NxmTunGbpFlags, error) {
 	_nxmtungbpflags := &NxmTunGbpFlags{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("NxmTunGbpFlags packet too short: %d < 1", decoder.Length())
@@ -8345,7 +8344,7 @@ type NxmTunGbpFlagsMasked struct {
 }
 
 type INxmTunGbpFlagsMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 	GetValueMask() uint8
 }
@@ -8366,7 +8365,7 @@ func (self *NxmTunGbpFlagsMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunGbpFlagsMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunGbpFlagsMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8377,7 +8376,7 @@ func (self *NxmTunGbpFlagsMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunGbpFlagsMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunGbpFlagsMasked, error) {
+func DecodeNxmTunGbpFlagsMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunGbpFlagsMasked, error) {
 	_nxmtungbpflagsmasked := &NxmTunGbpFlagsMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("NxmTunGbpFlagsMasked packet too short: %d < 2", decoder.Length())
@@ -8423,7 +8422,7 @@ type NxmTunGbpId struct {
 }
 
 type INxmTunGbpId interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -8435,7 +8434,7 @@ func (self *NxmTunGbpId) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *NxmTunGbpId) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunGbpId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8445,7 +8444,7 @@ func (self *NxmTunGbpId) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunGbpId(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunGbpId, error) {
+func DecodeNxmTunGbpId(parent *Oxm, decoder *openflow.Decoder) (*NxmTunGbpId, error) {
 	_nxmtungbpid := &NxmTunGbpId{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("NxmTunGbpId packet too short: %d < 2", decoder.Length())
@@ -8483,7 +8482,7 @@ type NxmTunGbpIdMasked struct {
 }
 
 type INxmTunGbpIdMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -8504,7 +8503,7 @@ func (self *NxmTunGbpIdMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunGbpIdMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunGbpIdMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8515,7 +8514,7 @@ func (self *NxmTunGbpIdMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunGbpIdMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunGbpIdMasked, error) {
+func DecodeNxmTunGbpIdMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunGbpIdMasked, error) {
 	_nxmtungbpidmasked := &NxmTunGbpIdMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmTunGbpIdMasked packet too short: %d < 4", decoder.Length())
@@ -8561,7 +8560,7 @@ type NxmTunId struct {
 }
 
 type INxmTunId interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint64
 }
 
@@ -8573,7 +8572,7 @@ func (self *NxmTunId) SetValue(v uint64) {
 	self.Value = v
 }
 
-func (self *NxmTunId) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8583,7 +8582,7 @@ func (self *NxmTunId) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunId(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunId, error) {
+func DecodeNxmTunId(parent *Oxm, decoder *openflow.Decoder) (*NxmTunId, error) {
 	_nxmtunid := &NxmTunId{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmTunId packet too short: %d < 8", decoder.Length())
@@ -8621,7 +8620,7 @@ type NxmTunIdMasked struct {
 }
 
 type INxmTunIdMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint64
 	GetValueMask() uint64
 }
@@ -8642,7 +8641,7 @@ func (self *NxmTunIdMasked) SetValueMask(v uint64) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunIdMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunIdMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8653,7 +8652,7 @@ func (self *NxmTunIdMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunIdMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunIdMasked, error) {
+func DecodeNxmTunIdMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunIdMasked, error) {
 	_nxmtunidmasked := &NxmTunIdMasked{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("NxmTunIdMasked packet too short: %d < 16", decoder.Length())
@@ -8699,7 +8698,7 @@ type NxmTunIpv6Dst struct {
 }
 
 type INxmTunIpv6Dst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -8711,7 +8710,7 @@ func (self *NxmTunIpv6Dst) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmTunIpv6Dst) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunIpv6Dst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8721,7 +8720,7 @@ func (self *NxmTunIpv6Dst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunIpv6Dst(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunIpv6Dst, error) {
+func DecodeNxmTunIpv6Dst(parent *Oxm, decoder *openflow.Decoder) (*NxmTunIpv6Dst, error) {
 	_nxmtunipv6dst := &NxmTunIpv6Dst{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("NxmTunIpv6Dst packet too short: %d < 16", decoder.Length())
@@ -8759,7 +8758,7 @@ type NxmTunIpv6DstMasked struct {
 }
 
 type INxmTunIpv6DstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -8780,7 +8779,7 @@ func (self *NxmTunIpv6DstMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunIpv6DstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunIpv6DstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8791,7 +8790,7 @@ func (self *NxmTunIpv6DstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunIpv6DstMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunIpv6DstMasked, error) {
+func DecodeNxmTunIpv6DstMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunIpv6DstMasked, error) {
 	_nxmtunipv6dstmasked := &NxmTunIpv6DstMasked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("NxmTunIpv6DstMasked packet too short: %d < 32", decoder.Length())
@@ -8837,7 +8836,7 @@ type NxmTunIpv6Src struct {
 }
 
 type INxmTunIpv6Src interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -8849,7 +8848,7 @@ func (self *NxmTunIpv6Src) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmTunIpv6Src) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunIpv6Src) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8859,7 +8858,7 @@ func (self *NxmTunIpv6Src) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunIpv6Src(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunIpv6Src, error) {
+func DecodeNxmTunIpv6Src(parent *Oxm, decoder *openflow.Decoder) (*NxmTunIpv6Src, error) {
 	_nxmtunipv6src := &NxmTunIpv6Src{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("NxmTunIpv6Src packet too short: %d < 16", decoder.Length())
@@ -8897,7 +8896,7 @@ type NxmTunIpv6SrcMasked struct {
 }
 
 type INxmTunIpv6SrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -8918,7 +8917,7 @@ func (self *NxmTunIpv6SrcMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunIpv6SrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunIpv6SrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8929,7 +8928,7 @@ func (self *NxmTunIpv6SrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunIpv6SrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunIpv6SrcMasked, error) {
+func DecodeNxmTunIpv6SrcMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunIpv6SrcMasked, error) {
 	_nxmtunipv6srcmasked := &NxmTunIpv6SrcMasked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("NxmTunIpv6SrcMasked packet too short: %d < 32", decoder.Length())
@@ -8975,7 +8974,7 @@ type NxmTunMetadata0 struct {
 }
 
 type INxmTunMetadata0 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -8987,7 +8986,7 @@ func (self *NxmTunMetadata0) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata0) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata0) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8997,7 +8996,7 @@ func (self *NxmTunMetadata0) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata0(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata0, error) {
+func DecodeNxmTunMetadata0(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata0, error) {
 	_nxmtunmetadata0 := &NxmTunMetadata0{Oxm: parent}
 	_nxmtunmetadata0.Value = decoder.Read(int(_nxmtunmetadata0.TypeLen & 0xFF))
 	return _nxmtunmetadata0, nil
@@ -9032,7 +9031,7 @@ type NxmTunMetadata0Masked struct {
 }
 
 type INxmTunMetadata0Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -9053,7 +9052,7 @@ func (self *NxmTunMetadata0Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata0Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata0Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9064,7 +9063,7 @@ func (self *NxmTunMetadata0Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata0Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata0Masked, error) {
+func DecodeNxmTunMetadata0Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata0Masked, error) {
 	_nxmtunmetadata0masked := &NxmTunMetadata0Masked{Oxm: parent}
 	_nxmtunmetadata0masked.Value = decoder.Read(int(_nxmtunmetadata0masked.TypeLen & 0xFF))
 	_nxmtunmetadata0masked.ValueMask = decoder.Read(int(_nxmtunmetadata0masked.TypeLen & 0xFF))
@@ -9107,7 +9106,7 @@ type NxmTunMetadata1 struct {
 }
 
 type INxmTunMetadata1 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -9119,7 +9118,7 @@ func (self *NxmTunMetadata1) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata1) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata1) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9129,7 +9128,7 @@ func (self *NxmTunMetadata1) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata1(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata1, error) {
+func DecodeNxmTunMetadata1(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata1, error) {
 	_nxmtunmetadata1 := &NxmTunMetadata1{Oxm: parent}
 	_nxmtunmetadata1.Value = decoder.Read(int(_nxmtunmetadata1.TypeLen & 0xFF))
 	return _nxmtunmetadata1, nil
@@ -9163,7 +9162,7 @@ type NxmTunMetadata10 struct {
 }
 
 type INxmTunMetadata10 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -9175,7 +9174,7 @@ func (self *NxmTunMetadata10) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata10) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata10) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9185,7 +9184,7 @@ func (self *NxmTunMetadata10) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata10(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata10, error) {
+func DecodeNxmTunMetadata10(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata10, error) {
 	_nxmtunmetadata10 := &NxmTunMetadata10{Oxm: parent}
 	_nxmtunmetadata10.Value = decoder.Read(int(_nxmtunmetadata10.TypeLen & 0xFF))
 	return _nxmtunmetadata10, nil
@@ -9220,7 +9219,7 @@ type NxmTunMetadata10Masked struct {
 }
 
 type INxmTunMetadata10Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -9241,7 +9240,7 @@ func (self *NxmTunMetadata10Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata10Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata10Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9252,7 +9251,7 @@ func (self *NxmTunMetadata10Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata10Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata10Masked, error) {
+func DecodeNxmTunMetadata10Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata10Masked, error) {
 	_nxmtunmetadata10masked := &NxmTunMetadata10Masked{Oxm: parent}
 	_nxmtunmetadata10masked.Value = decoder.Read(int(_nxmtunmetadata10masked.TypeLen & 0xFF))
 	_nxmtunmetadata10masked.ValueMask = decoder.Read(int(_nxmtunmetadata10masked.TypeLen & 0xFF))
@@ -9295,7 +9294,7 @@ type NxmTunMetadata11 struct {
 }
 
 type INxmTunMetadata11 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -9307,7 +9306,7 @@ func (self *NxmTunMetadata11) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata11) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata11) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9317,7 +9316,7 @@ func (self *NxmTunMetadata11) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata11(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata11, error) {
+func DecodeNxmTunMetadata11(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata11, error) {
 	_nxmtunmetadata11 := &NxmTunMetadata11{Oxm: parent}
 	_nxmtunmetadata11.Value = decoder.Read(int(_nxmtunmetadata11.TypeLen & 0xFF))
 	return _nxmtunmetadata11, nil
@@ -9352,7 +9351,7 @@ type NxmTunMetadata11Masked struct {
 }
 
 type INxmTunMetadata11Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -9373,7 +9372,7 @@ func (self *NxmTunMetadata11Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata11Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata11Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9384,7 +9383,7 @@ func (self *NxmTunMetadata11Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata11Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata11Masked, error) {
+func DecodeNxmTunMetadata11Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata11Masked, error) {
 	_nxmtunmetadata11masked := &NxmTunMetadata11Masked{Oxm: parent}
 	_nxmtunmetadata11masked.Value = decoder.Read(int(_nxmtunmetadata11masked.TypeLen & 0xFF))
 	_nxmtunmetadata11masked.ValueMask = decoder.Read(int(_nxmtunmetadata11masked.TypeLen & 0xFF))
@@ -9427,7 +9426,7 @@ type NxmTunMetadata12 struct {
 }
 
 type INxmTunMetadata12 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -9439,7 +9438,7 @@ func (self *NxmTunMetadata12) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata12) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata12) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9449,7 +9448,7 @@ func (self *NxmTunMetadata12) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata12(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata12, error) {
+func DecodeNxmTunMetadata12(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata12, error) {
 	_nxmtunmetadata12 := &NxmTunMetadata12{Oxm: parent}
 	_nxmtunmetadata12.Value = decoder.Read(int(_nxmtunmetadata12.TypeLen & 0xFF))
 	return _nxmtunmetadata12, nil
@@ -9484,7 +9483,7 @@ type NxmTunMetadata12Masked struct {
 }
 
 type INxmTunMetadata12Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -9505,7 +9504,7 @@ func (self *NxmTunMetadata12Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata12Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata12Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9516,7 +9515,7 @@ func (self *NxmTunMetadata12Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata12Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata12Masked, error) {
+func DecodeNxmTunMetadata12Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata12Masked, error) {
 	_nxmtunmetadata12masked := &NxmTunMetadata12Masked{Oxm: parent}
 	_nxmtunmetadata12masked.Value = decoder.Read(int(_nxmtunmetadata12masked.TypeLen & 0xFF))
 	_nxmtunmetadata12masked.ValueMask = decoder.Read(int(_nxmtunmetadata12masked.TypeLen & 0xFF))
@@ -9559,7 +9558,7 @@ type NxmTunMetadata13 struct {
 }
 
 type INxmTunMetadata13 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -9571,7 +9570,7 @@ func (self *NxmTunMetadata13) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata13) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata13) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9581,7 +9580,7 @@ func (self *NxmTunMetadata13) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata13(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata13, error) {
+func DecodeNxmTunMetadata13(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata13, error) {
 	_nxmtunmetadata13 := &NxmTunMetadata13{Oxm: parent}
 	_nxmtunmetadata13.Value = decoder.Read(int(_nxmtunmetadata13.TypeLen & 0xFF))
 	return _nxmtunmetadata13, nil
@@ -9616,7 +9615,7 @@ type NxmTunMetadata13Masked struct {
 }
 
 type INxmTunMetadata13Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -9637,7 +9636,7 @@ func (self *NxmTunMetadata13Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata13Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata13Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9648,7 +9647,7 @@ func (self *NxmTunMetadata13Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata13Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata13Masked, error) {
+func DecodeNxmTunMetadata13Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata13Masked, error) {
 	_nxmtunmetadata13masked := &NxmTunMetadata13Masked{Oxm: parent}
 	_nxmtunmetadata13masked.Value = decoder.Read(int(_nxmtunmetadata13masked.TypeLen & 0xFF))
 	_nxmtunmetadata13masked.ValueMask = decoder.Read(int(_nxmtunmetadata13masked.TypeLen & 0xFF))
@@ -9691,7 +9690,7 @@ type NxmTunMetadata14 struct {
 }
 
 type INxmTunMetadata14 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -9703,7 +9702,7 @@ func (self *NxmTunMetadata14) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata14) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata14) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9713,7 +9712,7 @@ func (self *NxmTunMetadata14) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata14(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata14, error) {
+func DecodeNxmTunMetadata14(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata14, error) {
 	_nxmtunmetadata14 := &NxmTunMetadata14{Oxm: parent}
 	_nxmtunmetadata14.Value = decoder.Read(int(_nxmtunmetadata14.TypeLen & 0xFF))
 	return _nxmtunmetadata14, nil
@@ -9748,7 +9747,7 @@ type NxmTunMetadata14Masked struct {
 }
 
 type INxmTunMetadata14Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -9769,7 +9768,7 @@ func (self *NxmTunMetadata14Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata14Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata14Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9780,7 +9779,7 @@ func (self *NxmTunMetadata14Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata14Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata14Masked, error) {
+func DecodeNxmTunMetadata14Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata14Masked, error) {
 	_nxmtunmetadata14masked := &NxmTunMetadata14Masked{Oxm: parent}
 	_nxmtunmetadata14masked.Value = decoder.Read(int(_nxmtunmetadata14masked.TypeLen & 0xFF))
 	_nxmtunmetadata14masked.ValueMask = decoder.Read(int(_nxmtunmetadata14masked.TypeLen & 0xFF))
@@ -9823,7 +9822,7 @@ type NxmTunMetadata15 struct {
 }
 
 type INxmTunMetadata15 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -9835,7 +9834,7 @@ func (self *NxmTunMetadata15) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata15) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata15) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9845,7 +9844,7 @@ func (self *NxmTunMetadata15) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata15(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata15, error) {
+func DecodeNxmTunMetadata15(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata15, error) {
 	_nxmtunmetadata15 := &NxmTunMetadata15{Oxm: parent}
 	_nxmtunmetadata15.Value = decoder.Read(int(_nxmtunmetadata15.TypeLen & 0xFF))
 	return _nxmtunmetadata15, nil
@@ -9880,7 +9879,7 @@ type NxmTunMetadata15Masked struct {
 }
 
 type INxmTunMetadata15Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -9901,7 +9900,7 @@ func (self *NxmTunMetadata15Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata15Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata15Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9912,7 +9911,7 @@ func (self *NxmTunMetadata15Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata15Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata15Masked, error) {
+func DecodeNxmTunMetadata15Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata15Masked, error) {
 	_nxmtunmetadata15masked := &NxmTunMetadata15Masked{Oxm: parent}
 	_nxmtunmetadata15masked.Value = decoder.Read(int(_nxmtunmetadata15masked.TypeLen & 0xFF))
 	_nxmtunmetadata15masked.ValueMask = decoder.Read(int(_nxmtunmetadata15masked.TypeLen & 0xFF))
@@ -9955,7 +9954,7 @@ type NxmTunMetadata16 struct {
 }
 
 type INxmTunMetadata16 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -9967,7 +9966,7 @@ func (self *NxmTunMetadata16) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata16) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata16) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9977,7 +9976,7 @@ func (self *NxmTunMetadata16) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata16(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata16, error) {
+func DecodeNxmTunMetadata16(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata16, error) {
 	_nxmtunmetadata16 := &NxmTunMetadata16{Oxm: parent}
 	_nxmtunmetadata16.Value = decoder.Read(int(_nxmtunmetadata16.TypeLen & 0xFF))
 	return _nxmtunmetadata16, nil
@@ -10012,7 +10011,7 @@ type NxmTunMetadata16Masked struct {
 }
 
 type INxmTunMetadata16Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -10033,7 +10032,7 @@ func (self *NxmTunMetadata16Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata16Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata16Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10044,7 +10043,7 @@ func (self *NxmTunMetadata16Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata16Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata16Masked, error) {
+func DecodeNxmTunMetadata16Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata16Masked, error) {
 	_nxmtunmetadata16masked := &NxmTunMetadata16Masked{Oxm: parent}
 	_nxmtunmetadata16masked.Value = decoder.Read(int(_nxmtunmetadata16masked.TypeLen & 0xFF))
 	_nxmtunmetadata16masked.ValueMask = decoder.Read(int(_nxmtunmetadata16masked.TypeLen & 0xFF))
@@ -10087,7 +10086,7 @@ type NxmTunMetadata17 struct {
 }
 
 type INxmTunMetadata17 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -10099,7 +10098,7 @@ func (self *NxmTunMetadata17) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata17) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata17) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10109,7 +10108,7 @@ func (self *NxmTunMetadata17) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata17(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata17, error) {
+func DecodeNxmTunMetadata17(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata17, error) {
 	_nxmtunmetadata17 := &NxmTunMetadata17{Oxm: parent}
 	_nxmtunmetadata17.Value = decoder.Read(int(_nxmtunmetadata17.TypeLen & 0xFF))
 	return _nxmtunmetadata17, nil
@@ -10144,7 +10143,7 @@ type NxmTunMetadata17Masked struct {
 }
 
 type INxmTunMetadata17Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -10165,7 +10164,7 @@ func (self *NxmTunMetadata17Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata17Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata17Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10176,7 +10175,7 @@ func (self *NxmTunMetadata17Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata17Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata17Masked, error) {
+func DecodeNxmTunMetadata17Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata17Masked, error) {
 	_nxmtunmetadata17masked := &NxmTunMetadata17Masked{Oxm: parent}
 	_nxmtunmetadata17masked.Value = decoder.Read(int(_nxmtunmetadata17masked.TypeLen & 0xFF))
 	_nxmtunmetadata17masked.ValueMask = decoder.Read(int(_nxmtunmetadata17masked.TypeLen & 0xFF))
@@ -10219,7 +10218,7 @@ type NxmTunMetadata18 struct {
 }
 
 type INxmTunMetadata18 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -10231,7 +10230,7 @@ func (self *NxmTunMetadata18) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata18) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata18) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10241,7 +10240,7 @@ func (self *NxmTunMetadata18) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata18(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata18, error) {
+func DecodeNxmTunMetadata18(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata18, error) {
 	_nxmtunmetadata18 := &NxmTunMetadata18{Oxm: parent}
 	_nxmtunmetadata18.Value = decoder.Read(int(_nxmtunmetadata18.TypeLen & 0xFF))
 	return _nxmtunmetadata18, nil
@@ -10276,7 +10275,7 @@ type NxmTunMetadata18Masked struct {
 }
 
 type INxmTunMetadata18Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -10297,7 +10296,7 @@ func (self *NxmTunMetadata18Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata18Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata18Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10308,7 +10307,7 @@ func (self *NxmTunMetadata18Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata18Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata18Masked, error) {
+func DecodeNxmTunMetadata18Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata18Masked, error) {
 	_nxmtunmetadata18masked := &NxmTunMetadata18Masked{Oxm: parent}
 	_nxmtunmetadata18masked.Value = decoder.Read(int(_nxmtunmetadata18masked.TypeLen & 0xFF))
 	_nxmtunmetadata18masked.ValueMask = decoder.Read(int(_nxmtunmetadata18masked.TypeLen & 0xFF))
@@ -10351,7 +10350,7 @@ type NxmTunMetadata19 struct {
 }
 
 type INxmTunMetadata19 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -10363,7 +10362,7 @@ func (self *NxmTunMetadata19) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata19) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata19) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10373,7 +10372,7 @@ func (self *NxmTunMetadata19) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata19(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata19, error) {
+func DecodeNxmTunMetadata19(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata19, error) {
 	_nxmtunmetadata19 := &NxmTunMetadata19{Oxm: parent}
 	_nxmtunmetadata19.Value = decoder.Read(int(_nxmtunmetadata19.TypeLen & 0xFF))
 	return _nxmtunmetadata19, nil
@@ -10408,7 +10407,7 @@ type NxmTunMetadata19Masked struct {
 }
 
 type INxmTunMetadata19Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -10429,7 +10428,7 @@ func (self *NxmTunMetadata19Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata19Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata19Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10440,7 +10439,7 @@ func (self *NxmTunMetadata19Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata19Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata19Masked, error) {
+func DecodeNxmTunMetadata19Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata19Masked, error) {
 	_nxmtunmetadata19masked := &NxmTunMetadata19Masked{Oxm: parent}
 	_nxmtunmetadata19masked.Value = decoder.Read(int(_nxmtunmetadata19masked.TypeLen & 0xFF))
 	_nxmtunmetadata19masked.ValueMask = decoder.Read(int(_nxmtunmetadata19masked.TypeLen & 0xFF))
@@ -10484,7 +10483,7 @@ type NxmTunMetadata1Masked struct {
 }
 
 type INxmTunMetadata1Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -10505,7 +10504,7 @@ func (self *NxmTunMetadata1Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata1Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata1Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10516,7 +10515,7 @@ func (self *NxmTunMetadata1Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata1Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata1Masked, error) {
+func DecodeNxmTunMetadata1Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata1Masked, error) {
 	_nxmtunmetadata1masked := &NxmTunMetadata1Masked{Oxm: parent}
 	_nxmtunmetadata1masked.Value = decoder.Read(int(_nxmtunmetadata1masked.TypeLen & 0xFF))
 	_nxmtunmetadata1masked.ValueMask = decoder.Read(int(_nxmtunmetadata1masked.TypeLen & 0xFF))
@@ -10559,7 +10558,7 @@ type NxmTunMetadata2 struct {
 }
 
 type INxmTunMetadata2 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -10571,7 +10570,7 @@ func (self *NxmTunMetadata2) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata2) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10581,7 +10580,7 @@ func (self *NxmTunMetadata2) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata2(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata2, error) {
+func DecodeNxmTunMetadata2(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata2, error) {
 	_nxmtunmetadata2 := &NxmTunMetadata2{Oxm: parent}
 	_nxmtunmetadata2.Value = decoder.Read(int(_nxmtunmetadata2.TypeLen & 0xFF))
 	return _nxmtunmetadata2, nil
@@ -10615,7 +10614,7 @@ type NxmTunMetadata20 struct {
 }
 
 type INxmTunMetadata20 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -10627,7 +10626,7 @@ func (self *NxmTunMetadata20) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata20) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata20) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10637,7 +10636,7 @@ func (self *NxmTunMetadata20) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata20(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata20, error) {
+func DecodeNxmTunMetadata20(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata20, error) {
 	_nxmtunmetadata20 := &NxmTunMetadata20{Oxm: parent}
 	_nxmtunmetadata20.Value = decoder.Read(int(_nxmtunmetadata20.TypeLen & 0xFF))
 	return _nxmtunmetadata20, nil
@@ -10672,7 +10671,7 @@ type NxmTunMetadata20Masked struct {
 }
 
 type INxmTunMetadata20Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -10693,7 +10692,7 @@ func (self *NxmTunMetadata20Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata20Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata20Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10704,7 +10703,7 @@ func (self *NxmTunMetadata20Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata20Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata20Masked, error) {
+func DecodeNxmTunMetadata20Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata20Masked, error) {
 	_nxmtunmetadata20masked := &NxmTunMetadata20Masked{Oxm: parent}
 	_nxmtunmetadata20masked.Value = decoder.Read(int(_nxmtunmetadata20masked.TypeLen & 0xFF))
 	_nxmtunmetadata20masked.ValueMask = decoder.Read(int(_nxmtunmetadata20masked.TypeLen & 0xFF))
@@ -10747,7 +10746,7 @@ type NxmTunMetadata21 struct {
 }
 
 type INxmTunMetadata21 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -10759,7 +10758,7 @@ func (self *NxmTunMetadata21) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata21) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata21) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10769,7 +10768,7 @@ func (self *NxmTunMetadata21) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata21(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata21, error) {
+func DecodeNxmTunMetadata21(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata21, error) {
 	_nxmtunmetadata21 := &NxmTunMetadata21{Oxm: parent}
 	_nxmtunmetadata21.Value = decoder.Read(int(_nxmtunmetadata21.TypeLen & 0xFF))
 	return _nxmtunmetadata21, nil
@@ -10804,7 +10803,7 @@ type NxmTunMetadata21Masked struct {
 }
 
 type INxmTunMetadata21Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -10825,7 +10824,7 @@ func (self *NxmTunMetadata21Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata21Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata21Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10836,7 +10835,7 @@ func (self *NxmTunMetadata21Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata21Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata21Masked, error) {
+func DecodeNxmTunMetadata21Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata21Masked, error) {
 	_nxmtunmetadata21masked := &NxmTunMetadata21Masked{Oxm: parent}
 	_nxmtunmetadata21masked.Value = decoder.Read(int(_nxmtunmetadata21masked.TypeLen & 0xFF))
 	_nxmtunmetadata21masked.ValueMask = decoder.Read(int(_nxmtunmetadata21masked.TypeLen & 0xFF))
@@ -10879,7 +10878,7 @@ type NxmTunMetadata22 struct {
 }
 
 type INxmTunMetadata22 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -10891,7 +10890,7 @@ func (self *NxmTunMetadata22) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata22) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata22) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10901,7 +10900,7 @@ func (self *NxmTunMetadata22) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata22(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata22, error) {
+func DecodeNxmTunMetadata22(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata22, error) {
 	_nxmtunmetadata22 := &NxmTunMetadata22{Oxm: parent}
 	_nxmtunmetadata22.Value = decoder.Read(int(_nxmtunmetadata22.TypeLen & 0xFF))
 	return _nxmtunmetadata22, nil
@@ -10936,7 +10935,7 @@ type NxmTunMetadata22Masked struct {
 }
 
 type INxmTunMetadata22Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -10957,7 +10956,7 @@ func (self *NxmTunMetadata22Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata22Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata22Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10968,7 +10967,7 @@ func (self *NxmTunMetadata22Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata22Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata22Masked, error) {
+func DecodeNxmTunMetadata22Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata22Masked, error) {
 	_nxmtunmetadata22masked := &NxmTunMetadata22Masked{Oxm: parent}
 	_nxmtunmetadata22masked.Value = decoder.Read(int(_nxmtunmetadata22masked.TypeLen & 0xFF))
 	_nxmtunmetadata22masked.ValueMask = decoder.Read(int(_nxmtunmetadata22masked.TypeLen & 0xFF))
@@ -11011,7 +11010,7 @@ type NxmTunMetadata23 struct {
 }
 
 type INxmTunMetadata23 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -11023,7 +11022,7 @@ func (self *NxmTunMetadata23) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata23) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata23) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11033,7 +11032,7 @@ func (self *NxmTunMetadata23) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata23(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata23, error) {
+func DecodeNxmTunMetadata23(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata23, error) {
 	_nxmtunmetadata23 := &NxmTunMetadata23{Oxm: parent}
 	_nxmtunmetadata23.Value = decoder.Read(int(_nxmtunmetadata23.TypeLen & 0xFF))
 	return _nxmtunmetadata23, nil
@@ -11068,7 +11067,7 @@ type NxmTunMetadata23Masked struct {
 }
 
 type INxmTunMetadata23Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -11089,7 +11088,7 @@ func (self *NxmTunMetadata23Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata23Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata23Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11100,7 +11099,7 @@ func (self *NxmTunMetadata23Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata23Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata23Masked, error) {
+func DecodeNxmTunMetadata23Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata23Masked, error) {
 	_nxmtunmetadata23masked := &NxmTunMetadata23Masked{Oxm: parent}
 	_nxmtunmetadata23masked.Value = decoder.Read(int(_nxmtunmetadata23masked.TypeLen & 0xFF))
 	_nxmtunmetadata23masked.ValueMask = decoder.Read(int(_nxmtunmetadata23masked.TypeLen & 0xFF))
@@ -11143,7 +11142,7 @@ type NxmTunMetadata24 struct {
 }
 
 type INxmTunMetadata24 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -11155,7 +11154,7 @@ func (self *NxmTunMetadata24) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata24) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata24) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11165,7 +11164,7 @@ func (self *NxmTunMetadata24) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata24(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata24, error) {
+func DecodeNxmTunMetadata24(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata24, error) {
 	_nxmtunmetadata24 := &NxmTunMetadata24{Oxm: parent}
 	_nxmtunmetadata24.Value = decoder.Read(int(_nxmtunmetadata24.TypeLen & 0xFF))
 	return _nxmtunmetadata24, nil
@@ -11200,7 +11199,7 @@ type NxmTunMetadata24Masked struct {
 }
 
 type INxmTunMetadata24Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -11221,7 +11220,7 @@ func (self *NxmTunMetadata24Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata24Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata24Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11232,7 +11231,7 @@ func (self *NxmTunMetadata24Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata24Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata24Masked, error) {
+func DecodeNxmTunMetadata24Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata24Masked, error) {
 	_nxmtunmetadata24masked := &NxmTunMetadata24Masked{Oxm: parent}
 	_nxmtunmetadata24masked.Value = decoder.Read(int(_nxmtunmetadata24masked.TypeLen & 0xFF))
 	_nxmtunmetadata24masked.ValueMask = decoder.Read(int(_nxmtunmetadata24masked.TypeLen & 0xFF))
@@ -11275,7 +11274,7 @@ type NxmTunMetadata25 struct {
 }
 
 type INxmTunMetadata25 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -11287,7 +11286,7 @@ func (self *NxmTunMetadata25) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata25) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata25) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11297,7 +11296,7 @@ func (self *NxmTunMetadata25) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata25(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata25, error) {
+func DecodeNxmTunMetadata25(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata25, error) {
 	_nxmtunmetadata25 := &NxmTunMetadata25{Oxm: parent}
 	_nxmtunmetadata25.Value = decoder.Read(int(_nxmtunmetadata25.TypeLen & 0xFF))
 	return _nxmtunmetadata25, nil
@@ -11332,7 +11331,7 @@ type NxmTunMetadata25Masked struct {
 }
 
 type INxmTunMetadata25Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -11353,7 +11352,7 @@ func (self *NxmTunMetadata25Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata25Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata25Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11364,7 +11363,7 @@ func (self *NxmTunMetadata25Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata25Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata25Masked, error) {
+func DecodeNxmTunMetadata25Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata25Masked, error) {
 	_nxmtunmetadata25masked := &NxmTunMetadata25Masked{Oxm: parent}
 	_nxmtunmetadata25masked.Value = decoder.Read(int(_nxmtunmetadata25masked.TypeLen & 0xFF))
 	_nxmtunmetadata25masked.ValueMask = decoder.Read(int(_nxmtunmetadata25masked.TypeLen & 0xFF))
@@ -11407,7 +11406,7 @@ type NxmTunMetadata26 struct {
 }
 
 type INxmTunMetadata26 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -11419,7 +11418,7 @@ func (self *NxmTunMetadata26) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata26) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata26) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11429,7 +11428,7 @@ func (self *NxmTunMetadata26) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata26(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata26, error) {
+func DecodeNxmTunMetadata26(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata26, error) {
 	_nxmtunmetadata26 := &NxmTunMetadata26{Oxm: parent}
 	_nxmtunmetadata26.Value = decoder.Read(int(_nxmtunmetadata26.TypeLen & 0xFF))
 	return _nxmtunmetadata26, nil
@@ -11464,7 +11463,7 @@ type NxmTunMetadata26Masked struct {
 }
 
 type INxmTunMetadata26Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -11485,7 +11484,7 @@ func (self *NxmTunMetadata26Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata26Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata26Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11496,7 +11495,7 @@ func (self *NxmTunMetadata26Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata26Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata26Masked, error) {
+func DecodeNxmTunMetadata26Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata26Masked, error) {
 	_nxmtunmetadata26masked := &NxmTunMetadata26Masked{Oxm: parent}
 	_nxmtunmetadata26masked.Value = decoder.Read(int(_nxmtunmetadata26masked.TypeLen & 0xFF))
 	_nxmtunmetadata26masked.ValueMask = decoder.Read(int(_nxmtunmetadata26masked.TypeLen & 0xFF))
@@ -11539,7 +11538,7 @@ type NxmTunMetadata27 struct {
 }
 
 type INxmTunMetadata27 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -11551,7 +11550,7 @@ func (self *NxmTunMetadata27) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata27) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata27) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11561,7 +11560,7 @@ func (self *NxmTunMetadata27) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata27(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata27, error) {
+func DecodeNxmTunMetadata27(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata27, error) {
 	_nxmtunmetadata27 := &NxmTunMetadata27{Oxm: parent}
 	_nxmtunmetadata27.Value = decoder.Read(int(_nxmtunmetadata27.TypeLen & 0xFF))
 	return _nxmtunmetadata27, nil
@@ -11596,7 +11595,7 @@ type NxmTunMetadata27Masked struct {
 }
 
 type INxmTunMetadata27Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -11617,7 +11616,7 @@ func (self *NxmTunMetadata27Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata27Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata27Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11628,7 +11627,7 @@ func (self *NxmTunMetadata27Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata27Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata27Masked, error) {
+func DecodeNxmTunMetadata27Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata27Masked, error) {
 	_nxmtunmetadata27masked := &NxmTunMetadata27Masked{Oxm: parent}
 	_nxmtunmetadata27masked.Value = decoder.Read(int(_nxmtunmetadata27masked.TypeLen & 0xFF))
 	_nxmtunmetadata27masked.ValueMask = decoder.Read(int(_nxmtunmetadata27masked.TypeLen & 0xFF))
@@ -11671,7 +11670,7 @@ type NxmTunMetadata28 struct {
 }
 
 type INxmTunMetadata28 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -11683,7 +11682,7 @@ func (self *NxmTunMetadata28) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata28) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata28) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11693,7 +11692,7 @@ func (self *NxmTunMetadata28) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata28(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata28, error) {
+func DecodeNxmTunMetadata28(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata28, error) {
 	_nxmtunmetadata28 := &NxmTunMetadata28{Oxm: parent}
 	_nxmtunmetadata28.Value = decoder.Read(int(_nxmtunmetadata28.TypeLen & 0xFF))
 	return _nxmtunmetadata28, nil
@@ -11728,7 +11727,7 @@ type NxmTunMetadata28Masked struct {
 }
 
 type INxmTunMetadata28Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -11749,7 +11748,7 @@ func (self *NxmTunMetadata28Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata28Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata28Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11760,7 +11759,7 @@ func (self *NxmTunMetadata28Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata28Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata28Masked, error) {
+func DecodeNxmTunMetadata28Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata28Masked, error) {
 	_nxmtunmetadata28masked := &NxmTunMetadata28Masked{Oxm: parent}
 	_nxmtunmetadata28masked.Value = decoder.Read(int(_nxmtunmetadata28masked.TypeLen & 0xFF))
 	_nxmtunmetadata28masked.ValueMask = decoder.Read(int(_nxmtunmetadata28masked.TypeLen & 0xFF))
@@ -11803,7 +11802,7 @@ type NxmTunMetadata29 struct {
 }
 
 type INxmTunMetadata29 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -11815,7 +11814,7 @@ func (self *NxmTunMetadata29) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata29) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata29) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11825,7 +11824,7 @@ func (self *NxmTunMetadata29) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata29(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata29, error) {
+func DecodeNxmTunMetadata29(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata29, error) {
 	_nxmtunmetadata29 := &NxmTunMetadata29{Oxm: parent}
 	_nxmtunmetadata29.Value = decoder.Read(int(_nxmtunmetadata29.TypeLen & 0xFF))
 	return _nxmtunmetadata29, nil
@@ -11860,7 +11859,7 @@ type NxmTunMetadata29Masked struct {
 }
 
 type INxmTunMetadata29Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -11881,7 +11880,7 @@ func (self *NxmTunMetadata29Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata29Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata29Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11892,7 +11891,7 @@ func (self *NxmTunMetadata29Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata29Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata29Masked, error) {
+func DecodeNxmTunMetadata29Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata29Masked, error) {
 	_nxmtunmetadata29masked := &NxmTunMetadata29Masked{Oxm: parent}
 	_nxmtunmetadata29masked.Value = decoder.Read(int(_nxmtunmetadata29masked.TypeLen & 0xFF))
 	_nxmtunmetadata29masked.ValueMask = decoder.Read(int(_nxmtunmetadata29masked.TypeLen & 0xFF))
@@ -11936,7 +11935,7 @@ type NxmTunMetadata2Masked struct {
 }
 
 type INxmTunMetadata2Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -11957,7 +11956,7 @@ func (self *NxmTunMetadata2Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata2Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata2Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11968,7 +11967,7 @@ func (self *NxmTunMetadata2Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata2Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata2Masked, error) {
+func DecodeNxmTunMetadata2Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata2Masked, error) {
 	_nxmtunmetadata2masked := &NxmTunMetadata2Masked{Oxm: parent}
 	_nxmtunmetadata2masked.Value = decoder.Read(int(_nxmtunmetadata2masked.TypeLen & 0xFF))
 	_nxmtunmetadata2masked.ValueMask = decoder.Read(int(_nxmtunmetadata2masked.TypeLen & 0xFF))
@@ -12011,7 +12010,7 @@ type NxmTunMetadata3 struct {
 }
 
 type INxmTunMetadata3 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -12023,7 +12022,7 @@ func (self *NxmTunMetadata3) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata3) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata3) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12033,7 +12032,7 @@ func (self *NxmTunMetadata3) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata3(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata3, error) {
+func DecodeNxmTunMetadata3(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata3, error) {
 	_nxmtunmetadata3 := &NxmTunMetadata3{Oxm: parent}
 	_nxmtunmetadata3.Value = decoder.Read(int(_nxmtunmetadata3.TypeLen & 0xFF))
 	return _nxmtunmetadata3, nil
@@ -12067,7 +12066,7 @@ type NxmTunMetadata30 struct {
 }
 
 type INxmTunMetadata30 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -12079,7 +12078,7 @@ func (self *NxmTunMetadata30) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata30) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata30) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12089,7 +12088,7 @@ func (self *NxmTunMetadata30) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata30(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata30, error) {
+func DecodeNxmTunMetadata30(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata30, error) {
 	_nxmtunmetadata30 := &NxmTunMetadata30{Oxm: parent}
 	_nxmtunmetadata30.Value = decoder.Read(int(_nxmtunmetadata30.TypeLen & 0xFF))
 	return _nxmtunmetadata30, nil
@@ -12124,7 +12123,7 @@ type NxmTunMetadata30Masked struct {
 }
 
 type INxmTunMetadata30Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -12145,7 +12144,7 @@ func (self *NxmTunMetadata30Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata30Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata30Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12156,7 +12155,7 @@ func (self *NxmTunMetadata30Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata30Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata30Masked, error) {
+func DecodeNxmTunMetadata30Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata30Masked, error) {
 	_nxmtunmetadata30masked := &NxmTunMetadata30Masked{Oxm: parent}
 	_nxmtunmetadata30masked.Value = decoder.Read(int(_nxmtunmetadata30masked.TypeLen & 0xFF))
 	_nxmtunmetadata30masked.ValueMask = decoder.Read(int(_nxmtunmetadata30masked.TypeLen & 0xFF))
@@ -12199,7 +12198,7 @@ type NxmTunMetadata31 struct {
 }
 
 type INxmTunMetadata31 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -12211,7 +12210,7 @@ func (self *NxmTunMetadata31) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata31) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata31) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12221,7 +12220,7 @@ func (self *NxmTunMetadata31) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata31(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata31, error) {
+func DecodeNxmTunMetadata31(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata31, error) {
 	_nxmtunmetadata31 := &NxmTunMetadata31{Oxm: parent}
 	_nxmtunmetadata31.Value = decoder.Read(int(_nxmtunmetadata31.TypeLen & 0xFF))
 	return _nxmtunmetadata31, nil
@@ -12256,7 +12255,7 @@ type NxmTunMetadata31Masked struct {
 }
 
 type INxmTunMetadata31Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -12277,7 +12276,7 @@ func (self *NxmTunMetadata31Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata31Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata31Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12288,7 +12287,7 @@ func (self *NxmTunMetadata31Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata31Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata31Masked, error) {
+func DecodeNxmTunMetadata31Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata31Masked, error) {
 	_nxmtunmetadata31masked := &NxmTunMetadata31Masked{Oxm: parent}
 	_nxmtunmetadata31masked.Value = decoder.Read(int(_nxmtunmetadata31masked.TypeLen & 0xFF))
 	_nxmtunmetadata31masked.ValueMask = decoder.Read(int(_nxmtunmetadata31masked.TypeLen & 0xFF))
@@ -12331,7 +12330,7 @@ type NxmTunMetadata32 struct {
 }
 
 type INxmTunMetadata32 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -12343,7 +12342,7 @@ func (self *NxmTunMetadata32) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata32) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata32) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12353,7 +12352,7 @@ func (self *NxmTunMetadata32) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata32(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata32, error) {
+func DecodeNxmTunMetadata32(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata32, error) {
 	_nxmtunmetadata32 := &NxmTunMetadata32{Oxm: parent}
 	_nxmtunmetadata32.Value = decoder.Read(int(_nxmtunmetadata32.TypeLen & 0xFF))
 	return _nxmtunmetadata32, nil
@@ -12388,7 +12387,7 @@ type NxmTunMetadata32Masked struct {
 }
 
 type INxmTunMetadata32Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -12409,7 +12408,7 @@ func (self *NxmTunMetadata32Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata32Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata32Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12420,7 +12419,7 @@ func (self *NxmTunMetadata32Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata32Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata32Masked, error) {
+func DecodeNxmTunMetadata32Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata32Masked, error) {
 	_nxmtunmetadata32masked := &NxmTunMetadata32Masked{Oxm: parent}
 	_nxmtunmetadata32masked.Value = decoder.Read(int(_nxmtunmetadata32masked.TypeLen & 0xFF))
 	_nxmtunmetadata32masked.ValueMask = decoder.Read(int(_nxmtunmetadata32masked.TypeLen & 0xFF))
@@ -12463,7 +12462,7 @@ type NxmTunMetadata33 struct {
 }
 
 type INxmTunMetadata33 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -12475,7 +12474,7 @@ func (self *NxmTunMetadata33) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata33) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata33) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12485,7 +12484,7 @@ func (self *NxmTunMetadata33) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata33(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata33, error) {
+func DecodeNxmTunMetadata33(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata33, error) {
 	_nxmtunmetadata33 := &NxmTunMetadata33{Oxm: parent}
 	_nxmtunmetadata33.Value = decoder.Read(int(_nxmtunmetadata33.TypeLen & 0xFF))
 	return _nxmtunmetadata33, nil
@@ -12520,7 +12519,7 @@ type NxmTunMetadata33Masked struct {
 }
 
 type INxmTunMetadata33Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -12541,7 +12540,7 @@ func (self *NxmTunMetadata33Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata33Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata33Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12552,7 +12551,7 @@ func (self *NxmTunMetadata33Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata33Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata33Masked, error) {
+func DecodeNxmTunMetadata33Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata33Masked, error) {
 	_nxmtunmetadata33masked := &NxmTunMetadata33Masked{Oxm: parent}
 	_nxmtunmetadata33masked.Value = decoder.Read(int(_nxmtunmetadata33masked.TypeLen & 0xFF))
 	_nxmtunmetadata33masked.ValueMask = decoder.Read(int(_nxmtunmetadata33masked.TypeLen & 0xFF))
@@ -12595,7 +12594,7 @@ type NxmTunMetadata34 struct {
 }
 
 type INxmTunMetadata34 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -12607,7 +12606,7 @@ func (self *NxmTunMetadata34) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata34) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata34) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12617,7 +12616,7 @@ func (self *NxmTunMetadata34) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata34(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata34, error) {
+func DecodeNxmTunMetadata34(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata34, error) {
 	_nxmtunmetadata34 := &NxmTunMetadata34{Oxm: parent}
 	_nxmtunmetadata34.Value = decoder.Read(int(_nxmtunmetadata34.TypeLen & 0xFF))
 	return _nxmtunmetadata34, nil
@@ -12652,7 +12651,7 @@ type NxmTunMetadata34Masked struct {
 }
 
 type INxmTunMetadata34Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -12673,7 +12672,7 @@ func (self *NxmTunMetadata34Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata34Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata34Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12684,7 +12683,7 @@ func (self *NxmTunMetadata34Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata34Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata34Masked, error) {
+func DecodeNxmTunMetadata34Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata34Masked, error) {
 	_nxmtunmetadata34masked := &NxmTunMetadata34Masked{Oxm: parent}
 	_nxmtunmetadata34masked.Value = decoder.Read(int(_nxmtunmetadata34masked.TypeLen & 0xFF))
 	_nxmtunmetadata34masked.ValueMask = decoder.Read(int(_nxmtunmetadata34masked.TypeLen & 0xFF))
@@ -12727,7 +12726,7 @@ type NxmTunMetadata35 struct {
 }
 
 type INxmTunMetadata35 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -12739,7 +12738,7 @@ func (self *NxmTunMetadata35) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata35) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata35) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12749,7 +12748,7 @@ func (self *NxmTunMetadata35) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata35(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata35, error) {
+func DecodeNxmTunMetadata35(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata35, error) {
 	_nxmtunmetadata35 := &NxmTunMetadata35{Oxm: parent}
 	_nxmtunmetadata35.Value = decoder.Read(int(_nxmtunmetadata35.TypeLen & 0xFF))
 	return _nxmtunmetadata35, nil
@@ -12784,7 +12783,7 @@ type NxmTunMetadata35Masked struct {
 }
 
 type INxmTunMetadata35Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -12805,7 +12804,7 @@ func (self *NxmTunMetadata35Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata35Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata35Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12816,7 +12815,7 @@ func (self *NxmTunMetadata35Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata35Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata35Masked, error) {
+func DecodeNxmTunMetadata35Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata35Masked, error) {
 	_nxmtunmetadata35masked := &NxmTunMetadata35Masked{Oxm: parent}
 	_nxmtunmetadata35masked.Value = decoder.Read(int(_nxmtunmetadata35masked.TypeLen & 0xFF))
 	_nxmtunmetadata35masked.ValueMask = decoder.Read(int(_nxmtunmetadata35masked.TypeLen & 0xFF))
@@ -12859,7 +12858,7 @@ type NxmTunMetadata36 struct {
 }
 
 type INxmTunMetadata36 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -12871,7 +12870,7 @@ func (self *NxmTunMetadata36) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata36) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata36) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12881,7 +12880,7 @@ func (self *NxmTunMetadata36) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata36(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata36, error) {
+func DecodeNxmTunMetadata36(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata36, error) {
 	_nxmtunmetadata36 := &NxmTunMetadata36{Oxm: parent}
 	_nxmtunmetadata36.Value = decoder.Read(int(_nxmtunmetadata36.TypeLen & 0xFF))
 	return _nxmtunmetadata36, nil
@@ -12916,7 +12915,7 @@ type NxmTunMetadata36Masked struct {
 }
 
 type INxmTunMetadata36Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -12937,7 +12936,7 @@ func (self *NxmTunMetadata36Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata36Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata36Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -12948,7 +12947,7 @@ func (self *NxmTunMetadata36Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata36Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata36Masked, error) {
+func DecodeNxmTunMetadata36Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata36Masked, error) {
 	_nxmtunmetadata36masked := &NxmTunMetadata36Masked{Oxm: parent}
 	_nxmtunmetadata36masked.Value = decoder.Read(int(_nxmtunmetadata36masked.TypeLen & 0xFF))
 	_nxmtunmetadata36masked.ValueMask = decoder.Read(int(_nxmtunmetadata36masked.TypeLen & 0xFF))
@@ -12991,7 +12990,7 @@ type NxmTunMetadata37 struct {
 }
 
 type INxmTunMetadata37 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -13003,7 +13002,7 @@ func (self *NxmTunMetadata37) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata37) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata37) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13013,7 +13012,7 @@ func (self *NxmTunMetadata37) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata37(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata37, error) {
+func DecodeNxmTunMetadata37(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata37, error) {
 	_nxmtunmetadata37 := &NxmTunMetadata37{Oxm: parent}
 	_nxmtunmetadata37.Value = decoder.Read(int(_nxmtunmetadata37.TypeLen & 0xFF))
 	return _nxmtunmetadata37, nil
@@ -13048,7 +13047,7 @@ type NxmTunMetadata37Masked struct {
 }
 
 type INxmTunMetadata37Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -13069,7 +13068,7 @@ func (self *NxmTunMetadata37Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata37Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata37Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13080,7 +13079,7 @@ func (self *NxmTunMetadata37Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata37Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata37Masked, error) {
+func DecodeNxmTunMetadata37Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata37Masked, error) {
 	_nxmtunmetadata37masked := &NxmTunMetadata37Masked{Oxm: parent}
 	_nxmtunmetadata37masked.Value = decoder.Read(int(_nxmtunmetadata37masked.TypeLen & 0xFF))
 	_nxmtunmetadata37masked.ValueMask = decoder.Read(int(_nxmtunmetadata37masked.TypeLen & 0xFF))
@@ -13123,7 +13122,7 @@ type NxmTunMetadata38 struct {
 }
 
 type INxmTunMetadata38 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -13135,7 +13134,7 @@ func (self *NxmTunMetadata38) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata38) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata38) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13145,7 +13144,7 @@ func (self *NxmTunMetadata38) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata38(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata38, error) {
+func DecodeNxmTunMetadata38(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata38, error) {
 	_nxmtunmetadata38 := &NxmTunMetadata38{Oxm: parent}
 	_nxmtunmetadata38.Value = decoder.Read(int(_nxmtunmetadata38.TypeLen & 0xFF))
 	return _nxmtunmetadata38, nil
@@ -13180,7 +13179,7 @@ type NxmTunMetadata38Masked struct {
 }
 
 type INxmTunMetadata38Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -13201,7 +13200,7 @@ func (self *NxmTunMetadata38Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata38Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata38Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13212,7 +13211,7 @@ func (self *NxmTunMetadata38Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata38Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata38Masked, error) {
+func DecodeNxmTunMetadata38Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata38Masked, error) {
 	_nxmtunmetadata38masked := &NxmTunMetadata38Masked{Oxm: parent}
 	_nxmtunmetadata38masked.Value = decoder.Read(int(_nxmtunmetadata38masked.TypeLen & 0xFF))
 	_nxmtunmetadata38masked.ValueMask = decoder.Read(int(_nxmtunmetadata38masked.TypeLen & 0xFF))
@@ -13255,7 +13254,7 @@ type NxmTunMetadata39 struct {
 }
 
 type INxmTunMetadata39 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -13267,7 +13266,7 @@ func (self *NxmTunMetadata39) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata39) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata39) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13277,7 +13276,7 @@ func (self *NxmTunMetadata39) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata39(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata39, error) {
+func DecodeNxmTunMetadata39(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata39, error) {
 	_nxmtunmetadata39 := &NxmTunMetadata39{Oxm: parent}
 	_nxmtunmetadata39.Value = decoder.Read(int(_nxmtunmetadata39.TypeLen & 0xFF))
 	return _nxmtunmetadata39, nil
@@ -13312,7 +13311,7 @@ type NxmTunMetadata39Masked struct {
 }
 
 type INxmTunMetadata39Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -13333,7 +13332,7 @@ func (self *NxmTunMetadata39Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata39Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata39Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13344,7 +13343,7 @@ func (self *NxmTunMetadata39Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata39Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata39Masked, error) {
+func DecodeNxmTunMetadata39Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata39Masked, error) {
 	_nxmtunmetadata39masked := &NxmTunMetadata39Masked{Oxm: parent}
 	_nxmtunmetadata39masked.Value = decoder.Read(int(_nxmtunmetadata39masked.TypeLen & 0xFF))
 	_nxmtunmetadata39masked.ValueMask = decoder.Read(int(_nxmtunmetadata39masked.TypeLen & 0xFF))
@@ -13388,7 +13387,7 @@ type NxmTunMetadata3Masked struct {
 }
 
 type INxmTunMetadata3Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -13409,7 +13408,7 @@ func (self *NxmTunMetadata3Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata3Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata3Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13420,7 +13419,7 @@ func (self *NxmTunMetadata3Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata3Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata3Masked, error) {
+func DecodeNxmTunMetadata3Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata3Masked, error) {
 	_nxmtunmetadata3masked := &NxmTunMetadata3Masked{Oxm: parent}
 	_nxmtunmetadata3masked.Value = decoder.Read(int(_nxmtunmetadata3masked.TypeLen & 0xFF))
 	_nxmtunmetadata3masked.ValueMask = decoder.Read(int(_nxmtunmetadata3masked.TypeLen & 0xFF))
@@ -13463,7 +13462,7 @@ type NxmTunMetadata4 struct {
 }
 
 type INxmTunMetadata4 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -13475,7 +13474,7 @@ func (self *NxmTunMetadata4) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata4) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata4) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13485,7 +13484,7 @@ func (self *NxmTunMetadata4) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata4(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata4, error) {
+func DecodeNxmTunMetadata4(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata4, error) {
 	_nxmtunmetadata4 := &NxmTunMetadata4{Oxm: parent}
 	_nxmtunmetadata4.Value = decoder.Read(int(_nxmtunmetadata4.TypeLen & 0xFF))
 	return _nxmtunmetadata4, nil
@@ -13519,7 +13518,7 @@ type NxmTunMetadata40 struct {
 }
 
 type INxmTunMetadata40 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -13531,7 +13530,7 @@ func (self *NxmTunMetadata40) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata40) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata40) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13541,7 +13540,7 @@ func (self *NxmTunMetadata40) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata40(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata40, error) {
+func DecodeNxmTunMetadata40(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata40, error) {
 	_nxmtunmetadata40 := &NxmTunMetadata40{Oxm: parent}
 	_nxmtunmetadata40.Value = decoder.Read(int(_nxmtunmetadata40.TypeLen & 0xFF))
 	return _nxmtunmetadata40, nil
@@ -13576,7 +13575,7 @@ type NxmTunMetadata40Masked struct {
 }
 
 type INxmTunMetadata40Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -13597,7 +13596,7 @@ func (self *NxmTunMetadata40Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata40Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata40Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13608,7 +13607,7 @@ func (self *NxmTunMetadata40Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata40Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata40Masked, error) {
+func DecodeNxmTunMetadata40Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata40Masked, error) {
 	_nxmtunmetadata40masked := &NxmTunMetadata40Masked{Oxm: parent}
 	_nxmtunmetadata40masked.Value = decoder.Read(int(_nxmtunmetadata40masked.TypeLen & 0xFF))
 	_nxmtunmetadata40masked.ValueMask = decoder.Read(int(_nxmtunmetadata40masked.TypeLen & 0xFF))
@@ -13651,7 +13650,7 @@ type NxmTunMetadata41 struct {
 }
 
 type INxmTunMetadata41 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -13663,7 +13662,7 @@ func (self *NxmTunMetadata41) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata41) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata41) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13673,7 +13672,7 @@ func (self *NxmTunMetadata41) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata41(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata41, error) {
+func DecodeNxmTunMetadata41(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata41, error) {
 	_nxmtunmetadata41 := &NxmTunMetadata41{Oxm: parent}
 	_nxmtunmetadata41.Value = decoder.Read(int(_nxmtunmetadata41.TypeLen & 0xFF))
 	return _nxmtunmetadata41, nil
@@ -13708,7 +13707,7 @@ type NxmTunMetadata41Masked struct {
 }
 
 type INxmTunMetadata41Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -13729,7 +13728,7 @@ func (self *NxmTunMetadata41Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata41Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata41Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13740,7 +13739,7 @@ func (self *NxmTunMetadata41Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata41Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata41Masked, error) {
+func DecodeNxmTunMetadata41Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata41Masked, error) {
 	_nxmtunmetadata41masked := &NxmTunMetadata41Masked{Oxm: parent}
 	_nxmtunmetadata41masked.Value = decoder.Read(int(_nxmtunmetadata41masked.TypeLen & 0xFF))
 	_nxmtunmetadata41masked.ValueMask = decoder.Read(int(_nxmtunmetadata41masked.TypeLen & 0xFF))
@@ -13783,7 +13782,7 @@ type NxmTunMetadata42 struct {
 }
 
 type INxmTunMetadata42 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -13795,7 +13794,7 @@ func (self *NxmTunMetadata42) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata42) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata42) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13805,7 +13804,7 @@ func (self *NxmTunMetadata42) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata42(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata42, error) {
+func DecodeNxmTunMetadata42(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata42, error) {
 	_nxmtunmetadata42 := &NxmTunMetadata42{Oxm: parent}
 	_nxmtunmetadata42.Value = decoder.Read(int(_nxmtunmetadata42.TypeLen & 0xFF))
 	return _nxmtunmetadata42, nil
@@ -13840,7 +13839,7 @@ type NxmTunMetadata42Masked struct {
 }
 
 type INxmTunMetadata42Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -13861,7 +13860,7 @@ func (self *NxmTunMetadata42Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata42Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata42Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13872,7 +13871,7 @@ func (self *NxmTunMetadata42Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata42Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata42Masked, error) {
+func DecodeNxmTunMetadata42Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata42Masked, error) {
 	_nxmtunmetadata42masked := &NxmTunMetadata42Masked{Oxm: parent}
 	_nxmtunmetadata42masked.Value = decoder.Read(int(_nxmtunmetadata42masked.TypeLen & 0xFF))
 	_nxmtunmetadata42masked.ValueMask = decoder.Read(int(_nxmtunmetadata42masked.TypeLen & 0xFF))
@@ -13915,7 +13914,7 @@ type NxmTunMetadata43 struct {
 }
 
 type INxmTunMetadata43 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -13927,7 +13926,7 @@ func (self *NxmTunMetadata43) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata43) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata43) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -13937,7 +13936,7 @@ func (self *NxmTunMetadata43) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata43(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata43, error) {
+func DecodeNxmTunMetadata43(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata43, error) {
 	_nxmtunmetadata43 := &NxmTunMetadata43{Oxm: parent}
 	_nxmtunmetadata43.Value = decoder.Read(int(_nxmtunmetadata43.TypeLen & 0xFF))
 	return _nxmtunmetadata43, nil
@@ -13972,7 +13971,7 @@ type NxmTunMetadata43Masked struct {
 }
 
 type INxmTunMetadata43Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -13993,7 +13992,7 @@ func (self *NxmTunMetadata43Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata43Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata43Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14004,7 +14003,7 @@ func (self *NxmTunMetadata43Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata43Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata43Masked, error) {
+func DecodeNxmTunMetadata43Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata43Masked, error) {
 	_nxmtunmetadata43masked := &NxmTunMetadata43Masked{Oxm: parent}
 	_nxmtunmetadata43masked.Value = decoder.Read(int(_nxmtunmetadata43masked.TypeLen & 0xFF))
 	_nxmtunmetadata43masked.ValueMask = decoder.Read(int(_nxmtunmetadata43masked.TypeLen & 0xFF))
@@ -14047,7 +14046,7 @@ type NxmTunMetadata44 struct {
 }
 
 type INxmTunMetadata44 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -14059,7 +14058,7 @@ func (self *NxmTunMetadata44) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata44) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata44) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14069,7 +14068,7 @@ func (self *NxmTunMetadata44) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata44(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata44, error) {
+func DecodeNxmTunMetadata44(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata44, error) {
 	_nxmtunmetadata44 := &NxmTunMetadata44{Oxm: parent}
 	_nxmtunmetadata44.Value = decoder.Read(int(_nxmtunmetadata44.TypeLen & 0xFF))
 	return _nxmtunmetadata44, nil
@@ -14104,7 +14103,7 @@ type NxmTunMetadata44Masked struct {
 }
 
 type INxmTunMetadata44Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -14125,7 +14124,7 @@ func (self *NxmTunMetadata44Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata44Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata44Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14136,7 +14135,7 @@ func (self *NxmTunMetadata44Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata44Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata44Masked, error) {
+func DecodeNxmTunMetadata44Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata44Masked, error) {
 	_nxmtunmetadata44masked := &NxmTunMetadata44Masked{Oxm: parent}
 	_nxmtunmetadata44masked.Value = decoder.Read(int(_nxmtunmetadata44masked.TypeLen & 0xFF))
 	_nxmtunmetadata44masked.ValueMask = decoder.Read(int(_nxmtunmetadata44masked.TypeLen & 0xFF))
@@ -14179,7 +14178,7 @@ type NxmTunMetadata45 struct {
 }
 
 type INxmTunMetadata45 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -14191,7 +14190,7 @@ func (self *NxmTunMetadata45) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata45) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata45) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14201,7 +14200,7 @@ func (self *NxmTunMetadata45) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata45(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata45, error) {
+func DecodeNxmTunMetadata45(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata45, error) {
 	_nxmtunmetadata45 := &NxmTunMetadata45{Oxm: parent}
 	_nxmtunmetadata45.Value = decoder.Read(int(_nxmtunmetadata45.TypeLen & 0xFF))
 	return _nxmtunmetadata45, nil
@@ -14236,7 +14235,7 @@ type NxmTunMetadata45Masked struct {
 }
 
 type INxmTunMetadata45Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -14257,7 +14256,7 @@ func (self *NxmTunMetadata45Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata45Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata45Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14268,7 +14267,7 @@ func (self *NxmTunMetadata45Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata45Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata45Masked, error) {
+func DecodeNxmTunMetadata45Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata45Masked, error) {
 	_nxmtunmetadata45masked := &NxmTunMetadata45Masked{Oxm: parent}
 	_nxmtunmetadata45masked.Value = decoder.Read(int(_nxmtunmetadata45masked.TypeLen & 0xFF))
 	_nxmtunmetadata45masked.ValueMask = decoder.Read(int(_nxmtunmetadata45masked.TypeLen & 0xFF))
@@ -14311,7 +14310,7 @@ type NxmTunMetadata46 struct {
 }
 
 type INxmTunMetadata46 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -14323,7 +14322,7 @@ func (self *NxmTunMetadata46) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata46) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata46) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14333,7 +14332,7 @@ func (self *NxmTunMetadata46) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata46(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata46, error) {
+func DecodeNxmTunMetadata46(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata46, error) {
 	_nxmtunmetadata46 := &NxmTunMetadata46{Oxm: parent}
 	_nxmtunmetadata46.Value = decoder.Read(int(_nxmtunmetadata46.TypeLen & 0xFF))
 	return _nxmtunmetadata46, nil
@@ -14368,7 +14367,7 @@ type NxmTunMetadata46Masked struct {
 }
 
 type INxmTunMetadata46Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -14389,7 +14388,7 @@ func (self *NxmTunMetadata46Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata46Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata46Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14400,7 +14399,7 @@ func (self *NxmTunMetadata46Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata46Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata46Masked, error) {
+func DecodeNxmTunMetadata46Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata46Masked, error) {
 	_nxmtunmetadata46masked := &NxmTunMetadata46Masked{Oxm: parent}
 	_nxmtunmetadata46masked.Value = decoder.Read(int(_nxmtunmetadata46masked.TypeLen & 0xFF))
 	_nxmtunmetadata46masked.ValueMask = decoder.Read(int(_nxmtunmetadata46masked.TypeLen & 0xFF))
@@ -14443,7 +14442,7 @@ type NxmTunMetadata47 struct {
 }
 
 type INxmTunMetadata47 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -14455,7 +14454,7 @@ func (self *NxmTunMetadata47) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata47) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata47) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14465,7 +14464,7 @@ func (self *NxmTunMetadata47) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata47(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata47, error) {
+func DecodeNxmTunMetadata47(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata47, error) {
 	_nxmtunmetadata47 := &NxmTunMetadata47{Oxm: parent}
 	_nxmtunmetadata47.Value = decoder.Read(int(_nxmtunmetadata47.TypeLen & 0xFF))
 	return _nxmtunmetadata47, nil
@@ -14500,7 +14499,7 @@ type NxmTunMetadata47Masked struct {
 }
 
 type INxmTunMetadata47Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -14521,7 +14520,7 @@ func (self *NxmTunMetadata47Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata47Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata47Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14532,7 +14531,7 @@ func (self *NxmTunMetadata47Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata47Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata47Masked, error) {
+func DecodeNxmTunMetadata47Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata47Masked, error) {
 	_nxmtunmetadata47masked := &NxmTunMetadata47Masked{Oxm: parent}
 	_nxmtunmetadata47masked.Value = decoder.Read(int(_nxmtunmetadata47masked.TypeLen & 0xFF))
 	_nxmtunmetadata47masked.ValueMask = decoder.Read(int(_nxmtunmetadata47masked.TypeLen & 0xFF))
@@ -14575,7 +14574,7 @@ type NxmTunMetadata48 struct {
 }
 
 type INxmTunMetadata48 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -14587,7 +14586,7 @@ func (self *NxmTunMetadata48) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata48) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata48) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14597,7 +14596,7 @@ func (self *NxmTunMetadata48) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata48(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata48, error) {
+func DecodeNxmTunMetadata48(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata48, error) {
 	_nxmtunmetadata48 := &NxmTunMetadata48{Oxm: parent}
 	_nxmtunmetadata48.Value = decoder.Read(int(_nxmtunmetadata48.TypeLen & 0xFF))
 	return _nxmtunmetadata48, nil
@@ -14632,7 +14631,7 @@ type NxmTunMetadata48Masked struct {
 }
 
 type INxmTunMetadata48Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -14653,7 +14652,7 @@ func (self *NxmTunMetadata48Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata48Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata48Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14664,7 +14663,7 @@ func (self *NxmTunMetadata48Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata48Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata48Masked, error) {
+func DecodeNxmTunMetadata48Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata48Masked, error) {
 	_nxmtunmetadata48masked := &NxmTunMetadata48Masked{Oxm: parent}
 	_nxmtunmetadata48masked.Value = decoder.Read(int(_nxmtunmetadata48masked.TypeLen & 0xFF))
 	_nxmtunmetadata48masked.ValueMask = decoder.Read(int(_nxmtunmetadata48masked.TypeLen & 0xFF))
@@ -14707,7 +14706,7 @@ type NxmTunMetadata49 struct {
 }
 
 type INxmTunMetadata49 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -14719,7 +14718,7 @@ func (self *NxmTunMetadata49) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata49) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata49) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14729,7 +14728,7 @@ func (self *NxmTunMetadata49) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata49(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata49, error) {
+func DecodeNxmTunMetadata49(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata49, error) {
 	_nxmtunmetadata49 := &NxmTunMetadata49{Oxm: parent}
 	_nxmtunmetadata49.Value = decoder.Read(int(_nxmtunmetadata49.TypeLen & 0xFF))
 	return _nxmtunmetadata49, nil
@@ -14764,7 +14763,7 @@ type NxmTunMetadata49Masked struct {
 }
 
 type INxmTunMetadata49Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -14785,7 +14784,7 @@ func (self *NxmTunMetadata49Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata49Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata49Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14796,7 +14795,7 @@ func (self *NxmTunMetadata49Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata49Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata49Masked, error) {
+func DecodeNxmTunMetadata49Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata49Masked, error) {
 	_nxmtunmetadata49masked := &NxmTunMetadata49Masked{Oxm: parent}
 	_nxmtunmetadata49masked.Value = decoder.Read(int(_nxmtunmetadata49masked.TypeLen & 0xFF))
 	_nxmtunmetadata49masked.ValueMask = decoder.Read(int(_nxmtunmetadata49masked.TypeLen & 0xFF))
@@ -14840,7 +14839,7 @@ type NxmTunMetadata4Masked struct {
 }
 
 type INxmTunMetadata4Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -14861,7 +14860,7 @@ func (self *NxmTunMetadata4Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata4Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata4Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14872,7 +14871,7 @@ func (self *NxmTunMetadata4Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata4Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata4Masked, error) {
+func DecodeNxmTunMetadata4Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata4Masked, error) {
 	_nxmtunmetadata4masked := &NxmTunMetadata4Masked{Oxm: parent}
 	_nxmtunmetadata4masked.Value = decoder.Read(int(_nxmtunmetadata4masked.TypeLen & 0xFF))
 	_nxmtunmetadata4masked.ValueMask = decoder.Read(int(_nxmtunmetadata4masked.TypeLen & 0xFF))
@@ -14915,7 +14914,7 @@ type NxmTunMetadata5 struct {
 }
 
 type INxmTunMetadata5 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -14927,7 +14926,7 @@ func (self *NxmTunMetadata5) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata5) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata5) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14937,7 +14936,7 @@ func (self *NxmTunMetadata5) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata5(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata5, error) {
+func DecodeNxmTunMetadata5(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata5, error) {
 	_nxmtunmetadata5 := &NxmTunMetadata5{Oxm: parent}
 	_nxmtunmetadata5.Value = decoder.Read(int(_nxmtunmetadata5.TypeLen & 0xFF))
 	return _nxmtunmetadata5, nil
@@ -14971,7 +14970,7 @@ type NxmTunMetadata50 struct {
 }
 
 type INxmTunMetadata50 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -14983,7 +14982,7 @@ func (self *NxmTunMetadata50) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata50) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata50) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -14993,7 +14992,7 @@ func (self *NxmTunMetadata50) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata50(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata50, error) {
+func DecodeNxmTunMetadata50(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata50, error) {
 	_nxmtunmetadata50 := &NxmTunMetadata50{Oxm: parent}
 	_nxmtunmetadata50.Value = decoder.Read(int(_nxmtunmetadata50.TypeLen & 0xFF))
 	return _nxmtunmetadata50, nil
@@ -15028,7 +15027,7 @@ type NxmTunMetadata50Masked struct {
 }
 
 type INxmTunMetadata50Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -15049,7 +15048,7 @@ func (self *NxmTunMetadata50Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata50Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata50Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15060,7 +15059,7 @@ func (self *NxmTunMetadata50Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata50Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata50Masked, error) {
+func DecodeNxmTunMetadata50Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata50Masked, error) {
 	_nxmtunmetadata50masked := &NxmTunMetadata50Masked{Oxm: parent}
 	_nxmtunmetadata50masked.Value = decoder.Read(int(_nxmtunmetadata50masked.TypeLen & 0xFF))
 	_nxmtunmetadata50masked.ValueMask = decoder.Read(int(_nxmtunmetadata50masked.TypeLen & 0xFF))
@@ -15103,7 +15102,7 @@ type NxmTunMetadata51 struct {
 }
 
 type INxmTunMetadata51 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -15115,7 +15114,7 @@ func (self *NxmTunMetadata51) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata51) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata51) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15125,7 +15124,7 @@ func (self *NxmTunMetadata51) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata51(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata51, error) {
+func DecodeNxmTunMetadata51(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata51, error) {
 	_nxmtunmetadata51 := &NxmTunMetadata51{Oxm: parent}
 	_nxmtunmetadata51.Value = decoder.Read(int(_nxmtunmetadata51.TypeLen & 0xFF))
 	return _nxmtunmetadata51, nil
@@ -15160,7 +15159,7 @@ type NxmTunMetadata51Masked struct {
 }
 
 type INxmTunMetadata51Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -15181,7 +15180,7 @@ func (self *NxmTunMetadata51Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata51Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata51Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15192,7 +15191,7 @@ func (self *NxmTunMetadata51Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata51Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata51Masked, error) {
+func DecodeNxmTunMetadata51Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata51Masked, error) {
 	_nxmtunmetadata51masked := &NxmTunMetadata51Masked{Oxm: parent}
 	_nxmtunmetadata51masked.Value = decoder.Read(int(_nxmtunmetadata51masked.TypeLen & 0xFF))
 	_nxmtunmetadata51masked.ValueMask = decoder.Read(int(_nxmtunmetadata51masked.TypeLen & 0xFF))
@@ -15235,7 +15234,7 @@ type NxmTunMetadata52 struct {
 }
 
 type INxmTunMetadata52 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -15247,7 +15246,7 @@ func (self *NxmTunMetadata52) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata52) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata52) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15257,7 +15256,7 @@ func (self *NxmTunMetadata52) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata52(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata52, error) {
+func DecodeNxmTunMetadata52(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata52, error) {
 	_nxmtunmetadata52 := &NxmTunMetadata52{Oxm: parent}
 	_nxmtunmetadata52.Value = decoder.Read(int(_nxmtunmetadata52.TypeLen & 0xFF))
 	return _nxmtunmetadata52, nil
@@ -15292,7 +15291,7 @@ type NxmTunMetadata52Masked struct {
 }
 
 type INxmTunMetadata52Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -15313,7 +15312,7 @@ func (self *NxmTunMetadata52Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata52Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata52Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15324,7 +15323,7 @@ func (self *NxmTunMetadata52Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata52Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata52Masked, error) {
+func DecodeNxmTunMetadata52Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata52Masked, error) {
 	_nxmtunmetadata52masked := &NxmTunMetadata52Masked{Oxm: parent}
 	_nxmtunmetadata52masked.Value = decoder.Read(int(_nxmtunmetadata52masked.TypeLen & 0xFF))
 	_nxmtunmetadata52masked.ValueMask = decoder.Read(int(_nxmtunmetadata52masked.TypeLen & 0xFF))
@@ -15367,7 +15366,7 @@ type NxmTunMetadata53 struct {
 }
 
 type INxmTunMetadata53 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -15379,7 +15378,7 @@ func (self *NxmTunMetadata53) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata53) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata53) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15389,7 +15388,7 @@ func (self *NxmTunMetadata53) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata53(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata53, error) {
+func DecodeNxmTunMetadata53(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata53, error) {
 	_nxmtunmetadata53 := &NxmTunMetadata53{Oxm: parent}
 	_nxmtunmetadata53.Value = decoder.Read(int(_nxmtunmetadata53.TypeLen & 0xFF))
 	return _nxmtunmetadata53, nil
@@ -15424,7 +15423,7 @@ type NxmTunMetadata53Masked struct {
 }
 
 type INxmTunMetadata53Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -15445,7 +15444,7 @@ func (self *NxmTunMetadata53Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata53Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata53Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15456,7 +15455,7 @@ func (self *NxmTunMetadata53Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata53Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata53Masked, error) {
+func DecodeNxmTunMetadata53Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata53Masked, error) {
 	_nxmtunmetadata53masked := &NxmTunMetadata53Masked{Oxm: parent}
 	_nxmtunmetadata53masked.Value = decoder.Read(int(_nxmtunmetadata53masked.TypeLen & 0xFF))
 	_nxmtunmetadata53masked.ValueMask = decoder.Read(int(_nxmtunmetadata53masked.TypeLen & 0xFF))
@@ -15499,7 +15498,7 @@ type NxmTunMetadata54 struct {
 }
 
 type INxmTunMetadata54 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -15511,7 +15510,7 @@ func (self *NxmTunMetadata54) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata54) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata54) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15521,7 +15520,7 @@ func (self *NxmTunMetadata54) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata54(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata54, error) {
+func DecodeNxmTunMetadata54(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata54, error) {
 	_nxmtunmetadata54 := &NxmTunMetadata54{Oxm: parent}
 	_nxmtunmetadata54.Value = decoder.Read(int(_nxmtunmetadata54.TypeLen & 0xFF))
 	return _nxmtunmetadata54, nil
@@ -15556,7 +15555,7 @@ type NxmTunMetadata54Masked struct {
 }
 
 type INxmTunMetadata54Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -15577,7 +15576,7 @@ func (self *NxmTunMetadata54Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata54Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata54Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15588,7 +15587,7 @@ func (self *NxmTunMetadata54Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata54Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata54Masked, error) {
+func DecodeNxmTunMetadata54Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata54Masked, error) {
 	_nxmtunmetadata54masked := &NxmTunMetadata54Masked{Oxm: parent}
 	_nxmtunmetadata54masked.Value = decoder.Read(int(_nxmtunmetadata54masked.TypeLen & 0xFF))
 	_nxmtunmetadata54masked.ValueMask = decoder.Read(int(_nxmtunmetadata54masked.TypeLen & 0xFF))
@@ -15631,7 +15630,7 @@ type NxmTunMetadata55 struct {
 }
 
 type INxmTunMetadata55 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -15643,7 +15642,7 @@ func (self *NxmTunMetadata55) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata55) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata55) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15653,7 +15652,7 @@ func (self *NxmTunMetadata55) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata55(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata55, error) {
+func DecodeNxmTunMetadata55(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata55, error) {
 	_nxmtunmetadata55 := &NxmTunMetadata55{Oxm: parent}
 	_nxmtunmetadata55.Value = decoder.Read(int(_nxmtunmetadata55.TypeLen & 0xFF))
 	return _nxmtunmetadata55, nil
@@ -15688,7 +15687,7 @@ type NxmTunMetadata55Masked struct {
 }
 
 type INxmTunMetadata55Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -15709,7 +15708,7 @@ func (self *NxmTunMetadata55Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata55Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata55Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15720,7 +15719,7 @@ func (self *NxmTunMetadata55Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata55Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata55Masked, error) {
+func DecodeNxmTunMetadata55Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata55Masked, error) {
 	_nxmtunmetadata55masked := &NxmTunMetadata55Masked{Oxm: parent}
 	_nxmtunmetadata55masked.Value = decoder.Read(int(_nxmtunmetadata55masked.TypeLen & 0xFF))
 	_nxmtunmetadata55masked.ValueMask = decoder.Read(int(_nxmtunmetadata55masked.TypeLen & 0xFF))
@@ -15763,7 +15762,7 @@ type NxmTunMetadata56 struct {
 }
 
 type INxmTunMetadata56 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -15775,7 +15774,7 @@ func (self *NxmTunMetadata56) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata56) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata56) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15785,7 +15784,7 @@ func (self *NxmTunMetadata56) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata56(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata56, error) {
+func DecodeNxmTunMetadata56(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata56, error) {
 	_nxmtunmetadata56 := &NxmTunMetadata56{Oxm: parent}
 	_nxmtunmetadata56.Value = decoder.Read(int(_nxmtunmetadata56.TypeLen & 0xFF))
 	return _nxmtunmetadata56, nil
@@ -15820,7 +15819,7 @@ type NxmTunMetadata56Masked struct {
 }
 
 type INxmTunMetadata56Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -15841,7 +15840,7 @@ func (self *NxmTunMetadata56Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata56Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata56Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15852,7 +15851,7 @@ func (self *NxmTunMetadata56Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata56Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata56Masked, error) {
+func DecodeNxmTunMetadata56Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata56Masked, error) {
 	_nxmtunmetadata56masked := &NxmTunMetadata56Masked{Oxm: parent}
 	_nxmtunmetadata56masked.Value = decoder.Read(int(_nxmtunmetadata56masked.TypeLen & 0xFF))
 	_nxmtunmetadata56masked.ValueMask = decoder.Read(int(_nxmtunmetadata56masked.TypeLen & 0xFF))
@@ -15895,7 +15894,7 @@ type NxmTunMetadata57 struct {
 }
 
 type INxmTunMetadata57 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -15907,7 +15906,7 @@ func (self *NxmTunMetadata57) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata57) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata57) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15917,7 +15916,7 @@ func (self *NxmTunMetadata57) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata57(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata57, error) {
+func DecodeNxmTunMetadata57(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata57, error) {
 	_nxmtunmetadata57 := &NxmTunMetadata57{Oxm: parent}
 	_nxmtunmetadata57.Value = decoder.Read(int(_nxmtunmetadata57.TypeLen & 0xFF))
 	return _nxmtunmetadata57, nil
@@ -15952,7 +15951,7 @@ type NxmTunMetadata57Masked struct {
 }
 
 type INxmTunMetadata57Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -15973,7 +15972,7 @@ func (self *NxmTunMetadata57Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata57Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata57Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -15984,7 +15983,7 @@ func (self *NxmTunMetadata57Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata57Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata57Masked, error) {
+func DecodeNxmTunMetadata57Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata57Masked, error) {
 	_nxmtunmetadata57masked := &NxmTunMetadata57Masked{Oxm: parent}
 	_nxmtunmetadata57masked.Value = decoder.Read(int(_nxmtunmetadata57masked.TypeLen & 0xFF))
 	_nxmtunmetadata57masked.ValueMask = decoder.Read(int(_nxmtunmetadata57masked.TypeLen & 0xFF))
@@ -16027,7 +16026,7 @@ type NxmTunMetadata58 struct {
 }
 
 type INxmTunMetadata58 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -16039,7 +16038,7 @@ func (self *NxmTunMetadata58) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata58) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata58) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16049,7 +16048,7 @@ func (self *NxmTunMetadata58) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata58(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata58, error) {
+func DecodeNxmTunMetadata58(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata58, error) {
 	_nxmtunmetadata58 := &NxmTunMetadata58{Oxm: parent}
 	_nxmtunmetadata58.Value = decoder.Read(int(_nxmtunmetadata58.TypeLen & 0xFF))
 	return _nxmtunmetadata58, nil
@@ -16084,7 +16083,7 @@ type NxmTunMetadata58Masked struct {
 }
 
 type INxmTunMetadata58Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -16105,7 +16104,7 @@ func (self *NxmTunMetadata58Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata58Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata58Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16116,7 +16115,7 @@ func (self *NxmTunMetadata58Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata58Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata58Masked, error) {
+func DecodeNxmTunMetadata58Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata58Masked, error) {
 	_nxmtunmetadata58masked := &NxmTunMetadata58Masked{Oxm: parent}
 	_nxmtunmetadata58masked.Value = decoder.Read(int(_nxmtunmetadata58masked.TypeLen & 0xFF))
 	_nxmtunmetadata58masked.ValueMask = decoder.Read(int(_nxmtunmetadata58masked.TypeLen & 0xFF))
@@ -16159,7 +16158,7 @@ type NxmTunMetadata59 struct {
 }
 
 type INxmTunMetadata59 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -16171,7 +16170,7 @@ func (self *NxmTunMetadata59) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata59) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata59) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16181,7 +16180,7 @@ func (self *NxmTunMetadata59) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata59(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata59, error) {
+func DecodeNxmTunMetadata59(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata59, error) {
 	_nxmtunmetadata59 := &NxmTunMetadata59{Oxm: parent}
 	_nxmtunmetadata59.Value = decoder.Read(int(_nxmtunmetadata59.TypeLen & 0xFF))
 	return _nxmtunmetadata59, nil
@@ -16216,7 +16215,7 @@ type NxmTunMetadata59Masked struct {
 }
 
 type INxmTunMetadata59Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -16237,7 +16236,7 @@ func (self *NxmTunMetadata59Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata59Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata59Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16248,7 +16247,7 @@ func (self *NxmTunMetadata59Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata59Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata59Masked, error) {
+func DecodeNxmTunMetadata59Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata59Masked, error) {
 	_nxmtunmetadata59masked := &NxmTunMetadata59Masked{Oxm: parent}
 	_nxmtunmetadata59masked.Value = decoder.Read(int(_nxmtunmetadata59masked.TypeLen & 0xFF))
 	_nxmtunmetadata59masked.ValueMask = decoder.Read(int(_nxmtunmetadata59masked.TypeLen & 0xFF))
@@ -16292,7 +16291,7 @@ type NxmTunMetadata5Masked struct {
 }
 
 type INxmTunMetadata5Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -16313,7 +16312,7 @@ func (self *NxmTunMetadata5Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata5Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata5Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16324,7 +16323,7 @@ func (self *NxmTunMetadata5Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata5Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata5Masked, error) {
+func DecodeNxmTunMetadata5Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata5Masked, error) {
 	_nxmtunmetadata5masked := &NxmTunMetadata5Masked{Oxm: parent}
 	_nxmtunmetadata5masked.Value = decoder.Read(int(_nxmtunmetadata5masked.TypeLen & 0xFF))
 	_nxmtunmetadata5masked.ValueMask = decoder.Read(int(_nxmtunmetadata5masked.TypeLen & 0xFF))
@@ -16367,7 +16366,7 @@ type NxmTunMetadata6 struct {
 }
 
 type INxmTunMetadata6 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -16379,7 +16378,7 @@ func (self *NxmTunMetadata6) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata6) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata6) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16389,7 +16388,7 @@ func (self *NxmTunMetadata6) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata6(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata6, error) {
+func DecodeNxmTunMetadata6(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata6, error) {
 	_nxmtunmetadata6 := &NxmTunMetadata6{Oxm: parent}
 	_nxmtunmetadata6.Value = decoder.Read(int(_nxmtunmetadata6.TypeLen & 0xFF))
 	return _nxmtunmetadata6, nil
@@ -16423,7 +16422,7 @@ type NxmTunMetadata60 struct {
 }
 
 type INxmTunMetadata60 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -16435,7 +16434,7 @@ func (self *NxmTunMetadata60) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata60) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata60) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16445,7 +16444,7 @@ func (self *NxmTunMetadata60) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata60(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata60, error) {
+func DecodeNxmTunMetadata60(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata60, error) {
 	_nxmtunmetadata60 := &NxmTunMetadata60{Oxm: parent}
 	_nxmtunmetadata60.Value = decoder.Read(int(_nxmtunmetadata60.TypeLen & 0xFF))
 	return _nxmtunmetadata60, nil
@@ -16480,7 +16479,7 @@ type NxmTunMetadata60Masked struct {
 }
 
 type INxmTunMetadata60Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -16501,7 +16500,7 @@ func (self *NxmTunMetadata60Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata60Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata60Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16512,7 +16511,7 @@ func (self *NxmTunMetadata60Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata60Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata60Masked, error) {
+func DecodeNxmTunMetadata60Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata60Masked, error) {
 	_nxmtunmetadata60masked := &NxmTunMetadata60Masked{Oxm: parent}
 	_nxmtunmetadata60masked.Value = decoder.Read(int(_nxmtunmetadata60masked.TypeLen & 0xFF))
 	_nxmtunmetadata60masked.ValueMask = decoder.Read(int(_nxmtunmetadata60masked.TypeLen & 0xFF))
@@ -16555,7 +16554,7 @@ type NxmTunMetadata61 struct {
 }
 
 type INxmTunMetadata61 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -16567,7 +16566,7 @@ func (self *NxmTunMetadata61) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata61) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata61) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16577,7 +16576,7 @@ func (self *NxmTunMetadata61) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata61(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata61, error) {
+func DecodeNxmTunMetadata61(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata61, error) {
 	_nxmtunmetadata61 := &NxmTunMetadata61{Oxm: parent}
 	_nxmtunmetadata61.Value = decoder.Read(int(_nxmtunmetadata61.TypeLen & 0xFF))
 	return _nxmtunmetadata61, nil
@@ -16612,7 +16611,7 @@ type NxmTunMetadata61Masked struct {
 }
 
 type INxmTunMetadata61Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -16633,7 +16632,7 @@ func (self *NxmTunMetadata61Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata61Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata61Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16644,7 +16643,7 @@ func (self *NxmTunMetadata61Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata61Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata61Masked, error) {
+func DecodeNxmTunMetadata61Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata61Masked, error) {
 	_nxmtunmetadata61masked := &NxmTunMetadata61Masked{Oxm: parent}
 	_nxmtunmetadata61masked.Value = decoder.Read(int(_nxmtunmetadata61masked.TypeLen & 0xFF))
 	_nxmtunmetadata61masked.ValueMask = decoder.Read(int(_nxmtunmetadata61masked.TypeLen & 0xFF))
@@ -16687,7 +16686,7 @@ type NxmTunMetadata62 struct {
 }
 
 type INxmTunMetadata62 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -16699,7 +16698,7 @@ func (self *NxmTunMetadata62) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata62) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata62) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16709,7 +16708,7 @@ func (self *NxmTunMetadata62) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata62(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata62, error) {
+func DecodeNxmTunMetadata62(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata62, error) {
 	_nxmtunmetadata62 := &NxmTunMetadata62{Oxm: parent}
 	_nxmtunmetadata62.Value = decoder.Read(int(_nxmtunmetadata62.TypeLen & 0xFF))
 	return _nxmtunmetadata62, nil
@@ -16744,7 +16743,7 @@ type NxmTunMetadata62Masked struct {
 }
 
 type INxmTunMetadata62Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -16765,7 +16764,7 @@ func (self *NxmTunMetadata62Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata62Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata62Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16776,7 +16775,7 @@ func (self *NxmTunMetadata62Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata62Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata62Masked, error) {
+func DecodeNxmTunMetadata62Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata62Masked, error) {
 	_nxmtunmetadata62masked := &NxmTunMetadata62Masked{Oxm: parent}
 	_nxmtunmetadata62masked.Value = decoder.Read(int(_nxmtunmetadata62masked.TypeLen & 0xFF))
 	_nxmtunmetadata62masked.ValueMask = decoder.Read(int(_nxmtunmetadata62masked.TypeLen & 0xFF))
@@ -16819,7 +16818,7 @@ type NxmTunMetadata63 struct {
 }
 
 type INxmTunMetadata63 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -16831,7 +16830,7 @@ func (self *NxmTunMetadata63) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata63) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata63) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16841,7 +16840,7 @@ func (self *NxmTunMetadata63) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata63(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata63, error) {
+func DecodeNxmTunMetadata63(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata63, error) {
 	_nxmtunmetadata63 := &NxmTunMetadata63{Oxm: parent}
 	_nxmtunmetadata63.Value = decoder.Read(int(_nxmtunmetadata63.TypeLen & 0xFF))
 	return _nxmtunmetadata63, nil
@@ -16876,7 +16875,7 @@ type NxmTunMetadata63Masked struct {
 }
 
 type INxmTunMetadata63Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -16897,7 +16896,7 @@ func (self *NxmTunMetadata63Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata63Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata63Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16908,7 +16907,7 @@ func (self *NxmTunMetadata63Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata63Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata63Masked, error) {
+func DecodeNxmTunMetadata63Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata63Masked, error) {
 	_nxmtunmetadata63masked := &NxmTunMetadata63Masked{Oxm: parent}
 	_nxmtunmetadata63masked.Value = decoder.Read(int(_nxmtunmetadata63masked.TypeLen & 0xFF))
 	_nxmtunmetadata63masked.ValueMask = decoder.Read(int(_nxmtunmetadata63masked.TypeLen & 0xFF))
@@ -16952,7 +16951,7 @@ type NxmTunMetadata6Masked struct {
 }
 
 type INxmTunMetadata6Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -16973,7 +16972,7 @@ func (self *NxmTunMetadata6Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata6Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata6Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -16984,7 +16983,7 @@ func (self *NxmTunMetadata6Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata6Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata6Masked, error) {
+func DecodeNxmTunMetadata6Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata6Masked, error) {
 	_nxmtunmetadata6masked := &NxmTunMetadata6Masked{Oxm: parent}
 	_nxmtunmetadata6masked.Value = decoder.Read(int(_nxmtunmetadata6masked.TypeLen & 0xFF))
 	_nxmtunmetadata6masked.ValueMask = decoder.Read(int(_nxmtunmetadata6masked.TypeLen & 0xFF))
@@ -17027,7 +17026,7 @@ type NxmTunMetadata7 struct {
 }
 
 type INxmTunMetadata7 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -17039,7 +17038,7 @@ func (self *NxmTunMetadata7) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata7) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata7) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17049,7 +17048,7 @@ func (self *NxmTunMetadata7) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata7(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata7, error) {
+func DecodeNxmTunMetadata7(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata7, error) {
 	_nxmtunmetadata7 := &NxmTunMetadata7{Oxm: parent}
 	_nxmtunmetadata7.Value = decoder.Read(int(_nxmtunmetadata7.TypeLen & 0xFF))
 	return _nxmtunmetadata7, nil
@@ -17084,7 +17083,7 @@ type NxmTunMetadata7Masked struct {
 }
 
 type INxmTunMetadata7Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -17105,7 +17104,7 @@ func (self *NxmTunMetadata7Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata7Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata7Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17116,7 +17115,7 @@ func (self *NxmTunMetadata7Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata7Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata7Masked, error) {
+func DecodeNxmTunMetadata7Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata7Masked, error) {
 	_nxmtunmetadata7masked := &NxmTunMetadata7Masked{Oxm: parent}
 	_nxmtunmetadata7masked.Value = decoder.Read(int(_nxmtunmetadata7masked.TypeLen & 0xFF))
 	_nxmtunmetadata7masked.ValueMask = decoder.Read(int(_nxmtunmetadata7masked.TypeLen & 0xFF))
@@ -17159,7 +17158,7 @@ type NxmTunMetadata8 struct {
 }
 
 type INxmTunMetadata8 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -17171,7 +17170,7 @@ func (self *NxmTunMetadata8) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata8) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata8) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17181,7 +17180,7 @@ func (self *NxmTunMetadata8) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata8(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata8, error) {
+func DecodeNxmTunMetadata8(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata8, error) {
 	_nxmtunmetadata8 := &NxmTunMetadata8{Oxm: parent}
 	_nxmtunmetadata8.Value = decoder.Read(int(_nxmtunmetadata8.TypeLen & 0xFF))
 	return _nxmtunmetadata8, nil
@@ -17216,7 +17215,7 @@ type NxmTunMetadata8Masked struct {
 }
 
 type INxmTunMetadata8Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -17237,7 +17236,7 @@ func (self *NxmTunMetadata8Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata8Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata8Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17248,7 +17247,7 @@ func (self *NxmTunMetadata8Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata8Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata8Masked, error) {
+func DecodeNxmTunMetadata8Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata8Masked, error) {
 	_nxmtunmetadata8masked := &NxmTunMetadata8Masked{Oxm: parent}
 	_nxmtunmetadata8masked.Value = decoder.Read(int(_nxmtunmetadata8masked.TypeLen & 0xFF))
 	_nxmtunmetadata8masked.ValueMask = decoder.Read(int(_nxmtunmetadata8masked.TypeLen & 0xFF))
@@ -17291,7 +17290,7 @@ type NxmTunMetadata9 struct {
 }
 
 type INxmTunMetadata9 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 }
 
@@ -17303,7 +17302,7 @@ func (self *NxmTunMetadata9) SetValue(v []byte) {
 	self.Value = v
 }
 
-func (self *NxmTunMetadata9) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata9) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17313,7 +17312,7 @@ func (self *NxmTunMetadata9) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata9(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata9, error) {
+func DecodeNxmTunMetadata9(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata9, error) {
 	_nxmtunmetadata9 := &NxmTunMetadata9{Oxm: parent}
 	_nxmtunmetadata9.Value = decoder.Read(int(_nxmtunmetadata9.TypeLen & 0xFF))
 	return _nxmtunmetadata9, nil
@@ -17348,7 +17347,7 @@ type NxmTunMetadata9Masked struct {
 }
 
 type INxmTunMetadata9Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() []byte
 	GetValueMask() []byte
 }
@@ -17369,7 +17368,7 @@ func (self *NxmTunMetadata9Masked) SetValueMask(v []byte) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunMetadata9Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunMetadata9Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17380,7 +17379,7 @@ func (self *NxmTunMetadata9Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunMetadata9Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunMetadata9Masked, error) {
+func DecodeNxmTunMetadata9Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunMetadata9Masked, error) {
 	_nxmtunmetadata9masked := &NxmTunMetadata9Masked{Oxm: parent}
 	_nxmtunmetadata9masked.Value = decoder.Read(int(_nxmtunmetadata9masked.TypeLen & 0xFF))
 	_nxmtunmetadata9masked.ValueMask = decoder.Read(int(_nxmtunmetadata9masked.TypeLen & 0xFF))
@@ -17423,7 +17422,7 @@ type NxmTunSrc struct {
 }
 
 type INxmTunSrc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -17435,7 +17434,7 @@ func (self *NxmTunSrc) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *NxmTunSrc) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17445,7 +17444,7 @@ func (self *NxmTunSrc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunSrc(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunSrc, error) {
+func DecodeNxmTunSrc(parent *Oxm, decoder *openflow.Decoder) (*NxmTunSrc, error) {
 	_nxmtunsrc := &NxmTunSrc{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmTunSrc packet too short: %d < 4", decoder.Length())
@@ -17483,7 +17482,7 @@ type NxmTunSrcMasked struct {
 }
 
 type INxmTunSrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -17504,7 +17503,7 @@ func (self *NxmTunSrcMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *NxmTunSrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmTunSrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17515,7 +17514,7 @@ func (self *NxmTunSrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmTunSrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmTunSrcMasked, error) {
+func DecodeNxmTunSrcMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmTunSrcMasked, error) {
 	_nxmtunsrcmasked := &NxmTunSrcMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("NxmTunSrcMasked packet too short: %d < 8", decoder.Length())
@@ -17561,7 +17560,7 @@ type NxmUdpDst struct {
 }
 
 type INxmUdpDst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -17573,7 +17572,7 @@ func (self *NxmUdpDst) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *NxmUdpDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmUdpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17583,7 +17582,7 @@ func (self *NxmUdpDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmUdpDst(parent *Oxm, decoder *goloxi.Decoder) (*NxmUdpDst, error) {
+func DecodeNxmUdpDst(parent *Oxm, decoder *openflow.Decoder) (*NxmUdpDst, error) {
 	_nxmudpdst := &NxmUdpDst{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("NxmUdpDst packet too short: %d < 2", decoder.Length())
@@ -17621,7 +17620,7 @@ type NxmUdpDstMasked struct {
 }
 
 type INxmUdpDstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -17642,7 +17641,7 @@ func (self *NxmUdpDstMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *NxmUdpDstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmUdpDstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17653,7 +17652,7 @@ func (self *NxmUdpDstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmUdpDstMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmUdpDstMasked, error) {
+func DecodeNxmUdpDstMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmUdpDstMasked, error) {
 	_nxmudpdstmasked := &NxmUdpDstMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmUdpDstMasked packet too short: %d < 4", decoder.Length())
@@ -17699,7 +17698,7 @@ type NxmUdpSrc struct {
 }
 
 type INxmUdpSrc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -17711,7 +17710,7 @@ func (self *NxmUdpSrc) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *NxmUdpSrc) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmUdpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17721,7 +17720,7 @@ func (self *NxmUdpSrc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmUdpSrc(parent *Oxm, decoder *goloxi.Decoder) (*NxmUdpSrc, error) {
+func DecodeNxmUdpSrc(parent *Oxm, decoder *openflow.Decoder) (*NxmUdpSrc, error) {
 	_nxmudpsrc := &NxmUdpSrc{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("NxmUdpSrc packet too short: %d < 2", decoder.Length())
@@ -17759,7 +17758,7 @@ type NxmUdpSrcMasked struct {
 }
 
 type INxmUdpSrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -17780,7 +17779,7 @@ func (self *NxmUdpSrcMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *NxmUdpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmUdpSrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17791,7 +17790,7 @@ func (self *NxmUdpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmUdpSrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmUdpSrcMasked, error) {
+func DecodeNxmUdpSrcMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmUdpSrcMasked, error) {
 	_nxmudpsrcmasked := &NxmUdpSrcMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmUdpSrcMasked packet too short: %d < 4", decoder.Length())
@@ -17837,7 +17836,7 @@ type NxmVlanTci struct {
 }
 
 type INxmVlanTci interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -17849,7 +17848,7 @@ func (self *NxmVlanTci) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *NxmVlanTci) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmVlanTci) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17859,7 +17858,7 @@ func (self *NxmVlanTci) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmVlanTci(parent *Oxm, decoder *goloxi.Decoder) (*NxmVlanTci, error) {
+func DecodeNxmVlanTci(parent *Oxm, decoder *openflow.Decoder) (*NxmVlanTci, error) {
 	_nxmvlantci := &NxmVlanTci{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("NxmVlanTci packet too short: %d < 2", decoder.Length())
@@ -17897,7 +17896,7 @@ type NxmVlanTciMasked struct {
 }
 
 type INxmVlanTciMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -17918,7 +17917,7 @@ func (self *NxmVlanTciMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *NxmVlanTciMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmVlanTciMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17929,7 +17928,7 @@ func (self *NxmVlanTciMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmVlanTciMasked(parent *Oxm, decoder *goloxi.Decoder) (*NxmVlanTciMasked, error) {
+func DecodeNxmVlanTciMasked(parent *Oxm, decoder *openflow.Decoder) (*NxmVlanTciMasked, error) {
 	_nxmvlantcimasked := &NxmVlanTciMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NxmVlanTciMasked packet too short: %d < 4", decoder.Length())
@@ -17975,7 +17974,7 @@ type NxmXxreg0 struct {
 }
 
 type INxmXxreg0 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint128
 }
 
@@ -17987,7 +17986,7 @@ func (self *NxmXxreg0) SetValue(v uint128) {
 	self.Value = v
 }
 
-func (self *NxmXxreg0) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmXxreg0) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -17997,7 +17996,7 @@ func (self *NxmXxreg0) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmXxreg0(parent *Oxm, decoder *goloxi.Decoder) (*NxmXxreg0, error) {
+func DecodeNxmXxreg0(parent *Oxm, decoder *openflow.Decoder) (*NxmXxreg0, error) {
 	_nxmxxreg0 := &NxmXxreg0{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("NxmXxreg0 packet too short: %d < 16", decoder.Length())
@@ -18035,7 +18034,7 @@ type NxmXxreg0Masked struct {
 }
 
 type INxmXxreg0Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint128
 	GetValueMask() uint128
 }
@@ -18056,7 +18055,7 @@ func (self *NxmXxreg0Masked) SetValueMask(v uint128) {
 	self.ValueMask = v
 }
 
-func (self *NxmXxreg0Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmXxreg0Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -18067,7 +18066,7 @@ func (self *NxmXxreg0Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmXxreg0Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmXxreg0Masked, error) {
+func DecodeNxmXxreg0Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmXxreg0Masked, error) {
 	_nxmxxreg0masked := &NxmXxreg0Masked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("NxmXxreg0Masked packet too short: %d < 32", decoder.Length())
@@ -18113,7 +18112,7 @@ type NxmXxreg1 struct {
 }
 
 type INxmXxreg1 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint128
 }
 
@@ -18125,7 +18124,7 @@ func (self *NxmXxreg1) SetValue(v uint128) {
 	self.Value = v
 }
 
-func (self *NxmXxreg1) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmXxreg1) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -18135,7 +18134,7 @@ func (self *NxmXxreg1) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmXxreg1(parent *Oxm, decoder *goloxi.Decoder) (*NxmXxreg1, error) {
+func DecodeNxmXxreg1(parent *Oxm, decoder *openflow.Decoder) (*NxmXxreg1, error) {
 	_nxmxxreg1 := &NxmXxreg1{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("NxmXxreg1 packet too short: %d < 16", decoder.Length())
@@ -18173,7 +18172,7 @@ type NxmXxreg1Masked struct {
 }
 
 type INxmXxreg1Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint128
 	GetValueMask() uint128
 }
@@ -18194,7 +18193,7 @@ func (self *NxmXxreg1Masked) SetValueMask(v uint128) {
 	self.ValueMask = v
 }
 
-func (self *NxmXxreg1Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmXxreg1Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -18205,7 +18204,7 @@ func (self *NxmXxreg1Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmXxreg1Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmXxreg1Masked, error) {
+func DecodeNxmXxreg1Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmXxreg1Masked, error) {
 	_nxmxxreg1masked := &NxmXxreg1Masked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("NxmXxreg1Masked packet too short: %d < 32", decoder.Length())
@@ -18251,7 +18250,7 @@ type NxmXxreg2 struct {
 }
 
 type INxmXxreg2 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint128
 }
 
@@ -18263,7 +18262,7 @@ func (self *NxmXxreg2) SetValue(v uint128) {
 	self.Value = v
 }
 
-func (self *NxmXxreg2) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmXxreg2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -18273,7 +18272,7 @@ func (self *NxmXxreg2) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmXxreg2(parent *Oxm, decoder *goloxi.Decoder) (*NxmXxreg2, error) {
+func DecodeNxmXxreg2(parent *Oxm, decoder *openflow.Decoder) (*NxmXxreg2, error) {
 	_nxmxxreg2 := &NxmXxreg2{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("NxmXxreg2 packet too short: %d < 16", decoder.Length())
@@ -18311,7 +18310,7 @@ type NxmXxreg2Masked struct {
 }
 
 type INxmXxreg2Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint128
 	GetValueMask() uint128
 }
@@ -18332,7 +18331,7 @@ func (self *NxmXxreg2Masked) SetValueMask(v uint128) {
 	self.ValueMask = v
 }
 
-func (self *NxmXxreg2Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmXxreg2Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -18343,7 +18342,7 @@ func (self *NxmXxreg2Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmXxreg2Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmXxreg2Masked, error) {
+func DecodeNxmXxreg2Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmXxreg2Masked, error) {
 	_nxmxxreg2masked := &NxmXxreg2Masked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("NxmXxreg2Masked packet too short: %d < 32", decoder.Length())
@@ -18389,7 +18388,7 @@ type NxmXxreg3 struct {
 }
 
 type INxmXxreg3 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint128
 }
 
@@ -18401,7 +18400,7 @@ func (self *NxmXxreg3) SetValue(v uint128) {
 	self.Value = v
 }
 
-func (self *NxmXxreg3) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmXxreg3) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -18411,7 +18410,7 @@ func (self *NxmXxreg3) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmXxreg3(parent *Oxm, decoder *goloxi.Decoder) (*NxmXxreg3, error) {
+func DecodeNxmXxreg3(parent *Oxm, decoder *openflow.Decoder) (*NxmXxreg3, error) {
 	_nxmxxreg3 := &NxmXxreg3{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("NxmXxreg3 packet too short: %d < 16", decoder.Length())
@@ -18449,7 +18448,7 @@ type NxmXxreg3Masked struct {
 }
 
 type INxmXxreg3Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint128
 	GetValueMask() uint128
 }
@@ -18470,7 +18469,7 @@ func (self *NxmXxreg3Masked) SetValueMask(v uint128) {
 	self.ValueMask = v
 }
 
-func (self *NxmXxreg3Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *NxmXxreg3Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -18481,7 +18480,7 @@ func (self *NxmXxreg3Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNxmXxreg3Masked(parent *Oxm, decoder *goloxi.Decoder) (*NxmXxreg3Masked, error) {
+func DecodeNxmXxreg3Masked(parent *Oxm, decoder *openflow.Decoder) (*NxmXxreg3Masked, error) {
 	_nxmxxreg3masked := &NxmXxreg3Masked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("NxmXxreg3Masked packet too short: %d < 32", decoder.Length())
@@ -18527,7 +18526,7 @@ type OxmArpOp struct {
 }
 
 type IOxmArpOp interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -18539,7 +18538,7 @@ func (self *OxmArpOp) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmArpOp) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmArpOp) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -18549,7 +18548,7 @@ func (self *OxmArpOp) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmArpOp(parent *Oxm, decoder *goloxi.Decoder) (*OxmArpOp, error) {
+func DecodeOxmArpOp(parent *Oxm, decoder *openflow.Decoder) (*OxmArpOp, error) {
 	_oxmarpop := &OxmArpOp{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmArpOp packet too short: %d < 2", decoder.Length())
@@ -18587,7 +18586,7 @@ type OxmArpOpMasked struct {
 }
 
 type IOxmArpOpMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -18608,7 +18607,7 @@ func (self *OxmArpOpMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmArpOpMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmArpOpMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -18619,7 +18618,7 @@ func (self *OxmArpOpMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmArpOpMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmArpOpMasked, error) {
+func DecodeOxmArpOpMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmArpOpMasked, error) {
 	_oxmarpopmasked := &OxmArpOpMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmArpOpMasked packet too short: %d < 4", decoder.Length())
@@ -18665,7 +18664,7 @@ type OxmArpSha struct {
 }
 
 type IOxmArpSha interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 }
 
@@ -18677,7 +18676,7 @@ func (self *OxmArpSha) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
-func (self *OxmArpSha) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmArpSha) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -18687,7 +18686,7 @@ func (self *OxmArpSha) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmArpSha(parent *Oxm, decoder *goloxi.Decoder) (*OxmArpSha, error) {
+func DecodeOxmArpSha(parent *Oxm, decoder *openflow.Decoder) (*OxmArpSha, error) {
 	_oxmarpsha := &OxmArpSha{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("OxmArpSha packet too short: %d < 6", decoder.Length())
@@ -18725,7 +18724,7 @@ type OxmArpShaMasked struct {
 }
 
 type IOxmArpShaMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 	GetValueMask() net.HardwareAddr
 }
@@ -18746,7 +18745,7 @@ func (self *OxmArpShaMasked) SetValueMask(v net.HardwareAddr) {
 	self.ValueMask = v
 }
 
-func (self *OxmArpShaMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmArpShaMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -18757,7 +18756,7 @@ func (self *OxmArpShaMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmArpShaMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmArpShaMasked, error) {
+func DecodeOxmArpShaMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmArpShaMasked, error) {
 	_oxmarpshamasked := &OxmArpShaMasked{Oxm: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("OxmArpShaMasked packet too short: %d < 12", decoder.Length())
@@ -18803,7 +18802,7 @@ type OxmArpSpa struct {
 }
 
 type IOxmArpSpa interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -18815,7 +18814,7 @@ func (self *OxmArpSpa) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmArpSpa) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmArpSpa) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -18825,7 +18824,7 @@ func (self *OxmArpSpa) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmArpSpa(parent *Oxm, decoder *goloxi.Decoder) (*OxmArpSpa, error) {
+func DecodeOxmArpSpa(parent *Oxm, decoder *openflow.Decoder) (*OxmArpSpa, error) {
 	_oxmarpspa := &OxmArpSpa{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmArpSpa packet too short: %d < 4", decoder.Length())
@@ -18863,7 +18862,7 @@ type OxmArpSpaMasked struct {
 }
 
 type IOxmArpSpaMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -18884,7 +18883,7 @@ func (self *OxmArpSpaMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmArpSpaMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmArpSpaMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -18895,7 +18894,7 @@ func (self *OxmArpSpaMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmArpSpaMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmArpSpaMasked, error) {
+func DecodeOxmArpSpaMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmArpSpaMasked, error) {
 	_oxmarpspamasked := &OxmArpSpaMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmArpSpaMasked packet too short: %d < 8", decoder.Length())
@@ -18941,7 +18940,7 @@ type OxmArpTha struct {
 }
 
 type IOxmArpTha interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 }
 
@@ -18953,7 +18952,7 @@ func (self *OxmArpTha) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
-func (self *OxmArpTha) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmArpTha) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -18963,7 +18962,7 @@ func (self *OxmArpTha) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmArpTha(parent *Oxm, decoder *goloxi.Decoder) (*OxmArpTha, error) {
+func DecodeOxmArpTha(parent *Oxm, decoder *openflow.Decoder) (*OxmArpTha, error) {
 	_oxmarptha := &OxmArpTha{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("OxmArpTha packet too short: %d < 6", decoder.Length())
@@ -19001,7 +19000,7 @@ type OxmArpThaMasked struct {
 }
 
 type IOxmArpThaMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 	GetValueMask() net.HardwareAddr
 }
@@ -19022,7 +19021,7 @@ func (self *OxmArpThaMasked) SetValueMask(v net.HardwareAddr) {
 	self.ValueMask = v
 }
 
-func (self *OxmArpThaMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmArpThaMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19033,7 +19032,7 @@ func (self *OxmArpThaMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmArpThaMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmArpThaMasked, error) {
+func DecodeOxmArpThaMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmArpThaMasked, error) {
 	_oxmarpthamasked := &OxmArpThaMasked{Oxm: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("OxmArpThaMasked packet too short: %d < 12", decoder.Length())
@@ -19079,7 +19078,7 @@ type OxmArpTpa struct {
 }
 
 type IOxmArpTpa interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -19091,7 +19090,7 @@ func (self *OxmArpTpa) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmArpTpa) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmArpTpa) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19101,7 +19100,7 @@ func (self *OxmArpTpa) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmArpTpa(parent *Oxm, decoder *goloxi.Decoder) (*OxmArpTpa, error) {
+func DecodeOxmArpTpa(parent *Oxm, decoder *openflow.Decoder) (*OxmArpTpa, error) {
 	_oxmarptpa := &OxmArpTpa{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmArpTpa packet too short: %d < 4", decoder.Length())
@@ -19139,7 +19138,7 @@ type OxmArpTpaMasked struct {
 }
 
 type IOxmArpTpaMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -19160,7 +19159,7 @@ func (self *OxmArpTpaMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmArpTpaMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmArpTpaMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19171,7 +19170,7 @@ func (self *OxmArpTpaMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmArpTpaMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmArpTpaMasked, error) {
+func DecodeOxmArpTpaMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmArpTpaMasked, error) {
 	_oxmarptpamasked := &OxmArpTpaMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmArpTpaMasked packet too short: %d < 8", decoder.Length())
@@ -19217,7 +19216,7 @@ type OxmBsnEgrPortGroupId struct {
 }
 
 type IOxmBsnEgrPortGroupId interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -19229,7 +19228,7 @@ func (self *OxmBsnEgrPortGroupId) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnEgrPortGroupId) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnEgrPortGroupId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19239,7 +19238,7 @@ func (self *OxmBsnEgrPortGroupId) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnEgrPortGroupId(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnEgrPortGroupId, error) {
+func DecodeOxmBsnEgrPortGroupId(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnEgrPortGroupId, error) {
 	_oxmbsnegrportgroupid := &OxmBsnEgrPortGroupId{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnEgrPortGroupId packet too short: %d < 4", decoder.Length())
@@ -19277,7 +19276,7 @@ type OxmBsnEgrPortGroupIdMasked struct {
 }
 
 type IOxmBsnEgrPortGroupIdMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -19298,7 +19297,7 @@ func (self *OxmBsnEgrPortGroupIdMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnEgrPortGroupIdMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnEgrPortGroupIdMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19309,7 +19308,7 @@ func (self *OxmBsnEgrPortGroupIdMasked) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeOxmBsnEgrPortGroupIdMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnEgrPortGroupIdMasked, error) {
+func DecodeOxmBsnEgrPortGroupIdMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnEgrPortGroupIdMasked, error) {
 	_oxmbsnegrportgroupidmasked := &OxmBsnEgrPortGroupIdMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnEgrPortGroupIdMasked packet too short: %d < 8", decoder.Length())
@@ -19355,7 +19354,7 @@ type OxmBsnGlobalVrfAllowed struct {
 }
 
 type IOxmBsnGlobalVrfAllowed interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -19367,7 +19366,7 @@ func (self *OxmBsnGlobalVrfAllowed) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *OxmBsnGlobalVrfAllowed) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnGlobalVrfAllowed) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19377,7 +19376,7 @@ func (self *OxmBsnGlobalVrfAllowed) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnGlobalVrfAllowed(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnGlobalVrfAllowed, error) {
+func DecodeOxmBsnGlobalVrfAllowed(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnGlobalVrfAllowed, error) {
 	_oxmbsnglobalvrfallowed := &OxmBsnGlobalVrfAllowed{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("OxmBsnGlobalVrfAllowed packet too short: %d < 1", decoder.Length())
@@ -19415,7 +19414,7 @@ type OxmBsnGlobalVrfAllowedMasked struct {
 }
 
 type IOxmBsnGlobalVrfAllowedMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 	GetValueMask() uint8
 }
@@ -19436,7 +19435,7 @@ func (self *OxmBsnGlobalVrfAllowedMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnGlobalVrfAllowedMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnGlobalVrfAllowedMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19447,7 +19446,7 @@ func (self *OxmBsnGlobalVrfAllowedMasked) Serialize(encoder *goloxi.Encoder) err
 	return nil
 }
 
-func DecodeOxmBsnGlobalVrfAllowedMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnGlobalVrfAllowedMasked, error) {
+func DecodeOxmBsnGlobalVrfAllowedMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnGlobalVrfAllowedMasked, error) {
 	_oxmbsnglobalvrfallowedmasked := &OxmBsnGlobalVrfAllowedMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmBsnGlobalVrfAllowedMasked packet too short: %d < 2", decoder.Length())
@@ -19493,7 +19492,7 @@ type OxmBsnInPorts128 struct {
 }
 
 type IOxmBsnInPorts128 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() Bitmap128
 }
 
@@ -19505,7 +19504,7 @@ func (self *OxmBsnInPorts128) SetValue(v Bitmap128) {
 	self.Value = v
 }
 
-func (self *OxmBsnInPorts128) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnInPorts128) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19515,7 +19514,7 @@ func (self *OxmBsnInPorts128) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnInPorts128(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnInPorts128, error) {
+func DecodeOxmBsnInPorts128(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnInPorts128, error) {
 	_oxmbsninports128 := &OxmBsnInPorts128{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("OxmBsnInPorts128 packet too short: %d < 16", decoder.Length())
@@ -19553,7 +19552,7 @@ type OxmBsnInPorts128Masked struct {
 }
 
 type IOxmBsnInPorts128Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() Bitmap128
 	GetValueMask() Bitmap128
 }
@@ -19574,7 +19573,7 @@ func (self *OxmBsnInPorts128Masked) SetValueMask(v Bitmap128) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnInPorts128Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnInPorts128Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19585,7 +19584,7 @@ func (self *OxmBsnInPorts128Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnInPorts128Masked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnInPorts128Masked, error) {
+func DecodeOxmBsnInPorts128Masked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnInPorts128Masked, error) {
 	_oxmbsninports128masked := &OxmBsnInPorts128Masked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("OxmBsnInPorts128Masked packet too short: %d < 32", decoder.Length())
@@ -19631,7 +19630,7 @@ type OxmBsnInPorts512 struct {
 }
 
 type IOxmBsnInPorts512 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() Bitmap512
 }
 
@@ -19643,7 +19642,7 @@ func (self *OxmBsnInPorts512) SetValue(v Bitmap512) {
 	self.Value = v
 }
 
-func (self *OxmBsnInPorts512) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnInPorts512) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19653,7 +19652,7 @@ func (self *OxmBsnInPorts512) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnInPorts512(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnInPorts512, error) {
+func DecodeOxmBsnInPorts512(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnInPorts512, error) {
 	_oxmbsninports512 := &OxmBsnInPorts512{Oxm: parent}
 	if decoder.Length() < 64 {
 		return nil, fmt.Errorf("OxmBsnInPorts512 packet too short: %d < 64", decoder.Length())
@@ -19691,7 +19690,7 @@ type OxmBsnInPorts512Masked struct {
 }
 
 type IOxmBsnInPorts512Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() Bitmap512
 	GetValueMask() Bitmap512
 }
@@ -19712,7 +19711,7 @@ func (self *OxmBsnInPorts512Masked) SetValueMask(v Bitmap512) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnInPorts512Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnInPorts512Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19723,7 +19722,7 @@ func (self *OxmBsnInPorts512Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnInPorts512Masked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnInPorts512Masked, error) {
+func DecodeOxmBsnInPorts512Masked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnInPorts512Masked, error) {
 	_oxmbsninports512masked := &OxmBsnInPorts512Masked{Oxm: parent}
 	if decoder.Length() < 128 {
 		return nil, fmt.Errorf("OxmBsnInPorts512Masked packet too short: %d < 128", decoder.Length())
@@ -19769,7 +19768,7 @@ type OxmBsnIngressPortGroupId struct {
 }
 
 type IOxmBsnIngressPortGroupId interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -19781,7 +19780,7 @@ func (self *OxmBsnIngressPortGroupId) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnIngressPortGroupId) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnIngressPortGroupId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19791,7 +19790,7 @@ func (self *OxmBsnIngressPortGroupId) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnIngressPortGroupId(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnIngressPortGroupId, error) {
+func DecodeOxmBsnIngressPortGroupId(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnIngressPortGroupId, error) {
 	_oxmbsningressportgroupid := &OxmBsnIngressPortGroupId{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnIngressPortGroupId packet too short: %d < 4", decoder.Length())
@@ -19829,7 +19828,7 @@ type OxmBsnIngressPortGroupIdMasked struct {
 }
 
 type IOxmBsnIngressPortGroupIdMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -19850,7 +19849,7 @@ func (self *OxmBsnIngressPortGroupIdMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnIngressPortGroupIdMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnIngressPortGroupIdMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19861,7 +19860,7 @@ func (self *OxmBsnIngressPortGroupIdMasked) Serialize(encoder *goloxi.Encoder) e
 	return nil
 }
 
-func DecodeOxmBsnIngressPortGroupIdMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnIngressPortGroupIdMasked, error) {
+func DecodeOxmBsnIngressPortGroupIdMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnIngressPortGroupIdMasked, error) {
 	_oxmbsningressportgroupidmasked := &OxmBsnIngressPortGroupIdMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnIngressPortGroupIdMasked packet too short: %d < 8", decoder.Length())
@@ -19907,7 +19906,7 @@ type OxmBsnInnerEthDst struct {
 }
 
 type IOxmBsnInnerEthDst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 }
 
@@ -19919,7 +19918,7 @@ func (self *OxmBsnInnerEthDst) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
-func (self *OxmBsnInnerEthDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnInnerEthDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19929,7 +19928,7 @@ func (self *OxmBsnInnerEthDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnInnerEthDst(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnInnerEthDst, error) {
+func DecodeOxmBsnInnerEthDst(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnInnerEthDst, error) {
 	_oxmbsninnerethdst := &OxmBsnInnerEthDst{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("OxmBsnInnerEthDst packet too short: %d < 6", decoder.Length())
@@ -19967,7 +19966,7 @@ type OxmBsnInnerEthDstMasked struct {
 }
 
 type IOxmBsnInnerEthDstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 	GetValueMask() net.HardwareAddr
 }
@@ -19988,7 +19987,7 @@ func (self *OxmBsnInnerEthDstMasked) SetValueMask(v net.HardwareAddr) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnInnerEthDstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnInnerEthDstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -19999,7 +19998,7 @@ func (self *OxmBsnInnerEthDstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnInnerEthDstMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnInnerEthDstMasked, error) {
+func DecodeOxmBsnInnerEthDstMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnInnerEthDstMasked, error) {
 	_oxmbsninnerethdstmasked := &OxmBsnInnerEthDstMasked{Oxm: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("OxmBsnInnerEthDstMasked packet too short: %d < 12", decoder.Length())
@@ -20045,7 +20044,7 @@ type OxmBsnInnerEthSrc struct {
 }
 
 type IOxmBsnInnerEthSrc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 }
 
@@ -20057,7 +20056,7 @@ func (self *OxmBsnInnerEthSrc) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
-func (self *OxmBsnInnerEthSrc) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnInnerEthSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -20067,7 +20066,7 @@ func (self *OxmBsnInnerEthSrc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnInnerEthSrc(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnInnerEthSrc, error) {
+func DecodeOxmBsnInnerEthSrc(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnInnerEthSrc, error) {
 	_oxmbsninnerethsrc := &OxmBsnInnerEthSrc{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("OxmBsnInnerEthSrc packet too short: %d < 6", decoder.Length())
@@ -20105,7 +20104,7 @@ type OxmBsnInnerEthSrcMasked struct {
 }
 
 type IOxmBsnInnerEthSrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 	GetValueMask() net.HardwareAddr
 }
@@ -20126,7 +20125,7 @@ func (self *OxmBsnInnerEthSrcMasked) SetValueMask(v net.HardwareAddr) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnInnerEthSrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnInnerEthSrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -20137,7 +20136,7 @@ func (self *OxmBsnInnerEthSrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnInnerEthSrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnInnerEthSrcMasked, error) {
+func DecodeOxmBsnInnerEthSrcMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnInnerEthSrcMasked, error) {
 	_oxmbsninnerethsrcmasked := &OxmBsnInnerEthSrcMasked{Oxm: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("OxmBsnInnerEthSrcMasked packet too short: %d < 12", decoder.Length())
@@ -20183,7 +20182,7 @@ type OxmBsnInnerVlanVid struct {
 }
 
 type IOxmBsnInnerVlanVid interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -20195,7 +20194,7 @@ func (self *OxmBsnInnerVlanVid) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmBsnInnerVlanVid) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnInnerVlanVid) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -20205,7 +20204,7 @@ func (self *OxmBsnInnerVlanVid) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnInnerVlanVid(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnInnerVlanVid, error) {
+func DecodeOxmBsnInnerVlanVid(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnInnerVlanVid, error) {
 	_oxmbsninnervlanvid := &OxmBsnInnerVlanVid{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmBsnInnerVlanVid packet too short: %d < 2", decoder.Length())
@@ -20243,7 +20242,7 @@ type OxmBsnInnerVlanVidMasked struct {
 }
 
 type IOxmBsnInnerVlanVidMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -20264,7 +20263,7 @@ func (self *OxmBsnInnerVlanVidMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnInnerVlanVidMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnInnerVlanVidMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -20275,7 +20274,7 @@ func (self *OxmBsnInnerVlanVidMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnInnerVlanVidMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnInnerVlanVidMasked, error) {
+func DecodeOxmBsnInnerVlanVidMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnInnerVlanVidMasked, error) {
 	_oxmbsninnervlanvidmasked := &OxmBsnInnerVlanVidMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnInnerVlanVidMasked packet too short: %d < 4", decoder.Length())
@@ -20321,7 +20320,7 @@ type OxmBsnIpFragmentation struct {
 }
 
 type IOxmBsnIpFragmentation interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -20333,7 +20332,7 @@ func (self *OxmBsnIpFragmentation) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *OxmBsnIpFragmentation) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnIpFragmentation) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -20343,7 +20342,7 @@ func (self *OxmBsnIpFragmentation) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnIpFragmentation(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnIpFragmentation, error) {
+func DecodeOxmBsnIpFragmentation(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnIpFragmentation, error) {
 	_oxmbsnipfragmentation := &OxmBsnIpFragmentation{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("OxmBsnIpFragmentation packet too short: %d < 1", decoder.Length())
@@ -20381,7 +20380,7 @@ type OxmBsnIpFragmentationMasked struct {
 }
 
 type IOxmBsnIpFragmentationMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 	GetValueMask() uint8
 }
@@ -20402,7 +20401,7 @@ func (self *OxmBsnIpFragmentationMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnIpFragmentationMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnIpFragmentationMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -20413,7 +20412,7 @@ func (self *OxmBsnIpFragmentationMasked) Serialize(encoder *goloxi.Encoder) erro
 	return nil
 }
 
-func DecodeOxmBsnIpFragmentationMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnIpFragmentationMasked, error) {
+func DecodeOxmBsnIpFragmentationMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnIpFragmentationMasked, error) {
 	_oxmbsnipfragmentationmasked := &OxmBsnIpFragmentationMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmBsnIpFragmentationMasked packet too short: %d < 2", decoder.Length())
@@ -20459,7 +20458,7 @@ type OxmBsnL2CacheHit struct {
 }
 
 type IOxmBsnL2CacheHit interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -20471,7 +20470,7 @@ func (self *OxmBsnL2CacheHit) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *OxmBsnL2CacheHit) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnL2CacheHit) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -20481,7 +20480,7 @@ func (self *OxmBsnL2CacheHit) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnL2CacheHit(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnL2CacheHit, error) {
+func DecodeOxmBsnL2CacheHit(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnL2CacheHit, error) {
 	_oxmbsnl2cachehit := &OxmBsnL2CacheHit{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("OxmBsnL2CacheHit packet too short: %d < 1", decoder.Length())
@@ -20519,7 +20518,7 @@ type OxmBsnL2CacheHitMasked struct {
 }
 
 type IOxmBsnL2CacheHitMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 	GetValueMask() uint8
 }
@@ -20540,7 +20539,7 @@ func (self *OxmBsnL2CacheHitMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnL2CacheHitMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnL2CacheHitMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -20551,7 +20550,7 @@ func (self *OxmBsnL2CacheHitMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnL2CacheHitMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnL2CacheHitMasked, error) {
+func DecodeOxmBsnL2CacheHitMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnL2CacheHitMasked, error) {
 	_oxmbsnl2cachehitmasked := &OxmBsnL2CacheHitMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmBsnL2CacheHitMasked packet too short: %d < 2", decoder.Length())
@@ -20597,7 +20596,7 @@ type OxmBsnL3DstClassId struct {
 }
 
 type IOxmBsnL3DstClassId interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -20609,7 +20608,7 @@ func (self *OxmBsnL3DstClassId) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnL3DstClassId) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnL3DstClassId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -20619,7 +20618,7 @@ func (self *OxmBsnL3DstClassId) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnL3DstClassId(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnL3DstClassId, error) {
+func DecodeOxmBsnL3DstClassId(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnL3DstClassId, error) {
 	_oxmbsnl3dstclassid := &OxmBsnL3DstClassId{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnL3DstClassId packet too short: %d < 4", decoder.Length())
@@ -20657,7 +20656,7 @@ type OxmBsnL3DstClassIdMasked struct {
 }
 
 type IOxmBsnL3DstClassIdMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -20678,7 +20677,7 @@ func (self *OxmBsnL3DstClassIdMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnL3DstClassIdMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnL3DstClassIdMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -20689,7 +20688,7 @@ func (self *OxmBsnL3DstClassIdMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnL3DstClassIdMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnL3DstClassIdMasked, error) {
+func DecodeOxmBsnL3DstClassIdMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnL3DstClassIdMasked, error) {
 	_oxmbsnl3dstclassidmasked := &OxmBsnL3DstClassIdMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnL3DstClassIdMasked packet too short: %d < 8", decoder.Length())
@@ -20735,7 +20734,7 @@ type OxmBsnL3InterfaceClassId struct {
 }
 
 type IOxmBsnL3InterfaceClassId interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -20747,7 +20746,7 @@ func (self *OxmBsnL3InterfaceClassId) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnL3InterfaceClassId) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnL3InterfaceClassId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -20757,7 +20756,7 @@ func (self *OxmBsnL3InterfaceClassId) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnL3InterfaceClassId(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnL3InterfaceClassId, error) {
+func DecodeOxmBsnL3InterfaceClassId(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnL3InterfaceClassId, error) {
 	_oxmbsnl3interfaceclassid := &OxmBsnL3InterfaceClassId{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnL3InterfaceClassId packet too short: %d < 4", decoder.Length())
@@ -20795,7 +20794,7 @@ type OxmBsnL3InterfaceClassIdMasked struct {
 }
 
 type IOxmBsnL3InterfaceClassIdMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -20816,7 +20815,7 @@ func (self *OxmBsnL3InterfaceClassIdMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnL3InterfaceClassIdMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnL3InterfaceClassIdMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -20827,7 +20826,7 @@ func (self *OxmBsnL3InterfaceClassIdMasked) Serialize(encoder *goloxi.Encoder) e
 	return nil
 }
 
-func DecodeOxmBsnL3InterfaceClassIdMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnL3InterfaceClassIdMasked, error) {
+func DecodeOxmBsnL3InterfaceClassIdMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnL3InterfaceClassIdMasked, error) {
 	_oxmbsnl3interfaceclassidmasked := &OxmBsnL3InterfaceClassIdMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnL3InterfaceClassIdMasked packet too short: %d < 8", decoder.Length())
@@ -20873,7 +20872,7 @@ type OxmBsnL3SrcClassId struct {
 }
 
 type IOxmBsnL3SrcClassId interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -20885,7 +20884,7 @@ func (self *OxmBsnL3SrcClassId) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnL3SrcClassId) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnL3SrcClassId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -20895,7 +20894,7 @@ func (self *OxmBsnL3SrcClassId) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnL3SrcClassId(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnL3SrcClassId, error) {
+func DecodeOxmBsnL3SrcClassId(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnL3SrcClassId, error) {
 	_oxmbsnl3srcclassid := &OxmBsnL3SrcClassId{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnL3SrcClassId packet too short: %d < 4", decoder.Length())
@@ -20933,7 +20932,7 @@ type OxmBsnL3SrcClassIdMasked struct {
 }
 
 type IOxmBsnL3SrcClassIdMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -20954,7 +20953,7 @@ func (self *OxmBsnL3SrcClassIdMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnL3SrcClassIdMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnL3SrcClassIdMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -20965,7 +20964,7 @@ func (self *OxmBsnL3SrcClassIdMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnL3SrcClassIdMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnL3SrcClassIdMasked, error) {
+func DecodeOxmBsnL3SrcClassIdMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnL3SrcClassIdMasked, error) {
 	_oxmbsnl3srcclassidmasked := &OxmBsnL3SrcClassIdMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnL3SrcClassIdMasked packet too short: %d < 8", decoder.Length())
@@ -21011,7 +21010,7 @@ type OxmBsnLagId struct {
 }
 
 type IOxmBsnLagId interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -21023,7 +21022,7 @@ func (self *OxmBsnLagId) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnLagId) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnLagId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21033,7 +21032,7 @@ func (self *OxmBsnLagId) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnLagId(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnLagId, error) {
+func DecodeOxmBsnLagId(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnLagId, error) {
 	_oxmbsnlagid := &OxmBsnLagId{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnLagId packet too short: %d < 4", decoder.Length())
@@ -21071,7 +21070,7 @@ type OxmBsnLagIdMasked struct {
 }
 
 type IOxmBsnLagIdMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -21092,7 +21091,7 @@ func (self *OxmBsnLagIdMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnLagIdMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnLagIdMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21103,7 +21102,7 @@ func (self *OxmBsnLagIdMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnLagIdMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnLagIdMasked, error) {
+func DecodeOxmBsnLagIdMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnLagIdMasked, error) {
 	_oxmbsnlagidmasked := &OxmBsnLagIdMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnLagIdMasked packet too short: %d < 8", decoder.Length())
@@ -21149,7 +21148,7 @@ type OxmBsnTcpFlags struct {
 }
 
 type IOxmBsnTcpFlags interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -21161,7 +21160,7 @@ func (self *OxmBsnTcpFlags) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmBsnTcpFlags) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnTcpFlags) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21171,7 +21170,7 @@ func (self *OxmBsnTcpFlags) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnTcpFlags(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnTcpFlags, error) {
+func DecodeOxmBsnTcpFlags(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnTcpFlags, error) {
 	_oxmbsntcpflags := &OxmBsnTcpFlags{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmBsnTcpFlags packet too short: %d < 2", decoder.Length())
@@ -21209,7 +21208,7 @@ type OxmBsnTcpFlagsMasked struct {
 }
 
 type IOxmBsnTcpFlagsMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -21230,7 +21229,7 @@ func (self *OxmBsnTcpFlagsMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnTcpFlagsMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnTcpFlagsMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21241,7 +21240,7 @@ func (self *OxmBsnTcpFlagsMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnTcpFlagsMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnTcpFlagsMasked, error) {
+func DecodeOxmBsnTcpFlagsMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnTcpFlagsMasked, error) {
 	_oxmbsntcpflagsmasked := &OxmBsnTcpFlagsMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnTcpFlagsMasked packet too short: %d < 4", decoder.Length())
@@ -21287,7 +21286,7 @@ type OxmBsnUdf0 struct {
 }
 
 type IOxmBsnUdf0 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -21299,7 +21298,7 @@ func (self *OxmBsnUdf0) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnUdf0) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf0) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21309,7 +21308,7 @@ func (self *OxmBsnUdf0) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf0(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf0, error) {
+func DecodeOxmBsnUdf0(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf0, error) {
 	_oxmbsnudf0 := &OxmBsnUdf0{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnUdf0 packet too short: %d < 4", decoder.Length())
@@ -21347,7 +21346,7 @@ type OxmBsnUdf0Masked struct {
 }
 
 type IOxmBsnUdf0Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -21368,7 +21367,7 @@ func (self *OxmBsnUdf0Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnUdf0Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf0Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21379,7 +21378,7 @@ func (self *OxmBsnUdf0Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf0Masked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf0Masked, error) {
+func DecodeOxmBsnUdf0Masked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf0Masked, error) {
 	_oxmbsnudf0masked := &OxmBsnUdf0Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnUdf0Masked packet too short: %d < 8", decoder.Length())
@@ -21425,7 +21424,7 @@ type OxmBsnUdf1 struct {
 }
 
 type IOxmBsnUdf1 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -21437,7 +21436,7 @@ func (self *OxmBsnUdf1) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnUdf1) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf1) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21447,7 +21446,7 @@ func (self *OxmBsnUdf1) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf1(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf1, error) {
+func DecodeOxmBsnUdf1(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf1, error) {
 	_oxmbsnudf1 := &OxmBsnUdf1{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnUdf1 packet too short: %d < 4", decoder.Length())
@@ -21485,7 +21484,7 @@ type OxmBsnUdf1Masked struct {
 }
 
 type IOxmBsnUdf1Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -21506,7 +21505,7 @@ func (self *OxmBsnUdf1Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnUdf1Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf1Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21517,7 +21516,7 @@ func (self *OxmBsnUdf1Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf1Masked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf1Masked, error) {
+func DecodeOxmBsnUdf1Masked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf1Masked, error) {
 	_oxmbsnudf1masked := &OxmBsnUdf1Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnUdf1Masked packet too short: %d < 8", decoder.Length())
@@ -21563,7 +21562,7 @@ type OxmBsnUdf2 struct {
 }
 
 type IOxmBsnUdf2 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -21575,7 +21574,7 @@ func (self *OxmBsnUdf2) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnUdf2) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21585,7 +21584,7 @@ func (self *OxmBsnUdf2) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf2(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf2, error) {
+func DecodeOxmBsnUdf2(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf2, error) {
 	_oxmbsnudf2 := &OxmBsnUdf2{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnUdf2 packet too short: %d < 4", decoder.Length())
@@ -21623,7 +21622,7 @@ type OxmBsnUdf2Masked struct {
 }
 
 type IOxmBsnUdf2Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -21644,7 +21643,7 @@ func (self *OxmBsnUdf2Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnUdf2Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf2Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21655,7 +21654,7 @@ func (self *OxmBsnUdf2Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf2Masked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf2Masked, error) {
+func DecodeOxmBsnUdf2Masked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf2Masked, error) {
 	_oxmbsnudf2masked := &OxmBsnUdf2Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnUdf2Masked packet too short: %d < 8", decoder.Length())
@@ -21701,7 +21700,7 @@ type OxmBsnUdf3 struct {
 }
 
 type IOxmBsnUdf3 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -21713,7 +21712,7 @@ func (self *OxmBsnUdf3) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnUdf3) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf3) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21723,7 +21722,7 @@ func (self *OxmBsnUdf3) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf3(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf3, error) {
+func DecodeOxmBsnUdf3(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf3, error) {
 	_oxmbsnudf3 := &OxmBsnUdf3{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnUdf3 packet too short: %d < 4", decoder.Length())
@@ -21761,7 +21760,7 @@ type OxmBsnUdf3Masked struct {
 }
 
 type IOxmBsnUdf3Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -21782,7 +21781,7 @@ func (self *OxmBsnUdf3Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnUdf3Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf3Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21793,7 +21792,7 @@ func (self *OxmBsnUdf3Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf3Masked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf3Masked, error) {
+func DecodeOxmBsnUdf3Masked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf3Masked, error) {
 	_oxmbsnudf3masked := &OxmBsnUdf3Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnUdf3Masked packet too short: %d < 8", decoder.Length())
@@ -21839,7 +21838,7 @@ type OxmBsnUdf4 struct {
 }
 
 type IOxmBsnUdf4 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -21851,7 +21850,7 @@ func (self *OxmBsnUdf4) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnUdf4) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf4) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21861,7 +21860,7 @@ func (self *OxmBsnUdf4) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf4(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf4, error) {
+func DecodeOxmBsnUdf4(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf4, error) {
 	_oxmbsnudf4 := &OxmBsnUdf4{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnUdf4 packet too short: %d < 4", decoder.Length())
@@ -21899,7 +21898,7 @@ type OxmBsnUdf4Masked struct {
 }
 
 type IOxmBsnUdf4Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -21920,7 +21919,7 @@ func (self *OxmBsnUdf4Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnUdf4Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf4Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21931,7 +21930,7 @@ func (self *OxmBsnUdf4Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf4Masked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf4Masked, error) {
+func DecodeOxmBsnUdf4Masked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf4Masked, error) {
 	_oxmbsnudf4masked := &OxmBsnUdf4Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnUdf4Masked packet too short: %d < 8", decoder.Length())
@@ -21977,7 +21976,7 @@ type OxmBsnUdf5 struct {
 }
 
 type IOxmBsnUdf5 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -21989,7 +21988,7 @@ func (self *OxmBsnUdf5) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnUdf5) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf5) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -21999,7 +21998,7 @@ func (self *OxmBsnUdf5) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf5(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf5, error) {
+func DecodeOxmBsnUdf5(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf5, error) {
 	_oxmbsnudf5 := &OxmBsnUdf5{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnUdf5 packet too short: %d < 4", decoder.Length())
@@ -22037,7 +22036,7 @@ type OxmBsnUdf5Masked struct {
 }
 
 type IOxmBsnUdf5Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -22058,7 +22057,7 @@ func (self *OxmBsnUdf5Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnUdf5Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf5Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -22069,7 +22068,7 @@ func (self *OxmBsnUdf5Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf5Masked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf5Masked, error) {
+func DecodeOxmBsnUdf5Masked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf5Masked, error) {
 	_oxmbsnudf5masked := &OxmBsnUdf5Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnUdf5Masked packet too short: %d < 8", decoder.Length())
@@ -22115,7 +22114,7 @@ type OxmBsnUdf6 struct {
 }
 
 type IOxmBsnUdf6 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -22127,7 +22126,7 @@ func (self *OxmBsnUdf6) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnUdf6) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf6) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -22137,7 +22136,7 @@ func (self *OxmBsnUdf6) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf6(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf6, error) {
+func DecodeOxmBsnUdf6(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf6, error) {
 	_oxmbsnudf6 := &OxmBsnUdf6{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnUdf6 packet too short: %d < 4", decoder.Length())
@@ -22175,7 +22174,7 @@ type OxmBsnUdf6Masked struct {
 }
 
 type IOxmBsnUdf6Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -22196,7 +22195,7 @@ func (self *OxmBsnUdf6Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnUdf6Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf6Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -22207,7 +22206,7 @@ func (self *OxmBsnUdf6Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf6Masked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf6Masked, error) {
+func DecodeOxmBsnUdf6Masked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf6Masked, error) {
 	_oxmbsnudf6masked := &OxmBsnUdf6Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnUdf6Masked packet too short: %d < 8", decoder.Length())
@@ -22253,7 +22252,7 @@ type OxmBsnUdf7 struct {
 }
 
 type IOxmBsnUdf7 interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -22265,7 +22264,7 @@ func (self *OxmBsnUdf7) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnUdf7) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf7) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -22275,7 +22274,7 @@ func (self *OxmBsnUdf7) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf7(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf7, error) {
+func DecodeOxmBsnUdf7(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf7, error) {
 	_oxmbsnudf7 := &OxmBsnUdf7{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnUdf7 packet too short: %d < 4", decoder.Length())
@@ -22313,7 +22312,7 @@ type OxmBsnUdf7Masked struct {
 }
 
 type IOxmBsnUdf7Masked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -22334,7 +22333,7 @@ func (self *OxmBsnUdf7Masked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnUdf7Masked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnUdf7Masked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -22345,7 +22344,7 @@ func (self *OxmBsnUdf7Masked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnUdf7Masked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnUdf7Masked, error) {
+func DecodeOxmBsnUdf7Masked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnUdf7Masked, error) {
 	_oxmbsnudf7masked := &OxmBsnUdf7Masked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnUdf7Masked packet too short: %d < 8", decoder.Length())
@@ -22391,7 +22390,7 @@ type OxmBsnVfi struct {
 }
 
 type IOxmBsnVfi interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -22403,7 +22402,7 @@ func (self *OxmBsnVfi) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmBsnVfi) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnVfi) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -22413,7 +22412,7 @@ func (self *OxmBsnVfi) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnVfi(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnVfi, error) {
+func DecodeOxmBsnVfi(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnVfi, error) {
 	_oxmbsnvfi := &OxmBsnVfi{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmBsnVfi packet too short: %d < 2", decoder.Length())
@@ -22451,7 +22450,7 @@ type OxmBsnVfiMasked struct {
 }
 
 type IOxmBsnVfiMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -22472,7 +22471,7 @@ func (self *OxmBsnVfiMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnVfiMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnVfiMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -22483,7 +22482,7 @@ func (self *OxmBsnVfiMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnVfiMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnVfiMasked, error) {
+func DecodeOxmBsnVfiMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnVfiMasked, error) {
 	_oxmbsnvfimasked := &OxmBsnVfiMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnVfiMasked packet too short: %d < 4", decoder.Length())
@@ -22529,7 +22528,7 @@ type OxmBsnVlanXlatePortGroupId struct {
 }
 
 type IOxmBsnVlanXlatePortGroupId interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -22541,7 +22540,7 @@ func (self *OxmBsnVlanXlatePortGroupId) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnVlanXlatePortGroupId) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnVlanXlatePortGroupId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -22551,7 +22550,7 @@ func (self *OxmBsnVlanXlatePortGroupId) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeOxmBsnVlanXlatePortGroupId(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnVlanXlatePortGroupId, error) {
+func DecodeOxmBsnVlanXlatePortGroupId(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnVlanXlatePortGroupId, error) {
 	_oxmbsnvlanxlateportgroupid := &OxmBsnVlanXlatePortGroupId{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnVlanXlatePortGroupId packet too short: %d < 4", decoder.Length())
@@ -22589,7 +22588,7 @@ type OxmBsnVlanXlatePortGroupIdMasked struct {
 }
 
 type IOxmBsnVlanXlatePortGroupIdMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -22610,7 +22609,7 @@ func (self *OxmBsnVlanXlatePortGroupIdMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnVlanXlatePortGroupIdMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnVlanXlatePortGroupIdMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -22621,7 +22620,7 @@ func (self *OxmBsnVlanXlatePortGroupIdMasked) Serialize(encoder *goloxi.Encoder)
 	return nil
 }
 
-func DecodeOxmBsnVlanXlatePortGroupIdMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnVlanXlatePortGroupIdMasked, error) {
+func DecodeOxmBsnVlanXlatePortGroupIdMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnVlanXlatePortGroupIdMasked, error) {
 	_oxmbsnvlanxlateportgroupidmasked := &OxmBsnVlanXlatePortGroupIdMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnVlanXlatePortGroupIdMasked packet too short: %d < 8", decoder.Length())
@@ -22667,7 +22666,7 @@ type OxmBsnVrf struct {
 }
 
 type IOxmBsnVrf interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -22679,7 +22678,7 @@ func (self *OxmBsnVrf) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnVrf) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnVrf) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -22689,7 +22688,7 @@ func (self *OxmBsnVrf) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnVrf(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnVrf, error) {
+func DecodeOxmBsnVrf(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnVrf, error) {
 	_oxmbsnvrf := &OxmBsnVrf{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnVrf packet too short: %d < 4", decoder.Length())
@@ -22727,7 +22726,7 @@ type OxmBsnVrfMasked struct {
 }
 
 type IOxmBsnVrfMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -22748,7 +22747,7 @@ func (self *OxmBsnVrfMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnVrfMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnVrfMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -22759,7 +22758,7 @@ func (self *OxmBsnVrfMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnVrfMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnVrfMasked, error) {
+func DecodeOxmBsnVrfMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnVrfMasked, error) {
 	_oxmbsnvrfmasked := &OxmBsnVrfMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnVrfMasked packet too short: %d < 8", decoder.Length())
@@ -22805,7 +22804,7 @@ type OxmBsnVxlanNetworkId struct {
 }
 
 type IOxmBsnVxlanNetworkId interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -22817,7 +22816,7 @@ func (self *OxmBsnVxlanNetworkId) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmBsnVxlanNetworkId) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnVxlanNetworkId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -22827,7 +22826,7 @@ func (self *OxmBsnVxlanNetworkId) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmBsnVxlanNetworkId(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnVxlanNetworkId, error) {
+func DecodeOxmBsnVxlanNetworkId(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnVxlanNetworkId, error) {
 	_oxmbsnvxlannetworkid := &OxmBsnVxlanNetworkId{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmBsnVxlanNetworkId packet too short: %d < 4", decoder.Length())
@@ -22865,7 +22864,7 @@ type OxmBsnVxlanNetworkIdMasked struct {
 }
 
 type IOxmBsnVxlanNetworkIdMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -22886,7 +22885,7 @@ func (self *OxmBsnVxlanNetworkIdMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmBsnVxlanNetworkIdMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmBsnVxlanNetworkIdMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -22897,7 +22896,7 @@ func (self *OxmBsnVxlanNetworkIdMasked) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeOxmBsnVxlanNetworkIdMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmBsnVxlanNetworkIdMasked, error) {
+func DecodeOxmBsnVxlanNetworkIdMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmBsnVxlanNetworkIdMasked, error) {
 	_oxmbsnvxlannetworkidmasked := &OxmBsnVxlanNetworkIdMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmBsnVxlanNetworkIdMasked packet too short: %d < 8", decoder.Length())
@@ -22943,7 +22942,7 @@ type OxmConnTrackingIpv6Dst struct {
 }
 
 type IOxmConnTrackingIpv6Dst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -22955,7 +22954,7 @@ func (self *OxmConnTrackingIpv6Dst) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *OxmConnTrackingIpv6Dst) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingIpv6Dst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -22965,7 +22964,7 @@ func (self *OxmConnTrackingIpv6Dst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmConnTrackingIpv6Dst(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingIpv6Dst, error) {
+func DecodeOxmConnTrackingIpv6Dst(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingIpv6Dst, error) {
 	_oxmconntrackingipv6dst := &OxmConnTrackingIpv6Dst{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("OxmConnTrackingIpv6Dst packet too short: %d < 16", decoder.Length())
@@ -23003,7 +23002,7 @@ type OxmConnTrackingIpv6DstMasked struct {
 }
 
 type IOxmConnTrackingIpv6DstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -23024,7 +23023,7 @@ func (self *OxmConnTrackingIpv6DstMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *OxmConnTrackingIpv6DstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingIpv6DstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -23035,7 +23034,7 @@ func (self *OxmConnTrackingIpv6DstMasked) Serialize(encoder *goloxi.Encoder) err
 	return nil
 }
 
-func DecodeOxmConnTrackingIpv6DstMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingIpv6DstMasked, error) {
+func DecodeOxmConnTrackingIpv6DstMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingIpv6DstMasked, error) {
 	_oxmconntrackingipv6dstmasked := &OxmConnTrackingIpv6DstMasked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("OxmConnTrackingIpv6DstMasked packet too short: %d < 32", decoder.Length())
@@ -23081,7 +23080,7 @@ type OxmConnTrackingIpv6Src struct {
 }
 
 type IOxmConnTrackingIpv6Src interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -23093,7 +23092,7 @@ func (self *OxmConnTrackingIpv6Src) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *OxmConnTrackingIpv6Src) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingIpv6Src) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -23103,7 +23102,7 @@ func (self *OxmConnTrackingIpv6Src) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmConnTrackingIpv6Src(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingIpv6Src, error) {
+func DecodeOxmConnTrackingIpv6Src(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingIpv6Src, error) {
 	_oxmconntrackingipv6src := &OxmConnTrackingIpv6Src{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("OxmConnTrackingIpv6Src packet too short: %d < 16", decoder.Length())
@@ -23141,7 +23140,7 @@ type OxmConnTrackingIpv6SrcMasked struct {
 }
 
 type IOxmConnTrackingIpv6SrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -23162,7 +23161,7 @@ func (self *OxmConnTrackingIpv6SrcMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *OxmConnTrackingIpv6SrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingIpv6SrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -23173,7 +23172,7 @@ func (self *OxmConnTrackingIpv6SrcMasked) Serialize(encoder *goloxi.Encoder) err
 	return nil
 }
 
-func DecodeOxmConnTrackingIpv6SrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingIpv6SrcMasked, error) {
+func DecodeOxmConnTrackingIpv6SrcMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingIpv6SrcMasked, error) {
 	_oxmconntrackingipv6srcmasked := &OxmConnTrackingIpv6SrcMasked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("OxmConnTrackingIpv6SrcMasked packet too short: %d < 32", decoder.Length())
@@ -23219,7 +23218,7 @@ type OxmConnTrackingLabel struct {
 }
 
 type IOxmConnTrackingLabel interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint128
 }
 
@@ -23231,7 +23230,7 @@ func (self *OxmConnTrackingLabel) SetValue(v uint128) {
 	self.Value = v
 }
 
-func (self *OxmConnTrackingLabel) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingLabel) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -23241,7 +23240,7 @@ func (self *OxmConnTrackingLabel) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmConnTrackingLabel(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingLabel, error) {
+func DecodeOxmConnTrackingLabel(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingLabel, error) {
 	_oxmconntrackinglabel := &OxmConnTrackingLabel{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("OxmConnTrackingLabel packet too short: %d < 16", decoder.Length())
@@ -23279,7 +23278,7 @@ type OxmConnTrackingLabelMasked struct {
 }
 
 type IOxmConnTrackingLabelMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint128
 	GetValueMask() uint128
 }
@@ -23300,7 +23299,7 @@ func (self *OxmConnTrackingLabelMasked) SetValueMask(v uint128) {
 	self.ValueMask = v
 }
 
-func (self *OxmConnTrackingLabelMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingLabelMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -23311,7 +23310,7 @@ func (self *OxmConnTrackingLabelMasked) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeOxmConnTrackingLabelMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingLabelMasked, error) {
+func DecodeOxmConnTrackingLabelMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingLabelMasked, error) {
 	_oxmconntrackinglabelmasked := &OxmConnTrackingLabelMasked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("OxmConnTrackingLabelMasked packet too short: %d < 32", decoder.Length())
@@ -23357,7 +23356,7 @@ type OxmConnTrackingMark struct {
 }
 
 type IOxmConnTrackingMark interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -23369,7 +23368,7 @@ func (self *OxmConnTrackingMark) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmConnTrackingMark) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingMark) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -23379,7 +23378,7 @@ func (self *OxmConnTrackingMark) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmConnTrackingMark(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingMark, error) {
+func DecodeOxmConnTrackingMark(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingMark, error) {
 	_oxmconntrackingmark := &OxmConnTrackingMark{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmConnTrackingMark packet too short: %d < 4", decoder.Length())
@@ -23417,7 +23416,7 @@ type OxmConnTrackingMarkMasked struct {
 }
 
 type IOxmConnTrackingMarkMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -23438,7 +23437,7 @@ func (self *OxmConnTrackingMarkMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmConnTrackingMarkMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingMarkMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -23449,7 +23448,7 @@ func (self *OxmConnTrackingMarkMasked) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeOxmConnTrackingMarkMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingMarkMasked, error) {
+func DecodeOxmConnTrackingMarkMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingMarkMasked, error) {
 	_oxmconntrackingmarkmasked := &OxmConnTrackingMarkMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmConnTrackingMarkMasked packet too short: %d < 8", decoder.Length())
@@ -23495,7 +23494,7 @@ type OxmConnTrackingNwDst struct {
 }
 
 type IOxmConnTrackingNwDst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -23507,7 +23506,7 @@ func (self *OxmConnTrackingNwDst) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmConnTrackingNwDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingNwDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -23517,7 +23516,7 @@ func (self *OxmConnTrackingNwDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmConnTrackingNwDst(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingNwDst, error) {
+func DecodeOxmConnTrackingNwDst(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingNwDst, error) {
 	_oxmconntrackingnwdst := &OxmConnTrackingNwDst{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmConnTrackingNwDst packet too short: %d < 4", decoder.Length())
@@ -23555,7 +23554,7 @@ type OxmConnTrackingNwDstMasked struct {
 }
 
 type IOxmConnTrackingNwDstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -23576,7 +23575,7 @@ func (self *OxmConnTrackingNwDstMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmConnTrackingNwDstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingNwDstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -23587,7 +23586,7 @@ func (self *OxmConnTrackingNwDstMasked) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeOxmConnTrackingNwDstMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingNwDstMasked, error) {
+func DecodeOxmConnTrackingNwDstMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingNwDstMasked, error) {
 	_oxmconntrackingnwdstmasked := &OxmConnTrackingNwDstMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmConnTrackingNwDstMasked packet too short: %d < 8", decoder.Length())
@@ -23633,7 +23632,7 @@ type OxmConnTrackingNwProto struct {
 }
 
 type IOxmConnTrackingNwProto interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -23645,7 +23644,7 @@ func (self *OxmConnTrackingNwProto) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *OxmConnTrackingNwProto) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingNwProto) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -23655,7 +23654,7 @@ func (self *OxmConnTrackingNwProto) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmConnTrackingNwProto(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingNwProto, error) {
+func DecodeOxmConnTrackingNwProto(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingNwProto, error) {
 	_oxmconntrackingnwproto := &OxmConnTrackingNwProto{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("OxmConnTrackingNwProto packet too short: %d < 1", decoder.Length())
@@ -23693,7 +23692,7 @@ type OxmConnTrackingNwProtoMasked struct {
 }
 
 type IOxmConnTrackingNwProtoMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 	GetValueMask() uint8
 }
@@ -23714,7 +23713,7 @@ func (self *OxmConnTrackingNwProtoMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *OxmConnTrackingNwProtoMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingNwProtoMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -23725,7 +23724,7 @@ func (self *OxmConnTrackingNwProtoMasked) Serialize(encoder *goloxi.Encoder) err
 	return nil
 }
 
-func DecodeOxmConnTrackingNwProtoMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingNwProtoMasked, error) {
+func DecodeOxmConnTrackingNwProtoMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingNwProtoMasked, error) {
 	_oxmconntrackingnwprotomasked := &OxmConnTrackingNwProtoMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmConnTrackingNwProtoMasked packet too short: %d < 2", decoder.Length())
@@ -23771,7 +23770,7 @@ type OxmConnTrackingNwSrc struct {
 }
 
 type IOxmConnTrackingNwSrc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -23783,7 +23782,7 @@ func (self *OxmConnTrackingNwSrc) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmConnTrackingNwSrc) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingNwSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -23793,7 +23792,7 @@ func (self *OxmConnTrackingNwSrc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmConnTrackingNwSrc(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingNwSrc, error) {
+func DecodeOxmConnTrackingNwSrc(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingNwSrc, error) {
 	_oxmconntrackingnwsrc := &OxmConnTrackingNwSrc{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmConnTrackingNwSrc packet too short: %d < 4", decoder.Length())
@@ -23831,7 +23830,7 @@ type OxmConnTrackingNwSrcMasked struct {
 }
 
 type IOxmConnTrackingNwSrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -23852,7 +23851,7 @@ func (self *OxmConnTrackingNwSrcMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmConnTrackingNwSrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingNwSrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -23863,7 +23862,7 @@ func (self *OxmConnTrackingNwSrcMasked) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeOxmConnTrackingNwSrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingNwSrcMasked, error) {
+func DecodeOxmConnTrackingNwSrcMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingNwSrcMasked, error) {
 	_oxmconntrackingnwsrcmasked := &OxmConnTrackingNwSrcMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmConnTrackingNwSrcMasked packet too short: %d < 8", decoder.Length())
@@ -23909,7 +23908,7 @@ type OxmConnTrackingState struct {
 }
 
 type IOxmConnTrackingState interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() CsStates
 }
 
@@ -23921,7 +23920,7 @@ func (self *OxmConnTrackingState) SetValue(v CsStates) {
 	self.Value = v
 }
 
-func (self *OxmConnTrackingState) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingState) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -23931,7 +23930,7 @@ func (self *OxmConnTrackingState) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmConnTrackingState(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingState, error) {
+func DecodeOxmConnTrackingState(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingState, error) {
 	_oxmconntrackingstate := &OxmConnTrackingState{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmConnTrackingState packet too short: %d < 4", decoder.Length())
@@ -23969,7 +23968,7 @@ type OxmConnTrackingStateMasked struct {
 }
 
 type IOxmConnTrackingStateMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() CsStates
 	GetValueMask() CsStates
 }
@@ -23990,7 +23989,7 @@ func (self *OxmConnTrackingStateMasked) SetValueMask(v CsStates) {
 	self.ValueMask = v
 }
 
-func (self *OxmConnTrackingStateMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingStateMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24001,7 +24000,7 @@ func (self *OxmConnTrackingStateMasked) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeOxmConnTrackingStateMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingStateMasked, error) {
+func DecodeOxmConnTrackingStateMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingStateMasked, error) {
 	_oxmconntrackingstatemasked := &OxmConnTrackingStateMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmConnTrackingStateMasked packet too short: %d < 8", decoder.Length())
@@ -24047,7 +24046,7 @@ type OxmConnTrackingTpDst struct {
 }
 
 type IOxmConnTrackingTpDst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -24059,7 +24058,7 @@ func (self *OxmConnTrackingTpDst) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmConnTrackingTpDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingTpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24069,7 +24068,7 @@ func (self *OxmConnTrackingTpDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmConnTrackingTpDst(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingTpDst, error) {
+func DecodeOxmConnTrackingTpDst(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingTpDst, error) {
 	_oxmconntrackingtpdst := &OxmConnTrackingTpDst{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmConnTrackingTpDst packet too short: %d < 2", decoder.Length())
@@ -24107,7 +24106,7 @@ type OxmConnTrackingTpDstMasked struct {
 }
 
 type IOxmConnTrackingTpDstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -24128,7 +24127,7 @@ func (self *OxmConnTrackingTpDstMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmConnTrackingTpDstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingTpDstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24139,7 +24138,7 @@ func (self *OxmConnTrackingTpDstMasked) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeOxmConnTrackingTpDstMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingTpDstMasked, error) {
+func DecodeOxmConnTrackingTpDstMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingTpDstMasked, error) {
 	_oxmconntrackingtpdstmasked := &OxmConnTrackingTpDstMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmConnTrackingTpDstMasked packet too short: %d < 4", decoder.Length())
@@ -24185,7 +24184,7 @@ type OxmConnTrackingTpSrc struct {
 }
 
 type IOxmConnTrackingTpSrc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -24197,7 +24196,7 @@ func (self *OxmConnTrackingTpSrc) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmConnTrackingTpSrc) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingTpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24207,7 +24206,7 @@ func (self *OxmConnTrackingTpSrc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmConnTrackingTpSrc(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingTpSrc, error) {
+func DecodeOxmConnTrackingTpSrc(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingTpSrc, error) {
 	_oxmconntrackingtpsrc := &OxmConnTrackingTpSrc{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmConnTrackingTpSrc packet too short: %d < 2", decoder.Length())
@@ -24245,7 +24244,7 @@ type OxmConnTrackingTpSrcMasked struct {
 }
 
 type IOxmConnTrackingTpSrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -24266,7 +24265,7 @@ func (self *OxmConnTrackingTpSrcMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmConnTrackingTpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingTpSrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24277,7 +24276,7 @@ func (self *OxmConnTrackingTpSrcMasked) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeOxmConnTrackingTpSrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingTpSrcMasked, error) {
+func DecodeOxmConnTrackingTpSrcMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingTpSrcMasked, error) {
 	_oxmconntrackingtpsrcmasked := &OxmConnTrackingTpSrcMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmConnTrackingTpSrcMasked packet too short: %d < 4", decoder.Length())
@@ -24323,7 +24322,7 @@ type OxmConnTrackingZone struct {
 }
 
 type IOxmConnTrackingZone interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -24335,7 +24334,7 @@ func (self *OxmConnTrackingZone) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmConnTrackingZone) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingZone) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24345,7 +24344,7 @@ func (self *OxmConnTrackingZone) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmConnTrackingZone(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingZone, error) {
+func DecodeOxmConnTrackingZone(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingZone, error) {
 	_oxmconntrackingzone := &OxmConnTrackingZone{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmConnTrackingZone packet too short: %d < 2", decoder.Length())
@@ -24383,7 +24382,7 @@ type OxmConnTrackingZoneMasked struct {
 }
 
 type IOxmConnTrackingZoneMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -24404,7 +24403,7 @@ func (self *OxmConnTrackingZoneMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmConnTrackingZoneMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmConnTrackingZoneMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24415,7 +24414,7 @@ func (self *OxmConnTrackingZoneMasked) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeOxmConnTrackingZoneMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmConnTrackingZoneMasked, error) {
+func DecodeOxmConnTrackingZoneMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmConnTrackingZoneMasked, error) {
 	_oxmconntrackingzonemasked := &OxmConnTrackingZoneMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmConnTrackingZoneMasked packet too short: %d < 4", decoder.Length())
@@ -24461,7 +24460,7 @@ type OxmEthDst struct {
 }
 
 type IOxmEthDst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 }
 
@@ -24473,7 +24472,7 @@ func (self *OxmEthDst) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
-func (self *OxmEthDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmEthDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24483,7 +24482,7 @@ func (self *OxmEthDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmEthDst(parent *Oxm, decoder *goloxi.Decoder) (*OxmEthDst, error) {
+func DecodeOxmEthDst(parent *Oxm, decoder *openflow.Decoder) (*OxmEthDst, error) {
 	_oxmethdst := &OxmEthDst{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("OxmEthDst packet too short: %d < 6", decoder.Length())
@@ -24521,7 +24520,7 @@ type OxmEthDstMasked struct {
 }
 
 type IOxmEthDstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 	GetValueMask() net.HardwareAddr
 }
@@ -24542,7 +24541,7 @@ func (self *OxmEthDstMasked) SetValueMask(v net.HardwareAddr) {
 	self.ValueMask = v
 }
 
-func (self *OxmEthDstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmEthDstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24553,7 +24552,7 @@ func (self *OxmEthDstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmEthDstMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmEthDstMasked, error) {
+func DecodeOxmEthDstMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmEthDstMasked, error) {
 	_oxmethdstmasked := &OxmEthDstMasked{Oxm: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("OxmEthDstMasked packet too short: %d < 12", decoder.Length())
@@ -24599,7 +24598,7 @@ type OxmEthSrc struct {
 }
 
 type IOxmEthSrc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 }
 
@@ -24611,7 +24610,7 @@ func (self *OxmEthSrc) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
-func (self *OxmEthSrc) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmEthSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24621,7 +24620,7 @@ func (self *OxmEthSrc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmEthSrc(parent *Oxm, decoder *goloxi.Decoder) (*OxmEthSrc, error) {
+func DecodeOxmEthSrc(parent *Oxm, decoder *openflow.Decoder) (*OxmEthSrc, error) {
 	_oxmethsrc := &OxmEthSrc{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("OxmEthSrc packet too short: %d < 6", decoder.Length())
@@ -24659,7 +24658,7 @@ type OxmEthSrcMasked struct {
 }
 
 type IOxmEthSrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 	GetValueMask() net.HardwareAddr
 }
@@ -24680,7 +24679,7 @@ func (self *OxmEthSrcMasked) SetValueMask(v net.HardwareAddr) {
 	self.ValueMask = v
 }
 
-func (self *OxmEthSrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmEthSrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24691,7 +24690,7 @@ func (self *OxmEthSrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmEthSrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmEthSrcMasked, error) {
+func DecodeOxmEthSrcMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmEthSrcMasked, error) {
 	_oxmethsrcmasked := &OxmEthSrcMasked{Oxm: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("OxmEthSrcMasked packet too short: %d < 12", decoder.Length())
@@ -24737,7 +24736,7 @@ type OxmEthType struct {
 }
 
 type IOxmEthType interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() EthernetType
 }
 
@@ -24749,7 +24748,7 @@ func (self *OxmEthType) SetValue(v EthernetType) {
 	self.Value = v
 }
 
-func (self *OxmEthType) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmEthType) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24759,7 +24758,7 @@ func (self *OxmEthType) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmEthType(parent *Oxm, decoder *goloxi.Decoder) (*OxmEthType, error) {
+func DecodeOxmEthType(parent *Oxm, decoder *openflow.Decoder) (*OxmEthType, error) {
 	_oxmethtype := &OxmEthType{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmEthType packet too short: %d < 2", decoder.Length())
@@ -24797,7 +24796,7 @@ type OxmEthTypeMasked struct {
 }
 
 type IOxmEthTypeMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() EthernetType
 	GetValueMask() uint16
 }
@@ -24818,7 +24817,7 @@ func (self *OxmEthTypeMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmEthTypeMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmEthTypeMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24829,7 +24828,7 @@ func (self *OxmEthTypeMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmEthTypeMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmEthTypeMasked, error) {
+func DecodeOxmEthTypeMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmEthTypeMasked, error) {
 	_oxmethtypemasked := &OxmEthTypeMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmEthTypeMasked packet too short: %d < 4", decoder.Length())
@@ -24875,7 +24874,7 @@ type OxmIcmpv4Code struct {
 }
 
 type IOxmIcmpv4Code interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -24887,7 +24886,7 @@ func (self *OxmIcmpv4Code) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *OxmIcmpv4Code) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIcmpv4Code) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24897,7 +24896,7 @@ func (self *OxmIcmpv4Code) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIcmpv4Code(parent *Oxm, decoder *goloxi.Decoder) (*OxmIcmpv4Code, error) {
+func DecodeOxmIcmpv4Code(parent *Oxm, decoder *openflow.Decoder) (*OxmIcmpv4Code, error) {
 	_oxmicmpv4code := &OxmIcmpv4Code{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("OxmIcmpv4Code packet too short: %d < 1", decoder.Length())
@@ -24935,7 +24934,7 @@ type OxmIcmpv4CodeMasked struct {
 }
 
 type IOxmIcmpv4CodeMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 	GetValueMask() uint8
 }
@@ -24956,7 +24955,7 @@ func (self *OxmIcmpv4CodeMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *OxmIcmpv4CodeMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIcmpv4CodeMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -24967,7 +24966,7 @@ func (self *OxmIcmpv4CodeMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIcmpv4CodeMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIcmpv4CodeMasked, error) {
+func DecodeOxmIcmpv4CodeMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIcmpv4CodeMasked, error) {
 	_oxmicmpv4codemasked := &OxmIcmpv4CodeMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmIcmpv4CodeMasked packet too short: %d < 2", decoder.Length())
@@ -25013,7 +25012,7 @@ type OxmIcmpv4Type struct {
 }
 
 type IOxmIcmpv4Type interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() IcmpType
 }
 
@@ -25025,7 +25024,7 @@ func (self *OxmIcmpv4Type) SetValue(v IcmpType) {
 	self.Value = v
 }
 
-func (self *OxmIcmpv4Type) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIcmpv4Type) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -25035,7 +25034,7 @@ func (self *OxmIcmpv4Type) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIcmpv4Type(parent *Oxm, decoder *goloxi.Decoder) (*OxmIcmpv4Type, error) {
+func DecodeOxmIcmpv4Type(parent *Oxm, decoder *openflow.Decoder) (*OxmIcmpv4Type, error) {
 	_oxmicmpv4type := &OxmIcmpv4Type{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("OxmIcmpv4Type packet too short: %d < 1", decoder.Length())
@@ -25073,7 +25072,7 @@ type OxmIcmpv4TypeMasked struct {
 }
 
 type IOxmIcmpv4TypeMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() IcmpType
 	GetValueMask() uint8
 }
@@ -25094,7 +25093,7 @@ func (self *OxmIcmpv4TypeMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *OxmIcmpv4TypeMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIcmpv4TypeMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -25105,7 +25104,7 @@ func (self *OxmIcmpv4TypeMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIcmpv4TypeMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIcmpv4TypeMasked, error) {
+func DecodeOxmIcmpv4TypeMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIcmpv4TypeMasked, error) {
 	_oxmicmpv4typemasked := &OxmIcmpv4TypeMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmIcmpv4TypeMasked packet too short: %d < 2", decoder.Length())
@@ -25151,7 +25150,7 @@ type OxmIcmpv6Code struct {
 }
 
 type IOxmIcmpv6Code interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -25163,7 +25162,7 @@ func (self *OxmIcmpv6Code) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *OxmIcmpv6Code) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIcmpv6Code) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -25173,7 +25172,7 @@ func (self *OxmIcmpv6Code) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIcmpv6Code(parent *Oxm, decoder *goloxi.Decoder) (*OxmIcmpv6Code, error) {
+func DecodeOxmIcmpv6Code(parent *Oxm, decoder *openflow.Decoder) (*OxmIcmpv6Code, error) {
 	_oxmicmpv6code := &OxmIcmpv6Code{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("OxmIcmpv6Code packet too short: %d < 1", decoder.Length())
@@ -25211,7 +25210,7 @@ type OxmIcmpv6CodeMasked struct {
 }
 
 type IOxmIcmpv6CodeMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 	GetValueMask() uint8
 }
@@ -25232,7 +25231,7 @@ func (self *OxmIcmpv6CodeMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *OxmIcmpv6CodeMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIcmpv6CodeMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -25243,7 +25242,7 @@ func (self *OxmIcmpv6CodeMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIcmpv6CodeMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIcmpv6CodeMasked, error) {
+func DecodeOxmIcmpv6CodeMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIcmpv6CodeMasked, error) {
 	_oxmicmpv6codemasked := &OxmIcmpv6CodeMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmIcmpv6CodeMasked packet too short: %d < 2", decoder.Length())
@@ -25289,7 +25288,7 @@ type OxmIcmpv6Type struct {
 }
 
 type IOxmIcmpv6Type interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() Icmpv6Type
 }
 
@@ -25301,7 +25300,7 @@ func (self *OxmIcmpv6Type) SetValue(v Icmpv6Type) {
 	self.Value = v
 }
 
-func (self *OxmIcmpv6Type) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIcmpv6Type) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -25311,7 +25310,7 @@ func (self *OxmIcmpv6Type) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIcmpv6Type(parent *Oxm, decoder *goloxi.Decoder) (*OxmIcmpv6Type, error) {
+func DecodeOxmIcmpv6Type(parent *Oxm, decoder *openflow.Decoder) (*OxmIcmpv6Type, error) {
 	_oxmicmpv6type := &OxmIcmpv6Type{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("OxmIcmpv6Type packet too short: %d < 1", decoder.Length())
@@ -25349,7 +25348,7 @@ type OxmIcmpv6TypeMasked struct {
 }
 
 type IOxmIcmpv6TypeMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() Icmpv6Type
 	GetValueMask() uint8
 }
@@ -25370,7 +25369,7 @@ func (self *OxmIcmpv6TypeMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *OxmIcmpv6TypeMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIcmpv6TypeMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -25381,7 +25380,7 @@ func (self *OxmIcmpv6TypeMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIcmpv6TypeMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIcmpv6TypeMasked, error) {
+func DecodeOxmIcmpv6TypeMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIcmpv6TypeMasked, error) {
 	_oxmicmpv6typemasked := &OxmIcmpv6TypeMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmIcmpv6TypeMasked packet too short: %d < 2", decoder.Length())
@@ -25427,7 +25426,7 @@ type OxmInPhyPort struct {
 }
 
 type IOxmInPhyPort interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() Port
 }
 
@@ -25439,7 +25438,7 @@ func (self *OxmInPhyPort) SetValue(v Port) {
 	self.Value = v
 }
 
-func (self *OxmInPhyPort) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmInPhyPort) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -25449,7 +25448,7 @@ func (self *OxmInPhyPort) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmInPhyPort(parent *Oxm, decoder *goloxi.Decoder) (*OxmInPhyPort, error) {
+func DecodeOxmInPhyPort(parent *Oxm, decoder *openflow.Decoder) (*OxmInPhyPort, error) {
 	_oxminphyport := &OxmInPhyPort{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmInPhyPort packet too short: %d < 4", decoder.Length())
@@ -25487,7 +25486,7 @@ type OxmInPhyPortMasked struct {
 }
 
 type IOxmInPhyPortMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() Port
 	GetValueMask() Port
 }
@@ -25508,7 +25507,7 @@ func (self *OxmInPhyPortMasked) SetValueMask(v Port) {
 	self.ValueMask = v
 }
 
-func (self *OxmInPhyPortMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmInPhyPortMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -25519,7 +25518,7 @@ func (self *OxmInPhyPortMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmInPhyPortMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmInPhyPortMasked, error) {
+func DecodeOxmInPhyPortMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmInPhyPortMasked, error) {
 	_oxminphyportmasked := &OxmInPhyPortMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmInPhyPortMasked packet too short: %d < 8", decoder.Length())
@@ -25565,7 +25564,7 @@ type OxmInPort struct {
 }
 
 type IOxmInPort interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() Port
 }
 
@@ -25577,7 +25576,7 @@ func (self *OxmInPort) SetValue(v Port) {
 	self.Value = v
 }
 
-func (self *OxmInPort) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmInPort) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -25587,7 +25586,7 @@ func (self *OxmInPort) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmInPort(parent *Oxm, decoder *goloxi.Decoder) (*OxmInPort, error) {
+func DecodeOxmInPort(parent *Oxm, decoder *openflow.Decoder) (*OxmInPort, error) {
 	_oxminport := &OxmInPort{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmInPort packet too short: %d < 4", decoder.Length())
@@ -25625,7 +25624,7 @@ type OxmInPortMasked struct {
 }
 
 type IOxmInPortMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() Port
 	GetValueMask() Port
 }
@@ -25646,7 +25645,7 @@ func (self *OxmInPortMasked) SetValueMask(v Port) {
 	self.ValueMask = v
 }
 
-func (self *OxmInPortMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmInPortMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -25657,7 +25656,7 @@ func (self *OxmInPortMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmInPortMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmInPortMasked, error) {
+func DecodeOxmInPortMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmInPortMasked, error) {
 	_oxminportmasked := &OxmInPortMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmInPortMasked packet too short: %d < 8", decoder.Length())
@@ -25703,7 +25702,7 @@ type OxmIpDscp struct {
 }
 
 type IOxmIpDscp interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -25715,7 +25714,7 @@ func (self *OxmIpDscp) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *OxmIpDscp) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpDscp) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -25725,7 +25724,7 @@ func (self *OxmIpDscp) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpDscp(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpDscp, error) {
+func DecodeOxmIpDscp(parent *Oxm, decoder *openflow.Decoder) (*OxmIpDscp, error) {
 	_oxmipdscp := &OxmIpDscp{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("OxmIpDscp packet too short: %d < 1", decoder.Length())
@@ -25763,7 +25762,7 @@ type OxmIpDscpMasked struct {
 }
 
 type IOxmIpDscpMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 	GetValueMask() uint8
 }
@@ -25784,7 +25783,7 @@ func (self *OxmIpDscpMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *OxmIpDscpMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpDscpMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -25795,7 +25794,7 @@ func (self *OxmIpDscpMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpDscpMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpDscpMasked, error) {
+func DecodeOxmIpDscpMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIpDscpMasked, error) {
 	_oxmipdscpmasked := &OxmIpDscpMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmIpDscpMasked packet too short: %d < 2", decoder.Length())
@@ -25841,7 +25840,7 @@ type OxmIpEcn struct {
 }
 
 type IOxmIpEcn interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -25853,7 +25852,7 @@ func (self *OxmIpEcn) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *OxmIpEcn) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpEcn) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -25863,7 +25862,7 @@ func (self *OxmIpEcn) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpEcn(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpEcn, error) {
+func DecodeOxmIpEcn(parent *Oxm, decoder *openflow.Decoder) (*OxmIpEcn, error) {
 	_oxmipecn := &OxmIpEcn{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("OxmIpEcn packet too short: %d < 1", decoder.Length())
@@ -25901,7 +25900,7 @@ type OxmIpEcnMasked struct {
 }
 
 type IOxmIpEcnMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 	GetValueMask() uint8
 }
@@ -25922,7 +25921,7 @@ func (self *OxmIpEcnMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *OxmIpEcnMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpEcnMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -25933,7 +25932,7 @@ func (self *OxmIpEcnMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpEcnMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpEcnMasked, error) {
+func DecodeOxmIpEcnMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIpEcnMasked, error) {
 	_oxmipecnmasked := &OxmIpEcnMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmIpEcnMasked packet too short: %d < 2", decoder.Length())
@@ -25979,7 +25978,7 @@ type OxmIpProto struct {
 }
 
 type IOxmIpProto interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() IpPrototype
 }
 
@@ -25991,7 +25990,7 @@ func (self *OxmIpProto) SetValue(v IpPrototype) {
 	self.Value = v
 }
 
-func (self *OxmIpProto) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpProto) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26001,7 +26000,7 @@ func (self *OxmIpProto) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpProto(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpProto, error) {
+func DecodeOxmIpProto(parent *Oxm, decoder *openflow.Decoder) (*OxmIpProto, error) {
 	_oxmipproto := &OxmIpProto{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("OxmIpProto packet too short: %d < 1", decoder.Length())
@@ -26039,7 +26038,7 @@ type OxmIpProtoMasked struct {
 }
 
 type IOxmIpProtoMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() IpPrototype
 	GetValueMask() uint8
 }
@@ -26060,7 +26059,7 @@ func (self *OxmIpProtoMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *OxmIpProtoMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpProtoMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26071,7 +26070,7 @@ func (self *OxmIpProtoMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpProtoMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpProtoMasked, error) {
+func DecodeOxmIpProtoMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIpProtoMasked, error) {
 	_oxmipprotomasked := &OxmIpProtoMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmIpProtoMasked packet too short: %d < 2", decoder.Length())
@@ -26117,7 +26116,7 @@ type OxmIpv4Dst struct {
 }
 
 type IOxmIpv4Dst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -26129,7 +26128,7 @@ func (self *OxmIpv4Dst) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *OxmIpv4Dst) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv4Dst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26139,7 +26138,7 @@ func (self *OxmIpv4Dst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv4Dst(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv4Dst, error) {
+func DecodeOxmIpv4Dst(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv4Dst, error) {
 	_oxmipv4dst := &OxmIpv4Dst{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmIpv4Dst packet too short: %d < 4", decoder.Length())
@@ -26177,7 +26176,7 @@ type OxmIpv4DstMasked struct {
 }
 
 type IOxmIpv4DstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -26198,7 +26197,7 @@ func (self *OxmIpv4DstMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *OxmIpv4DstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv4DstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26209,7 +26208,7 @@ func (self *OxmIpv4DstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv4DstMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv4DstMasked, error) {
+func DecodeOxmIpv4DstMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv4DstMasked, error) {
 	_oxmipv4dstmasked := &OxmIpv4DstMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmIpv4DstMasked packet too short: %d < 8", decoder.Length())
@@ -26255,7 +26254,7 @@ type OxmIpv4Src struct {
 }
 
 type IOxmIpv4Src interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -26267,7 +26266,7 @@ func (self *OxmIpv4Src) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *OxmIpv4Src) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv4Src) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26277,7 +26276,7 @@ func (self *OxmIpv4Src) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv4Src(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv4Src, error) {
+func DecodeOxmIpv4Src(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv4Src, error) {
 	_oxmipv4src := &OxmIpv4Src{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmIpv4Src packet too short: %d < 4", decoder.Length())
@@ -26315,7 +26314,7 @@ type OxmIpv4SrcMasked struct {
 }
 
 type IOxmIpv4SrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -26336,7 +26335,7 @@ func (self *OxmIpv4SrcMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *OxmIpv4SrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv4SrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26347,7 +26346,7 @@ func (self *OxmIpv4SrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv4SrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv4SrcMasked, error) {
+func DecodeOxmIpv4SrcMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv4SrcMasked, error) {
 	_oxmipv4srcmasked := &OxmIpv4SrcMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmIpv4SrcMasked packet too short: %d < 8", decoder.Length())
@@ -26393,7 +26392,7 @@ type OxmIpv6Dst struct {
 }
 
 type IOxmIpv6Dst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -26405,7 +26404,7 @@ func (self *OxmIpv6Dst) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *OxmIpv6Dst) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv6Dst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26415,7 +26414,7 @@ func (self *OxmIpv6Dst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv6Dst(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv6Dst, error) {
+func DecodeOxmIpv6Dst(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv6Dst, error) {
 	_oxmipv6dst := &OxmIpv6Dst{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("OxmIpv6Dst packet too short: %d < 16", decoder.Length())
@@ -26453,7 +26452,7 @@ type OxmIpv6DstMasked struct {
 }
 
 type IOxmIpv6DstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -26474,7 +26473,7 @@ func (self *OxmIpv6DstMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *OxmIpv6DstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv6DstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26485,7 +26484,7 @@ func (self *OxmIpv6DstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv6DstMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv6DstMasked, error) {
+func DecodeOxmIpv6DstMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv6DstMasked, error) {
 	_oxmipv6dstmasked := &OxmIpv6DstMasked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("OxmIpv6DstMasked packet too short: %d < 32", decoder.Length())
@@ -26531,7 +26530,7 @@ type OxmIpv6Exthdr struct {
 }
 
 type IOxmIpv6Exthdr interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -26543,7 +26542,7 @@ func (self *OxmIpv6Exthdr) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmIpv6Exthdr) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv6Exthdr) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26553,7 +26552,7 @@ func (self *OxmIpv6Exthdr) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv6Exthdr(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv6Exthdr, error) {
+func DecodeOxmIpv6Exthdr(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv6Exthdr, error) {
 	_oxmipv6exthdr := &OxmIpv6Exthdr{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmIpv6Exthdr packet too short: %d < 2", decoder.Length())
@@ -26591,7 +26590,7 @@ type OxmIpv6ExthdrMasked struct {
 }
 
 type IOxmIpv6ExthdrMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -26612,7 +26611,7 @@ func (self *OxmIpv6ExthdrMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmIpv6ExthdrMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv6ExthdrMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26623,7 +26622,7 @@ func (self *OxmIpv6ExthdrMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv6ExthdrMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv6ExthdrMasked, error) {
+func DecodeOxmIpv6ExthdrMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv6ExthdrMasked, error) {
 	_oxmipv6exthdrmasked := &OxmIpv6ExthdrMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmIpv6ExthdrMasked packet too short: %d < 4", decoder.Length())
@@ -26669,7 +26668,7 @@ type OxmIpv6Flabel struct {
 }
 
 type IOxmIpv6Flabel interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -26681,7 +26680,7 @@ func (self *OxmIpv6Flabel) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmIpv6Flabel) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv6Flabel) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26691,7 +26690,7 @@ func (self *OxmIpv6Flabel) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv6Flabel(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv6Flabel, error) {
+func DecodeOxmIpv6Flabel(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv6Flabel, error) {
 	_oxmipv6flabel := &OxmIpv6Flabel{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmIpv6Flabel packet too short: %d < 4", decoder.Length())
@@ -26729,7 +26728,7 @@ type OxmIpv6FlabelMasked struct {
 }
 
 type IOxmIpv6FlabelMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -26750,7 +26749,7 @@ func (self *OxmIpv6FlabelMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmIpv6FlabelMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv6FlabelMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26761,7 +26760,7 @@ func (self *OxmIpv6FlabelMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv6FlabelMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv6FlabelMasked, error) {
+func DecodeOxmIpv6FlabelMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv6FlabelMasked, error) {
 	_oxmipv6flabelmasked := &OxmIpv6FlabelMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmIpv6FlabelMasked packet too short: %d < 8", decoder.Length())
@@ -26807,7 +26806,7 @@ type OxmIpv6NdSll struct {
 }
 
 type IOxmIpv6NdSll interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 }
 
@@ -26819,7 +26818,7 @@ func (self *OxmIpv6NdSll) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
-func (self *OxmIpv6NdSll) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv6NdSll) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26829,7 +26828,7 @@ func (self *OxmIpv6NdSll) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv6NdSll(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv6NdSll, error) {
+func DecodeOxmIpv6NdSll(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv6NdSll, error) {
 	_oxmipv6ndsll := &OxmIpv6NdSll{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("OxmIpv6NdSll packet too short: %d < 6", decoder.Length())
@@ -26867,7 +26866,7 @@ type OxmIpv6NdSllMasked struct {
 }
 
 type IOxmIpv6NdSllMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 	GetValueMask() net.HardwareAddr
 }
@@ -26888,7 +26887,7 @@ func (self *OxmIpv6NdSllMasked) SetValueMask(v net.HardwareAddr) {
 	self.ValueMask = v
 }
 
-func (self *OxmIpv6NdSllMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv6NdSllMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26899,7 +26898,7 @@ func (self *OxmIpv6NdSllMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv6NdSllMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv6NdSllMasked, error) {
+func DecodeOxmIpv6NdSllMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv6NdSllMasked, error) {
 	_oxmipv6ndsllmasked := &OxmIpv6NdSllMasked{Oxm: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("OxmIpv6NdSllMasked packet too short: %d < 12", decoder.Length())
@@ -26945,7 +26944,7 @@ type OxmIpv6NdTarget struct {
 }
 
 type IOxmIpv6NdTarget interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -26957,7 +26956,7 @@ func (self *OxmIpv6NdTarget) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *OxmIpv6NdTarget) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv6NdTarget) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -26967,7 +26966,7 @@ func (self *OxmIpv6NdTarget) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv6NdTarget(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv6NdTarget, error) {
+func DecodeOxmIpv6NdTarget(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv6NdTarget, error) {
 	_oxmipv6ndtarget := &OxmIpv6NdTarget{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("OxmIpv6NdTarget packet too short: %d < 16", decoder.Length())
@@ -27005,7 +27004,7 @@ type OxmIpv6NdTargetMasked struct {
 }
 
 type IOxmIpv6NdTargetMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -27026,7 +27025,7 @@ func (self *OxmIpv6NdTargetMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *OxmIpv6NdTargetMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv6NdTargetMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -27037,7 +27036,7 @@ func (self *OxmIpv6NdTargetMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv6NdTargetMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv6NdTargetMasked, error) {
+func DecodeOxmIpv6NdTargetMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv6NdTargetMasked, error) {
 	_oxmipv6ndtargetmasked := &OxmIpv6NdTargetMasked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("OxmIpv6NdTargetMasked packet too short: %d < 32", decoder.Length())
@@ -27083,7 +27082,7 @@ type OxmIpv6NdTll struct {
 }
 
 type IOxmIpv6NdTll interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 }
 
@@ -27095,7 +27094,7 @@ func (self *OxmIpv6NdTll) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
-func (self *OxmIpv6NdTll) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv6NdTll) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -27105,7 +27104,7 @@ func (self *OxmIpv6NdTll) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv6NdTll(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv6NdTll, error) {
+func DecodeOxmIpv6NdTll(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv6NdTll, error) {
 	_oxmipv6ndtll := &OxmIpv6NdTll{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("OxmIpv6NdTll packet too short: %d < 6", decoder.Length())
@@ -27143,7 +27142,7 @@ type OxmIpv6NdTllMasked struct {
 }
 
 type IOxmIpv6NdTllMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.HardwareAddr
 	GetValueMask() net.HardwareAddr
 }
@@ -27164,7 +27163,7 @@ func (self *OxmIpv6NdTllMasked) SetValueMask(v net.HardwareAddr) {
 	self.ValueMask = v
 }
 
-func (self *OxmIpv6NdTllMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv6NdTllMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -27175,7 +27174,7 @@ func (self *OxmIpv6NdTllMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv6NdTllMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv6NdTllMasked, error) {
+func DecodeOxmIpv6NdTllMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv6NdTllMasked, error) {
 	_oxmipv6ndtllmasked := &OxmIpv6NdTllMasked{Oxm: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("OxmIpv6NdTllMasked packet too short: %d < 12", decoder.Length())
@@ -27221,7 +27220,7 @@ type OxmIpv6Src struct {
 }
 
 type IOxmIpv6Src interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -27233,7 +27232,7 @@ func (self *OxmIpv6Src) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *OxmIpv6Src) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv6Src) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -27243,7 +27242,7 @@ func (self *OxmIpv6Src) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv6Src(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv6Src, error) {
+func DecodeOxmIpv6Src(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv6Src, error) {
 	_oxmipv6src := &OxmIpv6Src{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("OxmIpv6Src packet too short: %d < 16", decoder.Length())
@@ -27281,7 +27280,7 @@ type OxmIpv6SrcMasked struct {
 }
 
 type IOxmIpv6SrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -27302,7 +27301,7 @@ func (self *OxmIpv6SrcMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *OxmIpv6SrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmIpv6SrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -27313,7 +27312,7 @@ func (self *OxmIpv6SrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmIpv6SrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmIpv6SrcMasked, error) {
+func DecodeOxmIpv6SrcMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmIpv6SrcMasked, error) {
 	_oxmipv6srcmasked := &OxmIpv6SrcMasked{Oxm: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("OxmIpv6SrcMasked packet too short: %d < 32", decoder.Length())
@@ -27359,7 +27358,7 @@ type OxmMetadata struct {
 }
 
 type IOxmMetadata interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint64
 }
 
@@ -27371,7 +27370,7 @@ func (self *OxmMetadata) SetValue(v uint64) {
 	self.Value = v
 }
 
-func (self *OxmMetadata) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmMetadata) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -27381,7 +27380,7 @@ func (self *OxmMetadata) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmMetadata(parent *Oxm, decoder *goloxi.Decoder) (*OxmMetadata, error) {
+func DecodeOxmMetadata(parent *Oxm, decoder *openflow.Decoder) (*OxmMetadata, error) {
 	_oxmmetadata := &OxmMetadata{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmMetadata packet too short: %d < 8", decoder.Length())
@@ -27419,7 +27418,7 @@ type OxmMetadataMasked struct {
 }
 
 type IOxmMetadataMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint64
 	GetValueMask() uint64
 }
@@ -27440,7 +27439,7 @@ func (self *OxmMetadataMasked) SetValueMask(v uint64) {
 	self.ValueMask = v
 }
 
-func (self *OxmMetadataMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmMetadataMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -27451,7 +27450,7 @@ func (self *OxmMetadataMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmMetadataMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmMetadataMasked, error) {
+func DecodeOxmMetadataMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmMetadataMasked, error) {
 	_oxmmetadatamasked := &OxmMetadataMasked{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("OxmMetadataMasked packet too short: %d < 16", decoder.Length())
@@ -27497,7 +27496,7 @@ type OxmMplsBos struct {
 }
 
 type IOxmMplsBos interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -27509,7 +27508,7 @@ func (self *OxmMplsBos) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *OxmMplsBos) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmMplsBos) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -27519,7 +27518,7 @@ func (self *OxmMplsBos) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmMplsBos(parent *Oxm, decoder *goloxi.Decoder) (*OxmMplsBos, error) {
+func DecodeOxmMplsBos(parent *Oxm, decoder *openflow.Decoder) (*OxmMplsBos, error) {
 	_oxmmplsbos := &OxmMplsBos{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("OxmMplsBos packet too short: %d < 1", decoder.Length())
@@ -27557,7 +27556,7 @@ type OxmMplsBosMasked struct {
 }
 
 type IOxmMplsBosMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 	GetValueMask() uint8
 }
@@ -27578,7 +27577,7 @@ func (self *OxmMplsBosMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *OxmMplsBosMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmMplsBosMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -27589,7 +27588,7 @@ func (self *OxmMplsBosMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmMplsBosMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmMplsBosMasked, error) {
+func DecodeOxmMplsBosMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmMplsBosMasked, error) {
 	_oxmmplsbosmasked := &OxmMplsBosMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmMplsBosMasked packet too short: %d < 2", decoder.Length())
@@ -27635,7 +27634,7 @@ type OxmMplsLabel struct {
 }
 
 type IOxmMplsLabel interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 }
 
@@ -27647,7 +27646,7 @@ func (self *OxmMplsLabel) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *OxmMplsLabel) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmMplsLabel) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -27657,7 +27656,7 @@ func (self *OxmMplsLabel) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmMplsLabel(parent *Oxm, decoder *goloxi.Decoder) (*OxmMplsLabel, error) {
+func DecodeOxmMplsLabel(parent *Oxm, decoder *openflow.Decoder) (*OxmMplsLabel, error) {
 	_oxmmplslabel := &OxmMplsLabel{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmMplsLabel packet too short: %d < 4", decoder.Length())
@@ -27695,7 +27694,7 @@ type OxmMplsLabelMasked struct {
 }
 
 type IOxmMplsLabelMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint32
 	GetValueMask() uint32
 }
@@ -27716,7 +27715,7 @@ func (self *OxmMplsLabelMasked) SetValueMask(v uint32) {
 	self.ValueMask = v
 }
 
-func (self *OxmMplsLabelMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmMplsLabelMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -27727,7 +27726,7 @@ func (self *OxmMplsLabelMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmMplsLabelMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmMplsLabelMasked, error) {
+func DecodeOxmMplsLabelMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmMplsLabelMasked, error) {
 	_oxmmplslabelmasked := &OxmMplsLabelMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmMplsLabelMasked packet too short: %d < 8", decoder.Length())
@@ -27773,7 +27772,7 @@ type OxmMplsTc struct {
 }
 
 type IOxmMplsTc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -27785,7 +27784,7 @@ func (self *OxmMplsTc) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *OxmMplsTc) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmMplsTc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -27795,7 +27794,7 @@ func (self *OxmMplsTc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmMplsTc(parent *Oxm, decoder *goloxi.Decoder) (*OxmMplsTc, error) {
+func DecodeOxmMplsTc(parent *Oxm, decoder *openflow.Decoder) (*OxmMplsTc, error) {
 	_oxmmplstc := &OxmMplsTc{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("OxmMplsTc packet too short: %d < 1", decoder.Length())
@@ -27833,7 +27832,7 @@ type OxmMplsTcMasked struct {
 }
 
 type IOxmMplsTcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 	GetValueMask() uint8
 }
@@ -27854,7 +27853,7 @@ func (self *OxmMplsTcMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *OxmMplsTcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmMplsTcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -27865,7 +27864,7 @@ func (self *OxmMplsTcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmMplsTcMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmMplsTcMasked, error) {
+func DecodeOxmMplsTcMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmMplsTcMasked, error) {
 	_oxmmplstcmasked := &OxmMplsTcMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmMplsTcMasked packet too short: %d < 2", decoder.Length())
@@ -27912,7 +27911,7 @@ type OxmOvsTcpFlags struct {
 }
 
 type IOxmOvsTcpFlags interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetExperimenterId() uint32
 	GetValue() uint16
 }
@@ -27933,7 +27932,7 @@ func (self *OxmOvsTcpFlags) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmOvsTcpFlags) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmOvsTcpFlags) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -27944,7 +27943,7 @@ func (self *OxmOvsTcpFlags) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmOvsTcpFlags(parent *Oxm, decoder *goloxi.Decoder) (*OxmOvsTcpFlags, error) {
+func DecodeOxmOvsTcpFlags(parent *Oxm, decoder *openflow.Decoder) (*OxmOvsTcpFlags, error) {
 	_oxmovstcpflags := &OxmOvsTcpFlags{Oxm: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("OxmOvsTcpFlags packet too short: %d < 6", decoder.Length())
@@ -27984,7 +27983,7 @@ type OxmOvsTcpFlagsMasked struct {
 }
 
 type IOxmOvsTcpFlagsMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetExperimenterId() uint32
 	GetValue() uint16
 	GetValueMask() uint16
@@ -28014,7 +28013,7 @@ func (self *OxmOvsTcpFlagsMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmOvsTcpFlagsMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmOvsTcpFlagsMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28026,7 +28025,7 @@ func (self *OxmOvsTcpFlagsMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmOvsTcpFlagsMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmOvsTcpFlagsMasked, error) {
+func DecodeOxmOvsTcpFlagsMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmOvsTcpFlagsMasked, error) {
 	_oxmovstcpflagsmasked := &OxmOvsTcpFlagsMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmOvsTcpFlagsMasked packet too short: %d < 8", decoder.Length())
@@ -28073,7 +28072,7 @@ type OxmSctpDst struct {
 }
 
 type IOxmSctpDst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -28085,7 +28084,7 @@ func (self *OxmSctpDst) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmSctpDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmSctpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28095,7 +28094,7 @@ func (self *OxmSctpDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmSctpDst(parent *Oxm, decoder *goloxi.Decoder) (*OxmSctpDst, error) {
+func DecodeOxmSctpDst(parent *Oxm, decoder *openflow.Decoder) (*OxmSctpDst, error) {
 	_oxmsctpdst := &OxmSctpDst{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmSctpDst packet too short: %d < 2", decoder.Length())
@@ -28133,7 +28132,7 @@ type OxmSctpDstMasked struct {
 }
 
 type IOxmSctpDstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -28154,7 +28153,7 @@ func (self *OxmSctpDstMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmSctpDstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmSctpDstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28165,7 +28164,7 @@ func (self *OxmSctpDstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmSctpDstMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmSctpDstMasked, error) {
+func DecodeOxmSctpDstMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmSctpDstMasked, error) {
 	_oxmsctpdstmasked := &OxmSctpDstMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmSctpDstMasked packet too short: %d < 4", decoder.Length())
@@ -28211,7 +28210,7 @@ type OxmSctpSrc struct {
 }
 
 type IOxmSctpSrc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -28223,7 +28222,7 @@ func (self *OxmSctpSrc) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmSctpSrc) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmSctpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28233,7 +28232,7 @@ func (self *OxmSctpSrc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmSctpSrc(parent *Oxm, decoder *goloxi.Decoder) (*OxmSctpSrc, error) {
+func DecodeOxmSctpSrc(parent *Oxm, decoder *openflow.Decoder) (*OxmSctpSrc, error) {
 	_oxmsctpsrc := &OxmSctpSrc{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmSctpSrc packet too short: %d < 2", decoder.Length())
@@ -28271,7 +28270,7 @@ type OxmSctpSrcMasked struct {
 }
 
 type IOxmSctpSrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -28292,7 +28291,7 @@ func (self *OxmSctpSrcMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmSctpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmSctpSrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28303,7 +28302,7 @@ func (self *OxmSctpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmSctpSrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmSctpSrcMasked, error) {
+func DecodeOxmSctpSrcMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmSctpSrcMasked, error) {
 	_oxmsctpsrcmasked := &OxmSctpSrcMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmSctpSrcMasked packet too short: %d < 4", decoder.Length())
@@ -28349,7 +28348,7 @@ type OxmTcpDst struct {
 }
 
 type IOxmTcpDst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -28361,7 +28360,7 @@ func (self *OxmTcpDst) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmTcpDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmTcpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28371,7 +28370,7 @@ func (self *OxmTcpDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmTcpDst(parent *Oxm, decoder *goloxi.Decoder) (*OxmTcpDst, error) {
+func DecodeOxmTcpDst(parent *Oxm, decoder *openflow.Decoder) (*OxmTcpDst, error) {
 	_oxmtcpdst := &OxmTcpDst{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmTcpDst packet too short: %d < 2", decoder.Length())
@@ -28409,7 +28408,7 @@ type OxmTcpDstMasked struct {
 }
 
 type IOxmTcpDstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -28430,7 +28429,7 @@ func (self *OxmTcpDstMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmTcpDstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmTcpDstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28441,7 +28440,7 @@ func (self *OxmTcpDstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmTcpDstMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmTcpDstMasked, error) {
+func DecodeOxmTcpDstMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmTcpDstMasked, error) {
 	_oxmtcpdstmasked := &OxmTcpDstMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmTcpDstMasked packet too short: %d < 4", decoder.Length())
@@ -28487,7 +28486,7 @@ type OxmTcpSrc struct {
 }
 
 type IOxmTcpSrc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -28499,7 +28498,7 @@ func (self *OxmTcpSrc) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmTcpSrc) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmTcpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28509,7 +28508,7 @@ func (self *OxmTcpSrc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmTcpSrc(parent *Oxm, decoder *goloxi.Decoder) (*OxmTcpSrc, error) {
+func DecodeOxmTcpSrc(parent *Oxm, decoder *openflow.Decoder) (*OxmTcpSrc, error) {
 	_oxmtcpsrc := &OxmTcpSrc{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmTcpSrc packet too short: %d < 2", decoder.Length())
@@ -28547,7 +28546,7 @@ type OxmTcpSrcMasked struct {
 }
 
 type IOxmTcpSrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -28568,7 +28567,7 @@ func (self *OxmTcpSrcMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmTcpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmTcpSrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28579,7 +28578,7 @@ func (self *OxmTcpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmTcpSrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmTcpSrcMasked, error) {
+func DecodeOxmTcpSrcMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmTcpSrcMasked, error) {
 	_oxmtcpsrcmasked := &OxmTcpSrcMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmTcpSrcMasked packet too short: %d < 4", decoder.Length())
@@ -28625,7 +28624,7 @@ type OxmTunnelId struct {
 }
 
 type IOxmTunnelId interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint64
 }
 
@@ -28637,7 +28636,7 @@ func (self *OxmTunnelId) SetValue(v uint64) {
 	self.Value = v
 }
 
-func (self *OxmTunnelId) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmTunnelId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28647,7 +28646,7 @@ func (self *OxmTunnelId) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmTunnelId(parent *Oxm, decoder *goloxi.Decoder) (*OxmTunnelId, error) {
+func DecodeOxmTunnelId(parent *Oxm, decoder *openflow.Decoder) (*OxmTunnelId, error) {
 	_oxmtunnelid := &OxmTunnelId{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmTunnelId packet too short: %d < 8", decoder.Length())
@@ -28685,7 +28684,7 @@ type OxmTunnelIdMasked struct {
 }
 
 type IOxmTunnelIdMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint64
 	GetValueMask() uint64
 }
@@ -28706,7 +28705,7 @@ func (self *OxmTunnelIdMasked) SetValueMask(v uint64) {
 	self.ValueMask = v
 }
 
-func (self *OxmTunnelIdMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmTunnelIdMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28717,7 +28716,7 @@ func (self *OxmTunnelIdMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmTunnelIdMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmTunnelIdMasked, error) {
+func DecodeOxmTunnelIdMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmTunnelIdMasked, error) {
 	_oxmtunnelidmasked := &OxmTunnelIdMasked{Oxm: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("OxmTunnelIdMasked packet too short: %d < 16", decoder.Length())
@@ -28763,7 +28762,7 @@ type OxmTunnelIpv4Dst struct {
 }
 
 type IOxmTunnelIpv4Dst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -28775,7 +28774,7 @@ func (self *OxmTunnelIpv4Dst) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *OxmTunnelIpv4Dst) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmTunnelIpv4Dst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28785,7 +28784,7 @@ func (self *OxmTunnelIpv4Dst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmTunnelIpv4Dst(parent *Oxm, decoder *goloxi.Decoder) (*OxmTunnelIpv4Dst, error) {
+func DecodeOxmTunnelIpv4Dst(parent *Oxm, decoder *openflow.Decoder) (*OxmTunnelIpv4Dst, error) {
 	_oxmtunnelipv4dst := &OxmTunnelIpv4Dst{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmTunnelIpv4Dst packet too short: %d < 4", decoder.Length())
@@ -28823,7 +28822,7 @@ type OxmTunnelIpv4DstMasked struct {
 }
 
 type IOxmTunnelIpv4DstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -28844,7 +28843,7 @@ func (self *OxmTunnelIpv4DstMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *OxmTunnelIpv4DstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmTunnelIpv4DstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28855,7 +28854,7 @@ func (self *OxmTunnelIpv4DstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmTunnelIpv4DstMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmTunnelIpv4DstMasked, error) {
+func DecodeOxmTunnelIpv4DstMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmTunnelIpv4DstMasked, error) {
 	_oxmtunnelipv4dstmasked := &OxmTunnelIpv4DstMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmTunnelIpv4DstMasked packet too short: %d < 8", decoder.Length())
@@ -28901,7 +28900,7 @@ type OxmTunnelIpv4Src struct {
 }
 
 type IOxmTunnelIpv4Src interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 }
 
@@ -28913,7 +28912,7 @@ func (self *OxmTunnelIpv4Src) SetValue(v net.IP) {
 	self.Value = v
 }
 
-func (self *OxmTunnelIpv4Src) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmTunnelIpv4Src) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28923,7 +28922,7 @@ func (self *OxmTunnelIpv4Src) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmTunnelIpv4Src(parent *Oxm, decoder *goloxi.Decoder) (*OxmTunnelIpv4Src, error) {
+func DecodeOxmTunnelIpv4Src(parent *Oxm, decoder *openflow.Decoder) (*OxmTunnelIpv4Src, error) {
 	_oxmtunnelipv4src := &OxmTunnelIpv4Src{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmTunnelIpv4Src packet too short: %d < 4", decoder.Length())
@@ -28961,7 +28960,7 @@ type OxmTunnelIpv4SrcMasked struct {
 }
 
 type IOxmTunnelIpv4SrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() net.IP
 	GetValueMask() net.IP
 }
@@ -28982,7 +28981,7 @@ func (self *OxmTunnelIpv4SrcMasked) SetValueMask(v net.IP) {
 	self.ValueMask = v
 }
 
-func (self *OxmTunnelIpv4SrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmTunnelIpv4SrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -28993,7 +28992,7 @@ func (self *OxmTunnelIpv4SrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmTunnelIpv4SrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmTunnelIpv4SrcMasked, error) {
+func DecodeOxmTunnelIpv4SrcMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmTunnelIpv4SrcMasked, error) {
 	_oxmtunnelipv4srcmasked := &OxmTunnelIpv4SrcMasked{Oxm: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("OxmTunnelIpv4SrcMasked packet too short: %d < 8", decoder.Length())
@@ -29039,7 +29038,7 @@ type OxmUdpDst struct {
 }
 
 type IOxmUdpDst interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -29051,7 +29050,7 @@ func (self *OxmUdpDst) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmUdpDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmUdpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -29061,7 +29060,7 @@ func (self *OxmUdpDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmUdpDst(parent *Oxm, decoder *goloxi.Decoder) (*OxmUdpDst, error) {
+func DecodeOxmUdpDst(parent *Oxm, decoder *openflow.Decoder) (*OxmUdpDst, error) {
 	_oxmudpdst := &OxmUdpDst{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmUdpDst packet too short: %d < 2", decoder.Length())
@@ -29099,7 +29098,7 @@ type OxmUdpDstMasked struct {
 }
 
 type IOxmUdpDstMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -29120,7 +29119,7 @@ func (self *OxmUdpDstMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmUdpDstMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmUdpDstMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -29131,7 +29130,7 @@ func (self *OxmUdpDstMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmUdpDstMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmUdpDstMasked, error) {
+func DecodeOxmUdpDstMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmUdpDstMasked, error) {
 	_oxmudpdstmasked := &OxmUdpDstMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmUdpDstMasked packet too short: %d < 4", decoder.Length())
@@ -29177,7 +29176,7 @@ type OxmUdpSrc struct {
 }
 
 type IOxmUdpSrc interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -29189,7 +29188,7 @@ func (self *OxmUdpSrc) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmUdpSrc) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmUdpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -29199,7 +29198,7 @@ func (self *OxmUdpSrc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmUdpSrc(parent *Oxm, decoder *goloxi.Decoder) (*OxmUdpSrc, error) {
+func DecodeOxmUdpSrc(parent *Oxm, decoder *openflow.Decoder) (*OxmUdpSrc, error) {
 	_oxmudpsrc := &OxmUdpSrc{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmUdpSrc packet too short: %d < 2", decoder.Length())
@@ -29237,7 +29236,7 @@ type OxmUdpSrcMasked struct {
 }
 
 type IOxmUdpSrcMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -29258,7 +29257,7 @@ func (self *OxmUdpSrcMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmUdpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmUdpSrcMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -29269,7 +29268,7 @@ func (self *OxmUdpSrcMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmUdpSrcMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmUdpSrcMasked, error) {
+func DecodeOxmUdpSrcMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmUdpSrcMasked, error) {
 	_oxmudpsrcmasked := &OxmUdpSrcMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmUdpSrcMasked packet too short: %d < 4", decoder.Length())
@@ -29315,7 +29314,7 @@ type OxmVlanPcp struct {
 }
 
 type IOxmVlanPcp interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 }
 
@@ -29327,7 +29326,7 @@ func (self *OxmVlanPcp) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *OxmVlanPcp) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmVlanPcp) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -29337,7 +29336,7 @@ func (self *OxmVlanPcp) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmVlanPcp(parent *Oxm, decoder *goloxi.Decoder) (*OxmVlanPcp, error) {
+func DecodeOxmVlanPcp(parent *Oxm, decoder *openflow.Decoder) (*OxmVlanPcp, error) {
 	_oxmvlanpcp := &OxmVlanPcp{Oxm: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("OxmVlanPcp packet too short: %d < 1", decoder.Length())
@@ -29375,7 +29374,7 @@ type OxmVlanPcpMasked struct {
 }
 
 type IOxmVlanPcpMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint8
 	GetValueMask() uint8
 }
@@ -29396,7 +29395,7 @@ func (self *OxmVlanPcpMasked) SetValueMask(v uint8) {
 	self.ValueMask = v
 }
 
-func (self *OxmVlanPcpMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmVlanPcpMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -29407,7 +29406,7 @@ func (self *OxmVlanPcpMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmVlanPcpMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmVlanPcpMasked, error) {
+func DecodeOxmVlanPcpMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmVlanPcpMasked, error) {
 	_oxmvlanpcpmasked := &OxmVlanPcpMasked{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmVlanPcpMasked packet too short: %d < 2", decoder.Length())
@@ -29453,7 +29452,7 @@ type OxmVlanVid struct {
 }
 
 type IOxmVlanVid interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 }
 
@@ -29465,7 +29464,7 @@ func (self *OxmVlanVid) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *OxmVlanVid) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmVlanVid) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -29475,7 +29474,7 @@ func (self *OxmVlanVid) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmVlanVid(parent *Oxm, decoder *goloxi.Decoder) (*OxmVlanVid, error) {
+func DecodeOxmVlanVid(parent *Oxm, decoder *openflow.Decoder) (*OxmVlanVid, error) {
 	_oxmvlanvid := &OxmVlanVid{Oxm: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("OxmVlanVid packet too short: %d < 2", decoder.Length())
@@ -29513,7 +29512,7 @@ type OxmVlanVidMasked struct {
 }
 
 type IOxmVlanVidMasked interface {
-	goloxi.IOxm
+	openflow.IOxm
 	GetValue() uint16
 	GetValueMask() uint16
 }
@@ -29534,7 +29533,7 @@ func (self *OxmVlanVidMasked) SetValueMask(v uint16) {
 	self.ValueMask = v
 }
 
-func (self *OxmVlanVidMasked) Serialize(encoder *goloxi.Encoder) error {
+func (self *OxmVlanVidMasked) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
 	}
@@ -29545,7 +29544,7 @@ func (self *OxmVlanVidMasked) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeOxmVlanVidMasked(parent *Oxm, decoder *goloxi.Decoder) (*OxmVlanVidMasked, error) {
+func DecodeOxmVlanVidMasked(parent *Oxm, decoder *openflow.Decoder) (*OxmVlanVidMasked, error) {
 	_oxmvlanvidmasked := &OxmVlanVidMasked{Oxm: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("OxmVlanVidMasked packet too short: %d < 4", decoder.Length())
