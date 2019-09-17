@@ -1,4 +1,4 @@
-# Goloxi - OpenFlow library for golang
+# OpenflowGo1.3 - OpenFlow library for golang focusing on Openflow1.3
 
 Goloxi is generated using [loxigen](https://github.com/floodlight/loxigen). Is it still in
 an experimental state.
