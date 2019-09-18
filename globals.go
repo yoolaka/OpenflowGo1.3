@@ -18,6 +18,15 @@ const (
 	OFPTEchoReply    = 3
 	OFPTExperimenter = 4
 )
+const (
+	OxmDefaultLen  = 4
+	EthAddrLen     = 6
+	EthAddrMaskLen = 6
+	IPv4Len        = 4
+	IPv4MaskLen    = 4
+	EthTypeLen     = 2
+	TunIdLen       = 8
+)
 
 type Serializable interface {
 	Serialize(encoder *Encoder) error
@@ -52,6 +61,7 @@ type Uint128 struct {
 type IOxm interface {
 	Serializable
 	GetOXMName() string
+	GetLength() uint16
 	GetOXMValue() interface{}
 }
 
