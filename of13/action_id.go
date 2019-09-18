@@ -12,8 +12,7 @@ package of13
 import (
 	"encoding/binary"
 	"fmt"
-
-	"github.com/skydive-project/goloxi"
+	"github.com/yoolaka/openflow"
 )
 
 type ActionId struct {
@@ -22,7 +21,7 @@ type ActionId struct {
 }
 
 type IActionId interface {
-	goloxi.Serializable
+	openflow.Serializable
 	GetType() uint16
 	GetLen() uint16
 }
@@ -43,7 +42,7 @@ func (self *ActionId) SetLen(v uint16) {
 	self.Len = v
 }
 
-func (self *ActionId) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionId) Serialize(encoder *openflow.Encoder) error {
 
 	encoder.PutUint16(uint16(self.Type))
 	encoder.PutUint16(uint16(self.Len))
@@ -51,7 +50,7 @@ func (self *ActionId) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionId(decoder *goloxi.Decoder) (IActionId, error) {
+func DecodeActionId(decoder *openflow.Decoder) (IActionId, error) {
 	_actionid := &ActionId{}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionId packet too short: %d < 4", decoder.Length())
@@ -126,7 +125,7 @@ func (self *ActionIdExperimenter) SetExperimenter(v uint32) {
 	self.Experimenter = v
 }
 
-func (self *ActionIdExperimenter) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdExperimenter) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -136,7 +135,7 @@ func (self *ActionIdExperimenter) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdExperimenter(parent *ActionId, decoder *goloxi.Decoder) (IActionIdExperimenter, error) {
+func DecodeActionIdExperimenter(parent *ActionId, decoder *openflow.Decoder) (IActionIdExperimenter, error) {
 	_actionidexperimenter := &ActionIdExperimenter{ActionId: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionIdExperimenter packet too short: %d < 4", decoder.Length())
@@ -179,7 +178,7 @@ func (self *ActionIdBsn) SetSubtype(v uint32) {
 	self.Subtype = v
 }
 
-func (self *ActionIdBsn) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdBsn) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdExperimenter.Serialize(encoder); err != nil {
 		return err
 	}
@@ -189,7 +188,7 @@ func (self *ActionIdBsn) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdBsn(parent *ActionIdExperimenter, decoder *goloxi.Decoder) (IActionIdBsn, error) {
+func DecodeActionIdBsn(parent *ActionIdExperimenter, decoder *openflow.Decoder) (IActionIdBsn, error) {
 	_actionidbsn := &ActionIdBsn{ActionIdExperimenter: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionIdBsn packet too short: %d < 4", decoder.Length())
@@ -226,7 +225,7 @@ type IActionIdBsnChecksum interface {
 	IActionIdBsn
 }
 
-func (self *ActionIdBsnChecksum) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdBsnChecksum) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdBsn.Serialize(encoder); err != nil {
 		return err
 	}
@@ -236,7 +235,7 @@ func (self *ActionIdBsnChecksum) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdBsnChecksum(parent *ActionIdBsn, decoder *goloxi.Decoder) (*ActionIdBsnChecksum, error) {
+func DecodeActionIdBsnChecksum(parent *ActionIdBsn, decoder *openflow.Decoder) (*ActionIdBsnChecksum, error) {
 	_actionidbsnchecksum := &ActionIdBsnChecksum{ActionIdBsn: parent}
 	return _actionidbsnchecksum, nil
 }
@@ -256,7 +255,7 @@ type IActionIdBsnGentable interface {
 	IActionIdBsn
 }
 
-func (self *ActionIdBsnGentable) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdBsnGentable) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdBsn.Serialize(encoder); err != nil {
 		return err
 	}
@@ -266,7 +265,7 @@ func (self *ActionIdBsnGentable) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdBsnGentable(parent *ActionIdBsn, decoder *goloxi.Decoder) (*ActionIdBsnGentable, error) {
+func DecodeActionIdBsnGentable(parent *ActionIdBsn, decoder *openflow.Decoder) (*ActionIdBsnGentable, error) {
 	_actionidbsngentable := &ActionIdBsnGentable{ActionIdBsn: parent}
 	return _actionidbsngentable, nil
 }
@@ -286,7 +285,7 @@ type IActionIdBsnMirror interface {
 	IActionIdBsn
 }
 
-func (self *ActionIdBsnMirror) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdBsnMirror) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdBsn.Serialize(encoder); err != nil {
 		return err
 	}
@@ -296,7 +295,7 @@ func (self *ActionIdBsnMirror) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdBsnMirror(parent *ActionIdBsn, decoder *goloxi.Decoder) (*ActionIdBsnMirror, error) {
+func DecodeActionIdBsnMirror(parent *ActionIdBsn, decoder *openflow.Decoder) (*ActionIdBsnMirror, error) {
 	_actionidbsnmirror := &ActionIdBsnMirror{ActionIdBsn: parent}
 	return _actionidbsnmirror, nil
 }
@@ -316,7 +315,7 @@ type IActionIdBsnSetTunnelDst interface {
 	IActionIdBsn
 }
 
-func (self *ActionIdBsnSetTunnelDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdBsnSetTunnelDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdBsn.Serialize(encoder); err != nil {
 		return err
 	}
@@ -326,7 +325,7 @@ func (self *ActionIdBsnSetTunnelDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdBsnSetTunnelDst(parent *ActionIdBsn, decoder *goloxi.Decoder) (*ActionIdBsnSetTunnelDst, error) {
+func DecodeActionIdBsnSetTunnelDst(parent *ActionIdBsn, decoder *openflow.Decoder) (*ActionIdBsnSetTunnelDst, error) {
 	_actionidbsnsettunneldst := &ActionIdBsnSetTunnelDst{ActionIdBsn: parent}
 	return _actionidbsnsettunneldst, nil
 }
@@ -346,7 +345,7 @@ type IActionIdCopyTtlIn interface {
 	IActionId
 }
 
-func (self *ActionIdCopyTtlIn) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdCopyTtlIn) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -356,7 +355,7 @@ func (self *ActionIdCopyTtlIn) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdCopyTtlIn(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdCopyTtlIn, error) {
+func DecodeActionIdCopyTtlIn(parent *ActionId, decoder *openflow.Decoder) (*ActionIdCopyTtlIn, error) {
 	_actionidcopyttlin := &ActionIdCopyTtlIn{ActionId: parent}
 	return _actionidcopyttlin, nil
 }
@@ -376,7 +375,7 @@ type IActionIdCopyTtlOut interface {
 	IActionId
 }
 
-func (self *ActionIdCopyTtlOut) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdCopyTtlOut) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -386,7 +385,7 @@ func (self *ActionIdCopyTtlOut) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdCopyTtlOut(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdCopyTtlOut, error) {
+func DecodeActionIdCopyTtlOut(parent *ActionId, decoder *openflow.Decoder) (*ActionIdCopyTtlOut, error) {
 	_actionidcopyttlout := &ActionIdCopyTtlOut{ActionId: parent}
 	return _actionidcopyttlout, nil
 }
@@ -406,7 +405,7 @@ type IActionIdDecMplsTtl interface {
 	IActionId
 }
 
-func (self *ActionIdDecMplsTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdDecMplsTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -416,7 +415,7 @@ func (self *ActionIdDecMplsTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdDecMplsTtl(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdDecMplsTtl, error) {
+func DecodeActionIdDecMplsTtl(parent *ActionId, decoder *openflow.Decoder) (*ActionIdDecMplsTtl, error) {
 	_actioniddecmplsttl := &ActionIdDecMplsTtl{ActionId: parent}
 	return _actioniddecmplsttl, nil
 }
@@ -436,7 +435,7 @@ type IActionIdDecNwTtl interface {
 	IActionId
 }
 
-func (self *ActionIdDecNwTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdDecNwTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -446,7 +445,7 @@ func (self *ActionIdDecNwTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdDecNwTtl(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdDecNwTtl, error) {
+func DecodeActionIdDecNwTtl(parent *ActionId, decoder *openflow.Decoder) (*ActionIdDecNwTtl, error) {
 	_actioniddecnwttl := &ActionIdDecNwTtl{ActionId: parent}
 	return _actioniddecnwttl, nil
 }
@@ -466,7 +465,7 @@ type IActionIdGroup interface {
 	IActionId
 }
 
-func (self *ActionIdGroup) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdGroup) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -476,7 +475,7 @@ func (self *ActionIdGroup) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdGroup(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdGroup, error) {
+func DecodeActionIdGroup(parent *ActionId, decoder *openflow.Decoder) (*ActionIdGroup, error) {
 	_actionidgroup := &ActionIdGroup{ActionId: parent}
 	return _actionidgroup, nil
 }
@@ -506,7 +505,7 @@ func (self *ActionIdNicira) SetSubtype(v uint16) {
 	self.Subtype = v
 }
 
-func (self *ActionIdNicira) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNicira) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdExperimenter.Serialize(encoder); err != nil {
 		return err
 	}
@@ -516,7 +515,7 @@ func (self *ActionIdNicira) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNicira(parent *ActionIdExperimenter, decoder *goloxi.Decoder) (IActionIdNicira, error) {
+func DecodeActionIdNicira(parent *ActionIdExperimenter, decoder *openflow.Decoder) (IActionIdNicira, error) {
 	_actionidnicira := &ActionIdNicira{ActionIdExperimenter: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("ActionIdNicira packet too short: %d < 2", decoder.Length())
@@ -641,7 +640,7 @@ type IActionIdNiciraDecTtl interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNiciraDecTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNiciraDecTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -651,7 +650,7 @@ func (self *ActionIdNiciraDecTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNiciraDecTtl(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNiciraDecTtl, error) {
+func DecodeActionIdNiciraDecTtl(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNiciraDecTtl, error) {
 	_actionidniciradecttl := &ActionIdNiciraDecTtl{ActionIdNicira: parent}
 	return _actionidniciradecttl, nil
 }
@@ -671,7 +670,7 @@ type IActionIdNxBundle interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxBundle) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxBundle) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -681,7 +680,7 @@ func (self *ActionIdNxBundle) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxBundle(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxBundle, error) {
+func DecodeActionIdNxBundle(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxBundle, error) {
 	_actionidnxbundle := &ActionIdNxBundle{ActionIdNicira: parent}
 	return _actionidnxbundle, nil
 }
@@ -711,7 +710,7 @@ func (self *ActionIdNxBundleLoad) SetSlaveType(v ActionNxBundleSlaveType) {
 	self.SlaveType = v
 }
 
-func (self *ActionIdNxBundleLoad) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxBundleLoad) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -721,7 +720,7 @@ func (self *ActionIdNxBundleLoad) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxBundleLoad(parent *ActionIdNicira, decoder *goloxi.Decoder) (IActionIdNxBundleLoad, error) {
+func DecodeActionIdNxBundleLoad(parent *ActionIdNicira, decoder *openflow.Decoder) (IActionIdNxBundleLoad, error) {
 	_actionidnxbundleload := &ActionIdNxBundleLoad{ActionIdNicira: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionIdNxBundleLoad packet too short: %d < 4", decoder.Length())
@@ -766,7 +765,7 @@ func (self *ActionIdNxBundleLoadInPort) SetNSlaves(v uint16) {
 	self.NSlaves = v
 }
 
-func (self *ActionIdNxBundleLoadInPort) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxBundleLoadInPort) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -779,7 +778,7 @@ func (self *ActionIdNxBundleLoadInPort) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeActionIdNxBundleLoadInPort(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxBundleLoadInPort, error) {
+func DecodeActionIdNxBundleLoadInPort(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxBundleLoadInPort, error) {
 	_actionidnxbundleloadinport := &ActionIdNxBundleLoadInPort{ActionIdNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionIdNxBundleLoadInPort packet too short: %d < 6", decoder.Length())
@@ -804,7 +803,7 @@ type IActionIdNxClone interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxClone) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxClone) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -814,7 +813,7 @@ func (self *ActionIdNxClone) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxClone(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxClone, error) {
+func DecodeActionIdNxClone(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxClone, error) {
 	_actionidnxclone := &ActionIdNxClone{ActionIdNicira: parent}
 	return _actionidnxclone, nil
 }
@@ -834,7 +833,7 @@ type IActionIdNxConjunction interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxConjunction) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxConjunction) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -844,7 +843,7 @@ func (self *ActionIdNxConjunction) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxConjunction(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxConjunction, error) {
+func DecodeActionIdNxConjunction(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxConjunction, error) {
 	_actionidnxconjunction := &ActionIdNxConjunction{ActionIdNicira: parent}
 	return _actionidnxconjunction, nil
 }
@@ -864,7 +863,7 @@ type IActionIdNxController interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxController) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxController) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -874,7 +873,7 @@ func (self *ActionIdNxController) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxController(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxController, error) {
+func DecodeActionIdNxController(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxController, error) {
 	_actionidnxcontroller := &ActionIdNxController{ActionIdNicira: parent}
 	return _actionidnxcontroller, nil
 }
@@ -894,7 +893,7 @@ type IActionIdNxController2 interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxController2) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxController2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -904,7 +903,7 @@ func (self *ActionIdNxController2) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxController2(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxController2, error) {
+func DecodeActionIdNxController2(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxController2, error) {
 	_actionidnxcontroller2 := &ActionIdNxController2{ActionIdNicira: parent}
 	return _actionidnxcontroller2, nil
 }
@@ -924,7 +923,7 @@ type IActionIdNxCt interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxCt) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxCt) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -934,7 +933,7 @@ func (self *ActionIdNxCt) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxCt(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxCt, error) {
+func DecodeActionIdNxCt(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxCt, error) {
 	_actionidnxct := &ActionIdNxCt{ActionIdNicira: parent}
 	return _actionidnxct, nil
 }
@@ -954,7 +953,7 @@ type IActionIdNxCtClear interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxCtClear) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxCtClear) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -964,7 +963,7 @@ func (self *ActionIdNxCtClear) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxCtClear(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxCtClear, error) {
+func DecodeActionIdNxCtClear(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxCtClear, error) {
 	_actionidnxctclear := &ActionIdNxCtClear{ActionIdNicira: parent}
 	return _actionidnxctclear, nil
 }
@@ -984,7 +983,7 @@ type IActionIdNxDebugRecirc interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxDebugRecirc) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxDebugRecirc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -994,7 +993,7 @@ func (self *ActionIdNxDebugRecirc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxDebugRecirc(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxDebugRecirc, error) {
+func DecodeActionIdNxDebugRecirc(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxDebugRecirc, error) {
 	_actionidnxdebugrecirc := &ActionIdNxDebugRecirc{ActionIdNicira: parent}
 	return _actionidnxdebugrecirc, nil
 }
@@ -1014,7 +1013,7 @@ type IActionIdNxDebugSlow interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxDebugSlow) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxDebugSlow) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1024,7 +1023,7 @@ func (self *ActionIdNxDebugSlow) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxDebugSlow(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxDebugSlow, error) {
+func DecodeActionIdNxDebugSlow(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxDebugSlow, error) {
 	_actionidnxdebugslow := &ActionIdNxDebugSlow{ActionIdNicira: parent}
 	return _actionidnxdebugslow, nil
 }
@@ -1044,7 +1043,7 @@ type IActionIdNxDecMplsTtl interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxDecMplsTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxDecMplsTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1054,7 +1053,7 @@ func (self *ActionIdNxDecMplsTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxDecMplsTtl(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxDecMplsTtl, error) {
+func DecodeActionIdNxDecMplsTtl(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxDecMplsTtl, error) {
 	_actionidnxdecmplsttl := &ActionIdNxDecMplsTtl{ActionIdNicira: parent}
 	return _actionidnxdecmplsttl, nil
 }
@@ -1074,7 +1073,7 @@ type IActionIdNxDecNshTtl interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxDecNshTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxDecNshTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1084,7 +1083,7 @@ func (self *ActionIdNxDecNshTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxDecNshTtl(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxDecNshTtl, error) {
+func DecodeActionIdNxDecNshTtl(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxDecNshTtl, error) {
 	_actionidnxdecnshttl := &ActionIdNxDecNshTtl{ActionIdNicira: parent}
 	return _actionidnxdecnshttl, nil
 }
@@ -1104,7 +1103,7 @@ type IActionIdNxDecTtlCntIds interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxDecTtlCntIds) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxDecTtlCntIds) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1114,7 +1113,7 @@ func (self *ActionIdNxDecTtlCntIds) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxDecTtlCntIds(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxDecTtlCntIds, error) {
+func DecodeActionIdNxDecTtlCntIds(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxDecTtlCntIds, error) {
 	_actionidnxdecttlcntids := &ActionIdNxDecTtlCntIds{ActionIdNicira: parent}
 	return _actionidnxdecttlcntids, nil
 }
@@ -1134,7 +1133,7 @@ type IActionIdNxDecap interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxDecap) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxDecap) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1144,7 +1143,7 @@ func (self *ActionIdNxDecap) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxDecap(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxDecap, error) {
+func DecodeActionIdNxDecap(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxDecap, error) {
 	_actionidnxdecap := &ActionIdNxDecap{ActionIdNicira: parent}
 	return _actionidnxdecap, nil
 }
@@ -1164,7 +1163,7 @@ type IActionIdNxEncap interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxEncap) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxEncap) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1174,7 +1173,7 @@ func (self *ActionIdNxEncap) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxEncap(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxEncap, error) {
+func DecodeActionIdNxEncap(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxEncap, error) {
 	_actionidnxencap := &ActionIdNxEncap{ActionIdNicira: parent}
 	return _actionidnxencap, nil
 }
@@ -1194,7 +1193,7 @@ type IActionIdNxExit interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxExit) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxExit) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1204,7 +1203,7 @@ func (self *ActionIdNxExit) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxExit(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxExit, error) {
+func DecodeActionIdNxExit(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxExit, error) {
 	_actionidnxexit := &ActionIdNxExit{ActionIdNicira: parent}
 	return _actionidnxexit, nil
 }
@@ -1224,7 +1223,7 @@ type IActionIdNxFinTimeout interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxFinTimeout) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxFinTimeout) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1234,7 +1233,7 @@ func (self *ActionIdNxFinTimeout) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxFinTimeout(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxFinTimeout, error) {
+func DecodeActionIdNxFinTimeout(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxFinTimeout, error) {
 	_actionidnxfintimeout := &ActionIdNxFinTimeout{ActionIdNicira: parent}
 	return _actionidnxfintimeout, nil
 }
@@ -1254,7 +1253,7 @@ type IActionIdNxGroup interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxGroup) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxGroup) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1264,7 +1263,7 @@ func (self *ActionIdNxGroup) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxGroup(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxGroup, error) {
+func DecodeActionIdNxGroup(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxGroup, error) {
 	_actionidnxgroup := &ActionIdNxGroup{ActionIdNicira: parent}
 	return _actionidnxgroup, nil
 }
@@ -1284,7 +1283,7 @@ type IActionIdNxLearn interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxLearn) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxLearn) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1294,7 +1293,7 @@ func (self *ActionIdNxLearn) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxLearn(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxLearn, error) {
+func DecodeActionIdNxLearn(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxLearn, error) {
 	_actionidnxlearn := &ActionIdNxLearn{ActionIdNicira: parent}
 	return _actionidnxlearn, nil
 }
@@ -1314,7 +1313,7 @@ type IActionIdNxLearn2 interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxLearn2) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxLearn2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1324,7 +1323,7 @@ func (self *ActionIdNxLearn2) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxLearn2(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxLearn2, error) {
+func DecodeActionIdNxLearn2(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxLearn2, error) {
 	_actionidnxlearn2 := &ActionIdNxLearn2{ActionIdNicira: parent}
 	return _actionidnxlearn2, nil
 }
@@ -1344,7 +1343,7 @@ type IActionIdNxMultipath interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxMultipath) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxMultipath) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1354,7 +1353,7 @@ func (self *ActionIdNxMultipath) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxMultipath(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxMultipath, error) {
+func DecodeActionIdNxMultipath(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxMultipath, error) {
 	_actionidnxmultipath := &ActionIdNxMultipath{ActionIdNicira: parent}
 	return _actionidnxmultipath, nil
 }
@@ -1374,7 +1373,7 @@ type IActionIdNxNat interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxNat) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxNat) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1384,7 +1383,7 @@ func (self *ActionIdNxNat) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxNat(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxNat, error) {
+func DecodeActionIdNxNat(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxNat, error) {
 	_actionidnxnat := &ActionIdNxNat{ActionIdNicira: parent}
 	return _actionidnxnat, nil
 }
@@ -1404,7 +1403,7 @@ type IActionIdNxNote interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxNote) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxNote) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1414,7 +1413,7 @@ func (self *ActionIdNxNote) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxNote(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxNote, error) {
+func DecodeActionIdNxNote(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxNote, error) {
 	_actionidnxnote := &ActionIdNxNote{ActionIdNicira: parent}
 	return _actionidnxnote, nil
 }
@@ -1434,7 +1433,7 @@ type IActionIdNxOutputReg interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxOutputReg) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxOutputReg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1444,7 +1443,7 @@ func (self *ActionIdNxOutputReg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxOutputReg(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxOutputReg, error) {
+func DecodeActionIdNxOutputReg(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxOutputReg, error) {
 	_actionidnxoutputreg := &ActionIdNxOutputReg{ActionIdNicira: parent}
 	return _actionidnxoutputreg, nil
 }
@@ -1464,7 +1463,7 @@ type IActionIdNxOutputReg2 interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxOutputReg2) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxOutputReg2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1474,7 +1473,7 @@ func (self *ActionIdNxOutputReg2) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxOutputReg2(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxOutputReg2, error) {
+func DecodeActionIdNxOutputReg2(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxOutputReg2, error) {
 	_actionidnxoutputreg2 := &ActionIdNxOutputReg2{ActionIdNicira: parent}
 	return _actionidnxoutputreg2, nil
 }
@@ -1494,7 +1493,7 @@ type IActionIdNxOutputTrunc interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxOutputTrunc) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxOutputTrunc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1504,7 +1503,7 @@ func (self *ActionIdNxOutputTrunc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxOutputTrunc(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxOutputTrunc, error) {
+func DecodeActionIdNxOutputTrunc(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxOutputTrunc, error) {
 	_actionidnxoutputtrunc := &ActionIdNxOutputTrunc{ActionIdNicira: parent}
 	return _actionidnxoutputtrunc, nil
 }
@@ -1524,7 +1523,7 @@ type IActionIdNxPopMpls interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxPopMpls) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxPopMpls) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1534,7 +1533,7 @@ func (self *ActionIdNxPopMpls) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxPopMpls(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxPopMpls, error) {
+func DecodeActionIdNxPopMpls(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxPopMpls, error) {
 	_actionidnxpopmpls := &ActionIdNxPopMpls{ActionIdNicira: parent}
 	return _actionidnxpopmpls, nil
 }
@@ -1554,7 +1553,7 @@ type IActionIdNxPopQueue interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxPopQueue) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxPopQueue) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1564,7 +1563,7 @@ func (self *ActionIdNxPopQueue) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxPopQueue(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxPopQueue, error) {
+func DecodeActionIdNxPopQueue(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxPopQueue, error) {
 	_actionidnxpopqueue := &ActionIdNxPopQueue{ActionIdNicira: parent}
 	return _actionidnxpopqueue, nil
 }
@@ -1584,7 +1583,7 @@ type IActionIdNxPushMpls interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxPushMpls) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxPushMpls) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1594,7 +1593,7 @@ func (self *ActionIdNxPushMpls) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxPushMpls(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxPushMpls, error) {
+func DecodeActionIdNxPushMpls(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxPushMpls, error) {
 	_actionidnxpushmpls := &ActionIdNxPushMpls{ActionIdNicira: parent}
 	return _actionidnxpushmpls, nil
 }
@@ -1614,7 +1613,7 @@ type IActionIdNxRegLoad interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxRegLoad) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxRegLoad) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1624,7 +1623,7 @@ func (self *ActionIdNxRegLoad) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxRegLoad(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxRegLoad, error) {
+func DecodeActionIdNxRegLoad(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxRegLoad, error) {
 	_actionidnxregload := &ActionIdNxRegLoad{ActionIdNicira: parent}
 	return _actionidnxregload, nil
 }
@@ -1644,7 +1643,7 @@ type IActionIdNxRegLoad2 interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxRegLoad2) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxRegLoad2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1654,7 +1653,7 @@ func (self *ActionIdNxRegLoad2) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxRegLoad2(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxRegLoad2, error) {
+func DecodeActionIdNxRegLoad2(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxRegLoad2, error) {
 	_actionidnxregload2 := &ActionIdNxRegLoad2{ActionIdNicira: parent}
 	return _actionidnxregload2, nil
 }
@@ -1674,7 +1673,7 @@ type IActionIdNxRegMove interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxRegMove) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxRegMove) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1684,7 +1683,7 @@ func (self *ActionIdNxRegMove) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxRegMove(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxRegMove, error) {
+func DecodeActionIdNxRegMove(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxRegMove, error) {
 	_actionidnxregmove := &ActionIdNxRegMove{ActionIdNicira: parent}
 	return _actionidnxregmove, nil
 }
@@ -1704,7 +1703,7 @@ type IActionIdNxResubmit interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxResubmit) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxResubmit) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1714,7 +1713,7 @@ func (self *ActionIdNxResubmit) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxResubmit(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxResubmit, error) {
+func DecodeActionIdNxResubmit(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxResubmit, error) {
 	_actionidnxresubmit := &ActionIdNxResubmit{ActionIdNicira: parent}
 	return _actionidnxresubmit, nil
 }
@@ -1734,7 +1733,7 @@ type IActionIdNxResubmitTable interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxResubmitTable) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxResubmitTable) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1744,7 +1743,7 @@ func (self *ActionIdNxResubmitTable) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxResubmitTable(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxResubmitTable, error) {
+func DecodeActionIdNxResubmitTable(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxResubmitTable, error) {
 	_actionidnxresubmittable := &ActionIdNxResubmitTable{ActionIdNicira: parent}
 	return _actionidnxresubmittable, nil
 }
@@ -1764,7 +1763,7 @@ type IActionIdNxResubmitTableCt interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxResubmitTableCt) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxResubmitTableCt) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1774,7 +1773,7 @@ func (self *ActionIdNxResubmitTableCt) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeActionIdNxResubmitTableCt(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxResubmitTableCt, error) {
+func DecodeActionIdNxResubmitTableCt(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxResubmitTableCt, error) {
 	_actionidnxresubmittablect := &ActionIdNxResubmitTableCt{ActionIdNicira: parent}
 	return _actionidnxresubmittablect, nil
 }
@@ -1794,7 +1793,7 @@ type IActionIdNxSample interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxSample) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxSample) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1804,7 +1803,7 @@ func (self *ActionIdNxSample) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxSample(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxSample, error) {
+func DecodeActionIdNxSample(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxSample, error) {
 	_actionidnxsample := &ActionIdNxSample{ActionIdNicira: parent}
 	return _actionidnxsample, nil
 }
@@ -1824,7 +1823,7 @@ type IActionIdNxSample2 interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxSample2) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxSample2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1834,7 +1833,7 @@ func (self *ActionIdNxSample2) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxSample2(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxSample2, error) {
+func DecodeActionIdNxSample2(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxSample2, error) {
 	_actionidnxsample2 := &ActionIdNxSample2{ActionIdNicira: parent}
 	return _actionidnxsample2, nil
 }
@@ -1854,7 +1853,7 @@ type IActionIdNxSample3 interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxSample3) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxSample3) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1864,7 +1863,7 @@ func (self *ActionIdNxSample3) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxSample3(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxSample3, error) {
+func DecodeActionIdNxSample3(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxSample3, error) {
 	_actionidnxsample3 := &ActionIdNxSample3{ActionIdNicira: parent}
 	return _actionidnxsample3, nil
 }
@@ -1884,7 +1883,7 @@ type IActionIdNxSetMplsLabel interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxSetMplsLabel) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxSetMplsLabel) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1894,7 +1893,7 @@ func (self *ActionIdNxSetMplsLabel) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxSetMplsLabel(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxSetMplsLabel, error) {
+func DecodeActionIdNxSetMplsLabel(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxSetMplsLabel, error) {
 	_actionidnxsetmplslabel := &ActionIdNxSetMplsLabel{ActionIdNicira: parent}
 	return _actionidnxsetmplslabel, nil
 }
@@ -1914,7 +1913,7 @@ type IActionIdNxSetMplsTc interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxSetMplsTc) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxSetMplsTc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1924,7 +1923,7 @@ func (self *ActionIdNxSetMplsTc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxSetMplsTc(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxSetMplsTc, error) {
+func DecodeActionIdNxSetMplsTc(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxSetMplsTc, error) {
 	_actionidnxsetmplstc := &ActionIdNxSetMplsTc{ActionIdNicira: parent}
 	return _actionidnxsetmplstc, nil
 }
@@ -1944,7 +1943,7 @@ type IActionIdNxSetMplsTtl interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxSetMplsTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxSetMplsTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1954,7 +1953,7 @@ func (self *ActionIdNxSetMplsTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxSetMplsTtl(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxSetMplsTtl, error) {
+func DecodeActionIdNxSetMplsTtl(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxSetMplsTtl, error) {
 	_actionidnxsetmplsttl := &ActionIdNxSetMplsTtl{ActionIdNicira: parent}
 	return _actionidnxsetmplsttl, nil
 }
@@ -1974,7 +1973,7 @@ type IActionIdNxSetQueue interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxSetQueue) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxSetQueue) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1984,7 +1983,7 @@ func (self *ActionIdNxSetQueue) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxSetQueue(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxSetQueue, error) {
+func DecodeActionIdNxSetQueue(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxSetQueue, error) {
 	_actionidnxsetqueue := &ActionIdNxSetQueue{ActionIdNicira: parent}
 	return _actionidnxsetqueue, nil
 }
@@ -2004,7 +2003,7 @@ type IActionIdNxSetTunnel interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxSetTunnel) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxSetTunnel) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2014,7 +2013,7 @@ func (self *ActionIdNxSetTunnel) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxSetTunnel(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxSetTunnel, error) {
+func DecodeActionIdNxSetTunnel(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxSetTunnel, error) {
 	_actionidnxsettunnel := &ActionIdNxSetTunnel{ActionIdNicira: parent}
 	return _actionidnxsettunnel, nil
 }
@@ -2034,7 +2033,7 @@ type IActionIdNxSetTunnel64 interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxSetTunnel64) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxSetTunnel64) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2044,7 +2043,7 @@ func (self *ActionIdNxSetTunnel64) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxSetTunnel64(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxSetTunnel64, error) {
+func DecodeActionIdNxSetTunnel64(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxSetTunnel64, error) {
 	_actionidnxsettunnel64 := &ActionIdNxSetTunnel64{ActionIdNicira: parent}
 	return _actionidnxsettunnel64, nil
 }
@@ -2064,7 +2063,7 @@ type IActionIdNxStackPop interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxStackPop) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxStackPop) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2074,7 +2073,7 @@ func (self *ActionIdNxStackPop) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxStackPop(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxStackPop, error) {
+func DecodeActionIdNxStackPop(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxStackPop, error) {
 	_actionidnxstackpop := &ActionIdNxStackPop{ActionIdNicira: parent}
 	return _actionidnxstackpop, nil
 }
@@ -2094,7 +2093,7 @@ type IActionIdNxStackPush interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxStackPush) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxStackPush) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2104,7 +2103,7 @@ func (self *ActionIdNxStackPush) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxStackPush(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxStackPush, error) {
+func DecodeActionIdNxStackPush(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxStackPush, error) {
 	_actionidnxstackpush := &ActionIdNxStackPush{ActionIdNicira: parent}
 	return _actionidnxstackpush, nil
 }
@@ -2124,7 +2123,7 @@ type IActionIdNxWriteMetadata interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdNxWriteMetadata) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdNxWriteMetadata) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2134,7 +2133,7 @@ func (self *ActionIdNxWriteMetadata) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdNxWriteMetadata(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdNxWriteMetadata, error) {
+func DecodeActionIdNxWriteMetadata(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdNxWriteMetadata, error) {
 	_actionidnxwritemetadata := &ActionIdNxWriteMetadata{ActionIdNicira: parent}
 	return _actionidnxwritemetadata, nil
 }
@@ -2154,7 +2153,7 @@ type IActionIdOutput interface {
 	IActionId
 }
 
-func (self *ActionIdOutput) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdOutput) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2164,7 +2163,7 @@ func (self *ActionIdOutput) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdOutput(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdOutput, error) {
+func DecodeActionIdOutput(parent *ActionId, decoder *openflow.Decoder) (*ActionIdOutput, error) {
 	_actionidoutput := &ActionIdOutput{ActionId: parent}
 	return _actionidoutput, nil
 }
@@ -2184,7 +2183,7 @@ type IActionIdPopMpls interface {
 	IActionId
 }
 
-func (self *ActionIdPopMpls) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdPopMpls) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2194,7 +2193,7 @@ func (self *ActionIdPopMpls) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdPopMpls(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdPopMpls, error) {
+func DecodeActionIdPopMpls(parent *ActionId, decoder *openflow.Decoder) (*ActionIdPopMpls, error) {
 	_actionidpopmpls := &ActionIdPopMpls{ActionId: parent}
 	return _actionidpopmpls, nil
 }
@@ -2214,7 +2213,7 @@ type IActionIdPopPbb interface {
 	IActionId
 }
 
-func (self *ActionIdPopPbb) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdPopPbb) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2224,7 +2223,7 @@ func (self *ActionIdPopPbb) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdPopPbb(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdPopPbb, error) {
+func DecodeActionIdPopPbb(parent *ActionId, decoder *openflow.Decoder) (*ActionIdPopPbb, error) {
 	_actionidpoppbb := &ActionIdPopPbb{ActionId: parent}
 	return _actionidpoppbb, nil
 }
@@ -2244,7 +2243,7 @@ type IActionIdPopVlan interface {
 	IActionId
 }
 
-func (self *ActionIdPopVlan) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdPopVlan) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2254,7 +2253,7 @@ func (self *ActionIdPopVlan) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdPopVlan(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdPopVlan, error) {
+func DecodeActionIdPopVlan(parent *ActionId, decoder *openflow.Decoder) (*ActionIdPopVlan, error) {
 	_actionidpopvlan := &ActionIdPopVlan{ActionId: parent}
 	return _actionidpopvlan, nil
 }
@@ -2274,7 +2273,7 @@ type IActionIdPushMpls interface {
 	IActionId
 }
 
-func (self *ActionIdPushMpls) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdPushMpls) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2284,7 +2283,7 @@ func (self *ActionIdPushMpls) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdPushMpls(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdPushMpls, error) {
+func DecodeActionIdPushMpls(parent *ActionId, decoder *openflow.Decoder) (*ActionIdPushMpls, error) {
 	_actionidpushmpls := &ActionIdPushMpls{ActionId: parent}
 	return _actionidpushmpls, nil
 }
@@ -2304,7 +2303,7 @@ type IActionIdPushPbb interface {
 	IActionId
 }
 
-func (self *ActionIdPushPbb) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdPushPbb) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2314,7 +2313,7 @@ func (self *ActionIdPushPbb) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdPushPbb(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdPushPbb, error) {
+func DecodeActionIdPushPbb(parent *ActionId, decoder *openflow.Decoder) (*ActionIdPushPbb, error) {
 	_actionidpushpbb := &ActionIdPushPbb{ActionId: parent}
 	return _actionidpushpbb, nil
 }
@@ -2334,7 +2333,7 @@ type IActionIdPushVlan interface {
 	IActionId
 }
 
-func (self *ActionIdPushVlan) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdPushVlan) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2344,7 +2343,7 @@ func (self *ActionIdPushVlan) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdPushVlan(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdPushVlan, error) {
+func DecodeActionIdPushVlan(parent *ActionId, decoder *openflow.Decoder) (*ActionIdPushVlan, error) {
 	_actionidpushvlan := &ActionIdPushVlan{ActionId: parent}
 	return _actionidpushvlan, nil
 }
@@ -2364,7 +2363,7 @@ type IActionIdResubmit interface {
 	IActionIdNicira
 }
 
-func (self *ActionIdResubmit) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdResubmit) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionIdNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2374,7 +2373,7 @@ func (self *ActionIdResubmit) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdResubmit(parent *ActionIdNicira, decoder *goloxi.Decoder) (*ActionIdResubmit, error) {
+func DecodeActionIdResubmit(parent *ActionIdNicira, decoder *openflow.Decoder) (*ActionIdResubmit, error) {
 	_actionidresubmit := &ActionIdResubmit{ActionIdNicira: parent}
 	return _actionidresubmit, nil
 }
@@ -2394,7 +2393,7 @@ type IActionIdSetField interface {
 	IActionId
 }
 
-func (self *ActionIdSetField) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdSetField) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2404,7 +2403,7 @@ func (self *ActionIdSetField) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdSetField(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdSetField, error) {
+func DecodeActionIdSetField(parent *ActionId, decoder *openflow.Decoder) (*ActionIdSetField, error) {
 	_actionidsetfield := &ActionIdSetField{ActionId: parent}
 	return _actionidsetfield, nil
 }
@@ -2424,7 +2423,7 @@ type IActionIdSetMplsTtl interface {
 	IActionId
 }
 
-func (self *ActionIdSetMplsTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdSetMplsTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2434,7 +2433,7 @@ func (self *ActionIdSetMplsTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdSetMplsTtl(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdSetMplsTtl, error) {
+func DecodeActionIdSetMplsTtl(parent *ActionId, decoder *openflow.Decoder) (*ActionIdSetMplsTtl, error) {
 	_actionidsetmplsttl := &ActionIdSetMplsTtl{ActionId: parent}
 	return _actionidsetmplsttl, nil
 }
@@ -2454,7 +2453,7 @@ type IActionIdSetNwTtl interface {
 	IActionId
 }
 
-func (self *ActionIdSetNwTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdSetNwTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2464,7 +2463,7 @@ func (self *ActionIdSetNwTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdSetNwTtl(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdSetNwTtl, error) {
+func DecodeActionIdSetNwTtl(parent *ActionId, decoder *openflow.Decoder) (*ActionIdSetNwTtl, error) {
 	_actionidsetnwttl := &ActionIdSetNwTtl{ActionId: parent}
 	return _actionidsetnwttl, nil
 }
@@ -2484,7 +2483,7 @@ type IActionIdSetQueue interface {
 	IActionId
 }
 
-func (self *ActionIdSetQueue) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionIdSetQueue) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionId.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2494,7 +2493,7 @@ func (self *ActionIdSetQueue) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionIdSetQueue(parent *ActionId, decoder *goloxi.Decoder) (*ActionIdSetQueue, error) {
+func DecodeActionIdSetQueue(parent *ActionId, decoder *openflow.Decoder) (*ActionIdSetQueue, error) {
 	_actionidsetqueue := &ActionIdSetQueue{ActionId: parent}
 	return _actionidsetqueue, nil
 }

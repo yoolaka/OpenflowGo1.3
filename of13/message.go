@@ -13,9 +13,8 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
+	"github.com/yoolaka/openflow"
 	"net"
-
-	"github.com/skydive-project/goloxi"
 )
 
 type Header struct {
@@ -26,7 +25,7 @@ type Header struct {
 }
 
 type IHeader interface {
-	goloxi.Serializable
+	openflow.Serializable
 	GetVersion() uint8
 	GetType() uint8
 	GetLength() uint16
@@ -65,7 +64,7 @@ func (self *Header) SetXid(v uint32) {
 	self.Xid = v
 }
 
-func (self *Header) Serialize(encoder *goloxi.Encoder) error {
+func (self *Header) Serialize(encoder *openflow.Encoder) error {
 
 	encoder.PutUint8(uint8(4))
 	encoder.PutUint8(uint8(self.Type))
@@ -74,7 +73,7 @@ func (self *Header) Serialize(encoder *goloxi.Encoder) error {
 
 	return nil
 }
-func (self *Header) Decode(decoder *goloxi.Decoder) error {
+func (self *Header) Decode(decoder *openflow.Decoder) error {
 	if decoder.Length() < 8 {
 		return fmt.Errorf("Header packet too short: %d < 8", decoder.Length())
 	}
@@ -89,7 +88,7 @@ func (self *Header) Decode(decoder *goloxi.Decoder) error {
 
 	return nil
 }
-func DecodeHeader(decoder *goloxi.Decoder) (IHeader, error) {
+func DecodeHeader(decoder *openflow.Decoder) (IHeader, error) {
 	_header := &Header{}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("Header packet too short: %d < 8", decoder.Length())
@@ -202,7 +201,7 @@ func (self *StatsReply) SetFlags(v StatsReplyFlags) {
 	self.Flags = v
 }
 
-func (self *StatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *StatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -213,7 +212,7 @@ func (self *StatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeStatsReply(parent *Header, decoder *goloxi.Decoder) (IStatsReply, error) {
+func DecodeStatsReply(parent *Header, decoder *openflow.Decoder) (IStatsReply, error) {
 	_statsreply := &StatsReply{Header: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("StatsReply packet too short: %d < 4", decoder.Length())
@@ -303,7 +302,7 @@ func (self *AggregateStatsReply) SetFlowCount(v uint32) {
 	self.FlowCount = v
 }
 
-func (self *AggregateStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *AggregateStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -319,7 +318,7 @@ func (self *AggregateStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeAggregateStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (*AggregateStatsReply, error) {
+func DecodeAggregateStatsReply(parent *StatsReply, decoder *openflow.Decoder) (*AggregateStatsReply, error) {
 	_aggregatestatsreply := &AggregateStatsReply{StatsReply: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("AggregateStatsReply packet too short: %d < 4", decoder.Length())
@@ -367,7 +366,7 @@ func (self *StatsRequest) SetFlags(v StatsRequestFlags) {
 	self.Flags = v
 }
 
-func (self *StatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *StatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -378,7 +377,7 @@ func (self *StatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeStatsRequest(parent *Header, decoder *goloxi.Decoder) (IStatsRequest, error) {
+func DecodeStatsRequest(parent *Header, decoder *openflow.Decoder) (IStatsRequest, error) {
 	_statsrequest := &StatsRequest{Header: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("StatsRequest packet too short: %d < 4", decoder.Length())
@@ -498,7 +497,7 @@ func (self *AggregateStatsRequest) SetMatch(v Match) {
 	self.Match = v
 }
 
-func (self *AggregateStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *AggregateStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -520,7 +519,7 @@ func (self *AggregateStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeAggregateStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (*AggregateStatsRequest, error) {
+func DecodeAggregateStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (*AggregateStatsRequest, error) {
 	_aggregatestatsrequest := &AggregateStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 28 {
 		return nil, fmt.Errorf("AggregateStatsRequest packet too short: %d < 28", decoder.Length())
@@ -616,7 +615,7 @@ func (self *AsyncGetReply) SetFlowRemovedMaskSlave(v uint32) {
 	self.FlowRemovedMaskSlave = v
 }
 
-func (self *AsyncGetReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *AsyncGetReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -633,7 +632,7 @@ func (self *AsyncGetReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeAsyncGetReply(parent *Header, decoder *goloxi.Decoder) (*AsyncGetReply, error) {
+func DecodeAsyncGetReply(parent *Header, decoder *openflow.Decoder) (*AsyncGetReply, error) {
 	_asyncgetreply := &AsyncGetReply{Header: parent}
 	if decoder.Length() < 24 {
 		return nil, fmt.Errorf("AsyncGetReply packet too short: %d < 24", decoder.Length())
@@ -662,7 +661,7 @@ type IAsyncGetRequest interface {
 	IHeader
 }
 
-func (self *AsyncGetRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *AsyncGetRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -672,7 +671,7 @@ func (self *AsyncGetRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeAsyncGetRequest(parent *Header, decoder *goloxi.Decoder) (*AsyncGetRequest, error) {
+func DecodeAsyncGetRequest(parent *Header, decoder *openflow.Decoder) (*AsyncGetRequest, error) {
 	_asyncgetrequest := &AsyncGetRequest{Header: parent}
 	return _asyncgetrequest, nil
 }
@@ -752,7 +751,7 @@ func (self *AsyncSet) SetFlowRemovedMaskSlave(v uint32) {
 	self.FlowRemovedMaskSlave = v
 }
 
-func (self *AsyncSet) Serialize(encoder *goloxi.Encoder) error {
+func (self *AsyncSet) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -769,7 +768,7 @@ func (self *AsyncSet) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeAsyncSet(parent *Header, decoder *goloxi.Decoder) (*AsyncSet, error) {
+func DecodeAsyncSet(parent *Header, decoder *openflow.Decoder) (*AsyncSet, error) {
 	_asyncset := &AsyncSet{Header: parent}
 	if decoder.Length() < 24 {
 		return nil, fmt.Errorf("AsyncSet packet too short: %d < 24", decoder.Length())
@@ -808,7 +807,7 @@ func (self *ErrorMsg) SetErrType(v uint16) {
 	self.ErrType = v
 }
 
-func (self *ErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *ErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -818,7 +817,7 @@ func (self *ErrorMsg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeErrorMsg(parent *Header, decoder *goloxi.Decoder) (IErrorMsg, error) {
+func DecodeErrorMsg(parent *Header, decoder *openflow.Decoder) (IErrorMsg, error) {
 	_errormsg := &ErrorMsg{Header: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("ErrorMsg packet too short: %d < 2", decoder.Length())
@@ -897,7 +896,7 @@ func (self *BadActionErrorMsg) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *BadActionErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *BadActionErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -910,7 +909,7 @@ func (self *BadActionErrorMsg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBadActionErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (*BadActionErrorMsg, error) {
+func DecodeBadActionErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (*BadActionErrorMsg, error) {
 	_badactionerrormsg := &BadActionErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("BadActionErrorMsg packet too short: %d < 2", decoder.Length())
@@ -955,7 +954,7 @@ func (self *BadInstructionErrorMsg) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *BadInstructionErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *BadInstructionErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -968,7 +967,7 @@ func (self *BadInstructionErrorMsg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBadInstructionErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (*BadInstructionErrorMsg, error) {
+func DecodeBadInstructionErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (*BadInstructionErrorMsg, error) {
 	_badinstructionerrormsg := &BadInstructionErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("BadInstructionErrorMsg packet too short: %d < 2", decoder.Length())
@@ -1013,7 +1012,7 @@ func (self *BadMatchErrorMsg) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *BadMatchErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *BadMatchErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1026,7 +1025,7 @@ func (self *BadMatchErrorMsg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBadMatchErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (*BadMatchErrorMsg, error) {
+func DecodeBadMatchErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (*BadMatchErrorMsg, error) {
 	_badmatcherrormsg := &BadMatchErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("BadMatchErrorMsg packet too short: %d < 2", decoder.Length())
@@ -1071,7 +1070,7 @@ func (self *BadRequestErrorMsg) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *BadRequestErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *BadRequestErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1084,7 +1083,7 @@ func (self *BadRequestErrorMsg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBadRequestErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (*BadRequestErrorMsg, error) {
+func DecodeBadRequestErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (*BadRequestErrorMsg, error) {
 	_badrequesterrormsg := &BadRequestErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("BadRequestErrorMsg packet too short: %d < 2", decoder.Length())
@@ -1109,7 +1108,7 @@ type IBarrierReply interface {
 	IHeader
 }
 
-func (self *BarrierReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BarrierReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1119,7 +1118,7 @@ func (self *BarrierReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBarrierReply(parent *Header, decoder *goloxi.Decoder) (*BarrierReply, error) {
+func DecodeBarrierReply(parent *Header, decoder *openflow.Decoder) (*BarrierReply, error) {
 	_barrierreply := &BarrierReply{Header: parent}
 	return _barrierreply, nil
 }
@@ -1139,7 +1138,7 @@ type IBarrierRequest interface {
 	IHeader
 }
 
-func (self *BarrierRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BarrierRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1149,7 +1148,7 @@ func (self *BarrierRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBarrierRequest(parent *Header, decoder *goloxi.Decoder) (*BarrierRequest, error) {
+func DecodeBarrierRequest(parent *Header, decoder *openflow.Decoder) (*BarrierRequest, error) {
 	_barrierrequest := &BarrierRequest{Header: parent}
 	return _barrierrequest, nil
 }
@@ -1189,7 +1188,7 @@ func (self *Experimenter) SetSubtype(v uint32) {
 	self.Subtype = v
 }
 
-func (self *Experimenter) Serialize(encoder *goloxi.Encoder) error {
+func (self *Experimenter) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1200,7 +1199,7 @@ func (self *Experimenter) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeExperimenter(parent *Header, decoder *goloxi.Decoder) (IExperimenter, error) {
+func DecodeExperimenter(parent *Header, decoder *openflow.Decoder) (IExperimenter, error) {
 	_experimenter := &Experimenter{Header: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("Experimenter packet too short: %d < 8", decoder.Length())
@@ -1234,7 +1233,7 @@ type IBsnHeader interface {
 	IExperimenter
 }
 
-func (self *BsnHeader) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnHeader) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Experimenter.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1242,7 +1241,7 @@ func (self *BsnHeader) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnHeader(parent *Experimenter, decoder *goloxi.Decoder) (IBsnHeader, error) {
+func DecodeBsnHeader(parent *Experimenter, decoder *openflow.Decoder) (IBsnHeader, error) {
 	_bsnheader := &BsnHeader{Experimenter: parent}
 
 	switch _bsnheader.Subtype {
@@ -1395,7 +1394,7 @@ func (self *BsnArpIdle) SetIpv4Addr(v net.IP) {
 	self.Ipv4Addr = v
 }
 
-func (self *BsnArpIdle) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnArpIdle) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1409,7 +1408,7 @@ func (self *BsnArpIdle) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnArpIdle(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnArpIdle, error) {
+func DecodeBsnArpIdle(parent *BsnHeader, decoder *openflow.Decoder) (*BsnArpIdle, error) {
 	_bsnarpidle := &BsnArpIdle{BsnHeader: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("BsnArpIdle packet too short: %d < 8", decoder.Length())
@@ -1455,7 +1454,7 @@ func (self *ExperimenterErrorMsg) SetExperimenter(v uint32) {
 	self.Experimenter = v
 }
 
-func (self *ExperimenterErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *ExperimenterErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1466,7 +1465,7 @@ func (self *ExperimenterErrorMsg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeExperimenterErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (IExperimenterErrorMsg, error) {
+func DecodeExperimenterErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (IExperimenterErrorMsg, error) {
 	_experimentererrormsg := &ExperimenterErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ExperimenterErrorMsg packet too short: %d < 6", decoder.Length())
@@ -1508,7 +1507,7 @@ func (self *BsnBaseError) SetErrMsg(v string) {
 	self.ErrMsg = v
 }
 
-func (self *BsnBaseError) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnBaseError) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ExperimenterErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1518,7 +1517,7 @@ func (self *BsnBaseError) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnBaseError(parent *ExperimenterErrorMsg, decoder *goloxi.Decoder) (IBsnBaseError, error) {
+func DecodeBsnBaseError(parent *ExperimenterErrorMsg, decoder *openflow.Decoder) (IBsnBaseError, error) {
 	_bsnbaseerror := &BsnBaseError{ExperimenterErrorMsg: parent}
 	if decoder.Length() < 256 {
 		return nil, fmt.Errorf("BsnBaseError packet too short: %d < 256", decoder.Length())
@@ -1561,7 +1560,7 @@ func (self *BsnBwClearDataReply) SetStatus(v uint32) {
 	self.Status = v
 }
 
-func (self *BsnBwClearDataReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnBwClearDataReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1573,7 +1572,7 @@ func (self *BsnBwClearDataReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnBwClearDataReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnBwClearDataReply, error) {
+func DecodeBsnBwClearDataReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnBwClearDataReply, error) {
 	_bsnbwcleardatareply := &BsnBwClearDataReply{BsnHeader: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnBwClearDataReply packet too short: %d < 4", decoder.Length())
@@ -1597,7 +1596,7 @@ type IBsnBwClearDataRequest interface {
 	IBsnHeader
 }
 
-func (self *BsnBwClearDataRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnBwClearDataRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1607,7 +1606,7 @@ func (self *BsnBwClearDataRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnBwClearDataRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnBwClearDataRequest, error) {
+func DecodeBsnBwClearDataRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnBwClearDataRequest, error) {
 	_bsnbwcleardatarequest := &BsnBwClearDataRequest{BsnHeader: parent}
 	return _bsnbwcleardatarequest, nil
 }
@@ -1637,7 +1636,7 @@ func (self *BsnBwEnableGetReply) SetEnabled(v uint32) {
 	self.Enabled = v
 }
 
-func (self *BsnBwEnableGetReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnBwEnableGetReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1649,7 +1648,7 @@ func (self *BsnBwEnableGetReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnBwEnableGetReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnBwEnableGetReply, error) {
+func DecodeBsnBwEnableGetReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnBwEnableGetReply, error) {
 	_bsnbwenablegetreply := &BsnBwEnableGetReply{BsnHeader: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnBwEnableGetReply packet too short: %d < 4", decoder.Length())
@@ -1673,7 +1672,7 @@ type IBsnBwEnableGetRequest interface {
 	IBsnHeader
 }
 
-func (self *BsnBwEnableGetRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnBwEnableGetRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1683,7 +1682,7 @@ func (self *BsnBwEnableGetRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnBwEnableGetRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnBwEnableGetRequest, error) {
+func DecodeBsnBwEnableGetRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnBwEnableGetRequest, error) {
 	_bsnbwenablegetrequest := &BsnBwEnableGetRequest{BsnHeader: parent}
 	return _bsnbwenablegetrequest, nil
 }
@@ -1723,7 +1722,7 @@ func (self *BsnBwEnableSetReply) SetStatus(v uint32) {
 	self.Status = v
 }
 
-func (self *BsnBwEnableSetReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnBwEnableSetReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1736,7 +1735,7 @@ func (self *BsnBwEnableSetReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnBwEnableSetReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnBwEnableSetReply, error) {
+func DecodeBsnBwEnableSetReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnBwEnableSetReply, error) {
 	_bsnbwenablesetreply := &BsnBwEnableSetReply{BsnHeader: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("BsnBwEnableSetReply packet too short: %d < 8", decoder.Length())
@@ -1771,7 +1770,7 @@ func (self *BsnBwEnableSetRequest) SetEnable(v uint32) {
 	self.Enable = v
 }
 
-func (self *BsnBwEnableSetRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnBwEnableSetRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1783,7 +1782,7 @@ func (self *BsnBwEnableSetRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnBwEnableSetRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnBwEnableSetRequest, error) {
+func DecodeBsnBwEnableSetRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnBwEnableSetRequest, error) {
 	_bsnbwenablesetrequest := &BsnBwEnableSetRequest{BsnHeader: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnBwEnableSetRequest packet too short: %d < 4", decoder.Length())
@@ -1817,7 +1816,7 @@ func (self *BsnControllerConnectionsReply) SetConnections(v []*BsnControllerConn
 	self.Connections = v
 }
 
-func (self *BsnControllerConnectionsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnControllerConnectionsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1833,7 +1832,7 @@ func (self *BsnControllerConnectionsReply) Serialize(encoder *goloxi.Encoder) er
 	return nil
 }
 
-func DecodeBsnControllerConnectionsReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnControllerConnectionsReply, error) {
+func DecodeBsnControllerConnectionsReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnControllerConnectionsReply, error) {
 	_bsncontrollerconnectionsreply := &BsnControllerConnectionsReply{BsnHeader: parent}
 
 	for decoder.Length() >= 264 {
@@ -1863,7 +1862,7 @@ type IBsnControllerConnectionsRequest interface {
 	IBsnHeader
 }
 
-func (self *BsnControllerConnectionsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnControllerConnectionsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1873,7 +1872,7 @@ func (self *BsnControllerConnectionsRequest) Serialize(encoder *goloxi.Encoder) 
 	return nil
 }
 
-func DecodeBsnControllerConnectionsRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnControllerConnectionsRequest, error) {
+func DecodeBsnControllerConnectionsRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnControllerConnectionsRequest, error) {
 	_bsncontrollerconnectionsrequest := &BsnControllerConnectionsRequest{BsnHeader: parent}
 	return _bsncontrollerconnectionsrequest, nil
 }
@@ -1913,7 +1912,7 @@ func (self *ExperimenterStatsReply) SetSubtype(v uint32) {
 	self.Subtype = v
 }
 
-func (self *ExperimenterStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *ExperimenterStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1925,7 +1924,7 @@ func (self *ExperimenterStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeExperimenterStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (IExperimenterStatsReply, error) {
+func DecodeExperimenterStatsReply(parent *StatsReply, decoder *openflow.Decoder) (IExperimenterStatsReply, error) {
 	_experimenterstatsreply := &ExperimenterStatsReply{StatsReply: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("ExperimenterStatsReply packet too short: %d < 12", decoder.Length())
@@ -1960,7 +1959,7 @@ type IBsnStatsReply interface {
 	IExperimenterStatsReply
 }
 
-func (self *BsnStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ExperimenterStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1968,7 +1967,7 @@ func (self *BsnStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnStatsReply(parent *ExperimenterStatsReply, decoder *goloxi.Decoder) (IBsnStatsReply, error) {
+func DecodeBsnStatsReply(parent *ExperimenterStatsReply, decoder *openflow.Decoder) (IBsnStatsReply, error) {
 	_bsnstatsreply := &BsnStatsReply{ExperimenterStatsReply: parent}
 
 	switch _bsnstatsreply.Subtype {
@@ -2035,7 +2034,7 @@ func (self *BsnDebugCounterDescStatsReply) SetEntries(v []*BsnDebugCounterDescSt
 	self.Entries = v
 }
 
-func (self *BsnDebugCounterDescStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnDebugCounterDescStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2051,7 +2050,7 @@ func (self *BsnDebugCounterDescStatsReply) Serialize(encoder *goloxi.Encoder) er
 	return nil
 }
 
-func DecodeBsnDebugCounterDescStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnDebugCounterDescStatsReply, error) {
+func DecodeBsnDebugCounterDescStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnDebugCounterDescStatsReply, error) {
 	_bsndebugcounterdescstatsreply := &BsnDebugCounterDescStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 328 {
@@ -2101,7 +2100,7 @@ func (self *ExperimenterStatsRequest) SetSubtype(v uint32) {
 	self.Subtype = v
 }
 
-func (self *ExperimenterStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *ExperimenterStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2113,7 +2112,7 @@ func (self *ExperimenterStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeExperimenterStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (IExperimenterStatsRequest, error) {
+func DecodeExperimenterStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (IExperimenterStatsRequest, error) {
 	_experimenterstatsrequest := &ExperimenterStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("ExperimenterStatsRequest packet too short: %d < 12", decoder.Length())
@@ -2148,7 +2147,7 @@ type IBsnStatsRequest interface {
 	IExperimenterStatsRequest
 }
 
-func (self *BsnStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ExperimenterStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2156,7 +2155,7 @@ func (self *BsnStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnStatsRequest(parent *ExperimenterStatsRequest, decoder *goloxi.Decoder) (IBsnStatsRequest, error) {
+func DecodeBsnStatsRequest(parent *ExperimenterStatsRequest, decoder *openflow.Decoder) (IBsnStatsRequest, error) {
 	_bsnstatsrequest := &BsnStatsRequest{ExperimenterStatsRequest: parent}
 
 	switch _bsnstatsrequest.Subtype {
@@ -2213,7 +2212,7 @@ type IBsnDebugCounterDescStatsRequest interface {
 	IBsnStatsRequest
 }
 
-func (self *BsnDebugCounterDescStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnDebugCounterDescStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2223,7 +2222,7 @@ func (self *BsnDebugCounterDescStatsRequest) Serialize(encoder *goloxi.Encoder) 
 	return nil
 }
 
-func DecodeBsnDebugCounterDescStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnDebugCounterDescStatsRequest, error) {
+func DecodeBsnDebugCounterDescStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnDebugCounterDescStatsRequest, error) {
 	_bsndebugcounterdescstatsrequest := &BsnDebugCounterDescStatsRequest{BsnStatsRequest: parent}
 	return _bsndebugcounterdescstatsrequest, nil
 }
@@ -2253,7 +2252,7 @@ func (self *BsnDebugCounterStatsReply) SetEntries(v []*BsnDebugCounterStatsEntry
 	self.Entries = v
 }
 
-func (self *BsnDebugCounterStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnDebugCounterStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2269,7 +2268,7 @@ func (self *BsnDebugCounterStatsReply) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeBsnDebugCounterStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnDebugCounterStatsReply, error) {
+func DecodeBsnDebugCounterStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnDebugCounterStatsReply, error) {
 	_bsndebugcounterstatsreply := &BsnDebugCounterStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 16 {
@@ -2299,7 +2298,7 @@ type IBsnDebugCounterStatsRequest interface {
 	IBsnStatsRequest
 }
 
-func (self *BsnDebugCounterStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnDebugCounterStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2309,7 +2308,7 @@ func (self *BsnDebugCounterStatsRequest) Serialize(encoder *goloxi.Encoder) erro
 	return nil
 }
 
-func DecodeBsnDebugCounterStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnDebugCounterStatsRequest, error) {
+func DecodeBsnDebugCounterStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnDebugCounterStatsRequest, error) {
 	_bsndebugcounterstatsrequest := &BsnDebugCounterStatsRequest{BsnStatsRequest: parent}
 	return _bsndebugcounterstatsrequest, nil
 }
@@ -2329,7 +2328,7 @@ type IBsnError interface {
 	IBsnBaseError
 }
 
-func (self *BsnError) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnError) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnBaseError.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2339,7 +2338,7 @@ func (self *BsnError) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnError(parent *BsnBaseError, decoder *goloxi.Decoder) (*BsnError, error) {
+func DecodeBsnError(parent *BsnBaseError, decoder *openflow.Decoder) (*BsnError, error) {
 	_bsnerror := &BsnError{BsnBaseError: parent}
 	return _bsnerror, nil
 }
@@ -2369,7 +2368,7 @@ func (self *BsnFlowChecksumBucketStatsReply) SetEntries(v []*BsnFlowChecksumBuck
 	self.Entries = v
 }
 
-func (self *BsnFlowChecksumBucketStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnFlowChecksumBucketStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2385,7 +2384,7 @@ func (self *BsnFlowChecksumBucketStatsReply) Serialize(encoder *goloxi.Encoder) 
 	return nil
 }
 
-func DecodeBsnFlowChecksumBucketStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnFlowChecksumBucketStatsReply, error) {
+func DecodeBsnFlowChecksumBucketStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnFlowChecksumBucketStatsReply, error) {
 	_bsnflowchecksumbucketstatsreply := &BsnFlowChecksumBucketStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 8 {
@@ -2425,7 +2424,7 @@ func (self *BsnFlowChecksumBucketStatsRequest) SetTableId(v uint8) {
 	self.TableId = v
 }
 
-func (self *BsnFlowChecksumBucketStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnFlowChecksumBucketStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2437,7 +2436,7 @@ func (self *BsnFlowChecksumBucketStatsRequest) Serialize(encoder *goloxi.Encoder
 	return nil
 }
 
-func DecodeBsnFlowChecksumBucketStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnFlowChecksumBucketStatsRequest, error) {
+func DecodeBsnFlowChecksumBucketStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnFlowChecksumBucketStatsRequest, error) {
 	_bsnflowchecksumbucketstatsrequest := &BsnFlowChecksumBucketStatsRequest{BsnStatsRequest: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("BsnFlowChecksumBucketStatsRequest packet too short: %d < 1", decoder.Length())
@@ -2501,7 +2500,7 @@ func (self *BsnFlowIdle) SetMatch(v Match) {
 	self.Match = v
 }
 
-func (self *BsnFlowIdle) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnFlowIdle) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2519,7 +2518,7 @@ func (self *BsnFlowIdle) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnFlowIdle(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnFlowIdle, error) {
+func DecodeBsnFlowIdle(parent *BsnHeader, decoder *openflow.Decoder) (*BsnFlowIdle, error) {
 	_bsnflowidle := &BsnFlowIdle{BsnHeader: parent}
 	if decoder.Length() < 24 {
 		return nil, fmt.Errorf("BsnFlowIdle packet too short: %d < 24", decoder.Length())
@@ -2561,7 +2560,7 @@ func (self *BsnFlowIdleEnableGetReply) SetEnabled(v uint32) {
 	self.Enabled = v
 }
 
-func (self *BsnFlowIdleEnableGetReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnFlowIdleEnableGetReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2573,7 +2572,7 @@ func (self *BsnFlowIdleEnableGetReply) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeBsnFlowIdleEnableGetReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnFlowIdleEnableGetReply, error) {
+func DecodeBsnFlowIdleEnableGetReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnFlowIdleEnableGetReply, error) {
 	_bsnflowidleenablegetreply := &BsnFlowIdleEnableGetReply{BsnHeader: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnFlowIdleEnableGetReply packet too short: %d < 4", decoder.Length())
@@ -2597,7 +2596,7 @@ type IBsnFlowIdleEnableGetRequest interface {
 	IBsnHeader
 }
 
-func (self *BsnFlowIdleEnableGetRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnFlowIdleEnableGetRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2607,7 +2606,7 @@ func (self *BsnFlowIdleEnableGetRequest) Serialize(encoder *goloxi.Encoder) erro
 	return nil
 }
 
-func DecodeBsnFlowIdleEnableGetRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnFlowIdleEnableGetRequest, error) {
+func DecodeBsnFlowIdleEnableGetRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnFlowIdleEnableGetRequest, error) {
 	_bsnflowidleenablegetrequest := &BsnFlowIdleEnableGetRequest{BsnHeader: parent}
 	return _bsnflowidleenablegetrequest, nil
 }
@@ -2647,7 +2646,7 @@ func (self *BsnFlowIdleEnableSetReply) SetStatus(v uint32) {
 	self.Status = v
 }
 
-func (self *BsnFlowIdleEnableSetReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnFlowIdleEnableSetReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2660,7 +2659,7 @@ func (self *BsnFlowIdleEnableSetReply) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeBsnFlowIdleEnableSetReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnFlowIdleEnableSetReply, error) {
+func DecodeBsnFlowIdleEnableSetReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnFlowIdleEnableSetReply, error) {
 	_bsnflowidleenablesetreply := &BsnFlowIdleEnableSetReply{BsnHeader: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("BsnFlowIdleEnableSetReply packet too short: %d < 8", decoder.Length())
@@ -2695,7 +2694,7 @@ func (self *BsnFlowIdleEnableSetRequest) SetEnable(v uint32) {
 	self.Enable = v
 }
 
-func (self *BsnFlowIdleEnableSetRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnFlowIdleEnableSetRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2707,7 +2706,7 @@ func (self *BsnFlowIdleEnableSetRequest) Serialize(encoder *goloxi.Encoder) erro
 	return nil
 }
 
-func DecodeBsnFlowIdleEnableSetRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnFlowIdleEnableSetRequest, error) {
+func DecodeBsnFlowIdleEnableSetRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnFlowIdleEnableSetRequest, error) {
 	_bsnflowidleenablesetrequest := &BsnFlowIdleEnableSetRequest{BsnHeader: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnFlowIdleEnableSetRequest packet too short: %d < 4", decoder.Length())
@@ -2741,7 +2740,7 @@ func (self *BsnGenericStatsReply) SetEntries(v []*BsnGenericStatsEntry) {
 	self.Entries = v
 }
 
-func (self *BsnGenericStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGenericStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2757,7 +2756,7 @@ func (self *BsnGenericStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnGenericStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnGenericStatsReply, error) {
+func DecodeBsnGenericStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnGenericStatsReply, error) {
 	_bsngenericstatsreply := &BsnGenericStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 2 {
@@ -2807,7 +2806,7 @@ func (self *BsnGenericStatsRequest) SetTlvs(v []IBsnTlv) {
 	self.Tlvs = v
 }
 
-func (self *BsnGenericStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGenericStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2824,7 +2823,7 @@ func (self *BsnGenericStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnGenericStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnGenericStatsRequest, error) {
+func DecodeBsnGenericStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnGenericStatsRequest, error) {
 	_bsngenericstatsrequest := &BsnGenericStatsRequest{BsnStatsRequest: parent}
 	if decoder.Length() < 64 {
 		return nil, fmt.Errorf("BsnGenericStatsRequest packet too short: %d < 64", decoder.Length())
@@ -2868,7 +2867,7 @@ func (self *BsnGentableBucketStatsReply) SetEntries(v []*BsnGentableBucketStatsE
 	self.Entries = v
 }
 
-func (self *BsnGentableBucketStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableBucketStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2884,7 +2883,7 @@ func (self *BsnGentableBucketStatsReply) Serialize(encoder *goloxi.Encoder) erro
 	return nil
 }
 
-func DecodeBsnGentableBucketStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnGentableBucketStatsReply, error) {
+func DecodeBsnGentableBucketStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnGentableBucketStatsReply, error) {
 	_bsngentablebucketstatsreply := &BsnGentableBucketStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 16 {
@@ -2924,7 +2923,7 @@ func (self *BsnGentableBucketStatsRequest) SetTableId(v uint16) {
 	self.TableId = v
 }
 
-func (self *BsnGentableBucketStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableBucketStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2936,7 +2935,7 @@ func (self *BsnGentableBucketStatsRequest) Serialize(encoder *goloxi.Encoder) er
 	return nil
 }
 
-func DecodeBsnGentableBucketStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnGentableBucketStatsRequest, error) {
+func DecodeBsnGentableBucketStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnGentableBucketStatsRequest, error) {
 	_bsngentablebucketstatsrequest := &BsnGentableBucketStatsRequest{BsnStatsRequest: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("BsnGentableBucketStatsRequest packet too short: %d < 2", decoder.Length())
@@ -2990,7 +2989,7 @@ func (self *BsnGentableClearReply) SetErrorCount(v uint32) {
 	self.ErrorCount = v
 }
 
-func (self *BsnGentableClearReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableClearReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3005,7 +3004,7 @@ func (self *BsnGentableClearReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnGentableClearReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnGentableClearReply, error) {
+func DecodeBsnGentableClearReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnGentableClearReply, error) {
 	_bsngentableclearreply := &BsnGentableClearReply{BsnHeader: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("BsnGentableClearReply packet too short: %d < 12", decoder.Length())
@@ -3062,7 +3061,7 @@ func (self *BsnGentableClearRequest) SetChecksumMask(v Checksum128) {
 	self.ChecksumMask = v
 }
 
-func (self *BsnGentableClearRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableClearRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3077,7 +3076,7 @@ func (self *BsnGentableClearRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnGentableClearRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnGentableClearRequest, error) {
+func DecodeBsnGentableClearRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnGentableClearRequest, error) {
 	_bsngentableclearrequest := &BsnGentableClearRequest{BsnHeader: parent}
 	if decoder.Length() < 36 {
 		return nil, fmt.Errorf("BsnGentableClearRequest packet too short: %d < 36", decoder.Length())
@@ -3114,7 +3113,7 @@ func (self *BsnGentableDescStatsReply) SetEntries(v []*BsnGentableDescStatsEntry
 	self.Entries = v
 }
 
-func (self *BsnGentableDescStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableDescStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3130,7 +3129,7 @@ func (self *BsnGentableDescStatsReply) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeBsnGentableDescStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnGentableDescStatsReply, error) {
+func DecodeBsnGentableDescStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnGentableDescStatsReply, error) {
 	_bsngentabledescstatsreply := &BsnGentableDescStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 48 {
@@ -3160,7 +3159,7 @@ type IBsnGentableDescStatsRequest interface {
 	IBsnStatsRequest
 }
 
-func (self *BsnGentableDescStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableDescStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3170,7 +3169,7 @@ func (self *BsnGentableDescStatsRequest) Serialize(encoder *goloxi.Encoder) erro
 	return nil
 }
 
-func DecodeBsnGentableDescStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnGentableDescStatsRequest, error) {
+func DecodeBsnGentableDescStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnGentableDescStatsRequest, error) {
 	_bsngentabledescstatsrequest := &BsnGentableDescStatsRequest{BsnStatsRequest: parent}
 	return _bsngentabledescstatsrequest, nil
 }
@@ -3240,7 +3239,7 @@ func (self *BsnGentableEntryAdd) SetValue(v []IBsnTlv) {
 	self.Value = v
 }
 
-func (self *BsnGentableEntryAdd) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableEntryAdd) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3264,7 +3263,7 @@ func (self *BsnGentableEntryAdd) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnGentableEntryAdd(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnGentableEntryAdd, error) {
+func DecodeBsnGentableEntryAdd(parent *BsnHeader, decoder *openflow.Decoder) (*BsnGentableEntryAdd, error) {
 	_bsngentableentryadd := &BsnGentableEntryAdd{BsnHeader: parent}
 	if decoder.Length() < 20 {
 		return nil, fmt.Errorf("BsnGentableEntryAdd packet too short: %d < 20", decoder.Length())
@@ -3330,7 +3329,7 @@ func (self *BsnGentableEntryDelete) SetKey(v []IBsnTlv) {
 	self.Key = v
 }
 
-func (self *BsnGentableEntryDelete) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableEntryDelete) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3347,7 +3346,7 @@ func (self *BsnGentableEntryDelete) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnGentableEntryDelete(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnGentableEntryDelete, error) {
+func DecodeBsnGentableEntryDelete(parent *BsnHeader, decoder *openflow.Decoder) (*BsnGentableEntryDelete, error) {
 	_bsngentableentrydelete := &BsnGentableEntryDelete{BsnHeader: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("BsnGentableEntryDelete packet too short: %d < 2", decoder.Length())
@@ -3391,7 +3390,7 @@ func (self *BsnGentableEntryDescStatsReply) SetEntries(v []*BsnGentableEntryDesc
 	self.Entries = v
 }
 
-func (self *BsnGentableEntryDescStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableEntryDescStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3407,7 +3406,7 @@ func (self *BsnGentableEntryDescStatsReply) Serialize(encoder *goloxi.Encoder) e
 	return nil
 }
 
-func DecodeBsnGentableEntryDescStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnGentableEntryDescStatsReply, error) {
+func DecodeBsnGentableEntryDescStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnGentableEntryDescStatsReply, error) {
 	_bsngentableentrydescstatsreply := &BsnGentableEntryDescStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 20 {
@@ -3467,7 +3466,7 @@ func (self *BsnGentableEntryDescStatsRequest) SetChecksumMask(v Checksum128) {
 	self.ChecksumMask = v
 }
 
-func (self *BsnGentableEntryDescStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableEntryDescStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3482,7 +3481,7 @@ func (self *BsnGentableEntryDescStatsRequest) Serialize(encoder *goloxi.Encoder)
 	return nil
 }
 
-func DecodeBsnGentableEntryDescStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnGentableEntryDescStatsRequest, error) {
+func DecodeBsnGentableEntryDescStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnGentableEntryDescStatsRequest, error) {
 	_bsngentableentrydescstatsrequest := &BsnGentableEntryDescStatsRequest{BsnStatsRequest: parent}
 	if decoder.Length() < 36 {
 		return nil, fmt.Errorf("BsnGentableEntryDescStatsRequest packet too short: %d < 36", decoder.Length())
@@ -3519,7 +3518,7 @@ func (self *BsnGentableEntryStatsReply) SetEntries(v []*BsnGentableEntryStatsEnt
 	self.Entries = v
 }
 
-func (self *BsnGentableEntryStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableEntryStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3535,7 +3534,7 @@ func (self *BsnGentableEntryStatsReply) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeBsnGentableEntryStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnGentableEntryStatsReply, error) {
+func DecodeBsnGentableEntryStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnGentableEntryStatsReply, error) {
 	_bsngentableentrystatsreply := &BsnGentableEntryStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 4 {
@@ -3595,7 +3594,7 @@ func (self *BsnGentableEntryStatsRequest) SetChecksumMask(v Checksum128) {
 	self.ChecksumMask = v
 }
 
-func (self *BsnGentableEntryStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableEntryStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3610,7 +3609,7 @@ func (self *BsnGentableEntryStatsRequest) Serialize(encoder *goloxi.Encoder) err
 	return nil
 }
 
-func DecodeBsnGentableEntryStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnGentableEntryStatsRequest, error) {
+func DecodeBsnGentableEntryStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnGentableEntryStatsRequest, error) {
 	_bsngentableentrystatsrequest := &BsnGentableEntryStatsRequest{BsnStatsRequest: parent}
 	if decoder.Length() < 36 {
 		return nil, fmt.Errorf("BsnGentableEntryStatsRequest packet too short: %d < 36", decoder.Length())
@@ -3657,7 +3656,7 @@ func (self *BsnGentableError) SetTableId(v uint16) {
 	self.TableId = v
 }
 
-func (self *BsnGentableError) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableError) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnBaseError.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3670,7 +3669,7 @@ func (self *BsnGentableError) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnGentableError(parent *BsnBaseError, decoder *goloxi.Decoder) (*BsnGentableError, error) {
+func DecodeBsnGentableError(parent *BsnBaseError, decoder *openflow.Decoder) (*BsnGentableError, error) {
 	_bsngentableerror := &BsnGentableError{BsnBaseError: parent}
 	if decoder.Length() < 260 {
 		return nil, fmt.Errorf("BsnGentableError packet too short: %d < 260", decoder.Length())
@@ -3715,7 +3714,7 @@ func (self *BsnGentableSetBucketsSize) SetBucketsSize(v uint32) {
 	self.BucketsSize = v
 }
 
-func (self *BsnGentableSetBucketsSize) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableSetBucketsSize) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3729,7 +3728,7 @@ func (self *BsnGentableSetBucketsSize) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeBsnGentableSetBucketsSize(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnGentableSetBucketsSize, error) {
+func DecodeBsnGentableSetBucketsSize(parent *BsnHeader, decoder *openflow.Decoder) (*BsnGentableSetBucketsSize, error) {
 	_bsngentablesetbucketssize := &BsnGentableSetBucketsSize{BsnHeader: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("BsnGentableSetBucketsSize packet too short: %d < 8", decoder.Length())
@@ -3765,7 +3764,7 @@ func (self *BsnGentableStatsReply) SetEntries(v []*BsnGentableStatsEntry) {
 	self.Entries = v
 }
 
-func (self *BsnGentableStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3781,7 +3780,7 @@ func (self *BsnGentableStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnGentableStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnGentableStatsReply, error) {
+func DecodeBsnGentableStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnGentableStatsReply, error) {
 	_bsngentablestatsreply := &BsnGentableStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 24 {
@@ -3811,7 +3810,7 @@ type IBsnGentableStatsRequest interface {
 	IBsnStatsRequest
 }
 
-func (self *BsnGentableStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGentableStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3821,7 +3820,7 @@ func (self *BsnGentableStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnGentableStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnGentableStatsRequest, error) {
+func DecodeBsnGentableStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnGentableStatsRequest, error) {
 	_bsngentablestatsrequest := &BsnGentableStatsRequest{BsnStatsRequest: parent}
 	return _bsngentablestatsrequest, nil
 }
@@ -3851,7 +3850,7 @@ func (self *BsnGetInterfacesReply) SetInterfaces(v []*BsnInterface) {
 	self.Interfaces = v
 }
 
-func (self *BsnGetInterfacesReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGetInterfacesReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3867,7 +3866,7 @@ func (self *BsnGetInterfacesReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnGetInterfacesReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnGetInterfacesReply, error) {
+func DecodeBsnGetInterfacesReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnGetInterfacesReply, error) {
 	_bsngetinterfacesreply := &BsnGetInterfacesReply{BsnHeader: parent}
 
 	for decoder.Length() >= 32 {
@@ -3897,7 +3896,7 @@ type IBsnGetInterfacesRequest interface {
 	IBsnHeader
 }
 
-func (self *BsnGetInterfacesRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGetInterfacesRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3907,7 +3906,7 @@ func (self *BsnGetInterfacesRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnGetInterfacesRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnGetInterfacesRequest, error) {
+func DecodeBsnGetInterfacesRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnGetInterfacesRequest, error) {
 	_bsngetinterfacesrequest := &BsnGetInterfacesRequest{BsnHeader: parent}
 	return _bsngetinterfacesrequest, nil
 }
@@ -3937,7 +3936,7 @@ func (self *BsnGetMirroringReply) SetReportMirrorPorts(v uint8) {
 	self.ReportMirrorPorts = v
 }
 
-func (self *BsnGetMirroringReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGetMirroringReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3950,7 +3949,7 @@ func (self *BsnGetMirroringReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnGetMirroringReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnGetMirroringReply, error) {
+func DecodeBsnGetMirroringReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnGetMirroringReply, error) {
 	_bsngetmirroringreply := &BsnGetMirroringReply{BsnHeader: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnGetMirroringReply packet too short: %d < 4", decoder.Length())
@@ -3985,7 +3984,7 @@ func (self *BsnGetMirroringRequest) SetReportMirrorPorts(v uint8) {
 	self.ReportMirrorPorts = v
 }
 
-func (self *BsnGetMirroringRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGetMirroringRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3998,7 +3997,7 @@ func (self *BsnGetMirroringRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnGetMirroringRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnGetMirroringRequest, error) {
+func DecodeBsnGetMirroringRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnGetMirroringRequest, error) {
 	_bsngetmirroringrequest := &BsnGetMirroringRequest{BsnHeader: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnGetMirroringRequest packet too short: %d < 4", decoder.Length())
@@ -4033,7 +4032,7 @@ func (self *BsnGetSwitchPipelineReply) SetPipeline(v string) {
 	self.Pipeline = v
 }
 
-func (self *BsnGetSwitchPipelineReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGetSwitchPipelineReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4045,7 +4044,7 @@ func (self *BsnGetSwitchPipelineReply) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeBsnGetSwitchPipelineReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnGetSwitchPipelineReply, error) {
+func DecodeBsnGetSwitchPipelineReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnGetSwitchPipelineReply, error) {
 	_bsngetswitchpipelinereply := &BsnGetSwitchPipelineReply{BsnHeader: parent}
 	if decoder.Length() < 256 {
 		return nil, fmt.Errorf("BsnGetSwitchPipelineReply packet too short: %d < 256", decoder.Length())
@@ -4069,7 +4068,7 @@ type IBsnGetSwitchPipelineRequest interface {
 	IBsnHeader
 }
 
-func (self *BsnGetSwitchPipelineRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnGetSwitchPipelineRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4079,7 +4078,7 @@ func (self *BsnGetSwitchPipelineRequest) Serialize(encoder *goloxi.Encoder) erro
 	return nil
 }
 
-func DecodeBsnGetSwitchPipelineRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnGetSwitchPipelineRequest, error) {
+func DecodeBsnGetSwitchPipelineRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnGetSwitchPipelineRequest, error) {
 	_bsngetswitchpipelinerequest := &BsnGetSwitchPipelineRequest{BsnHeader: parent}
 	return _bsngetswitchpipelinerequest, nil
 }
@@ -4119,7 +4118,7 @@ func (self *BsnImageDescStatsReply) SetStartupConfigChecksum(v string) {
 	self.StartupConfigChecksum = v
 }
 
-func (self *BsnImageDescStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnImageDescStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4132,7 +4131,7 @@ func (self *BsnImageDescStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnImageDescStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnImageDescStatsReply, error) {
+func DecodeBsnImageDescStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnImageDescStatsReply, error) {
 	_bsnimagedescstatsreply := &BsnImageDescStatsReply{BsnStatsReply: parent}
 	if decoder.Length() < 512 {
 		return nil, fmt.Errorf("BsnImageDescStatsReply packet too short: %d < 512", decoder.Length())
@@ -4157,7 +4156,7 @@ type IBsnImageDescStatsRequest interface {
 	IBsnStatsRequest
 }
 
-func (self *BsnImageDescStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnImageDescStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4167,7 +4166,7 @@ func (self *BsnImageDescStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnImageDescStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnImageDescStatsRequest, error) {
+func DecodeBsnImageDescStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnImageDescStatsRequest, error) {
 	_bsnimagedescstatsrequest := &BsnImageDescStatsRequest{BsnStatsRequest: parent}
 	return _bsnimagedescstatsrequest, nil
 }
@@ -4307,7 +4306,7 @@ func (self *BsnLacpConvergenceNotif) SetPartnerKey(v uint16) {
 	self.PartnerKey = v
 }
 
-func (self *BsnLacpConvergenceNotif) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnLacpConvergenceNotif) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4331,7 +4330,7 @@ func (self *BsnLacpConvergenceNotif) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnLacpConvergenceNotif(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnLacpConvergenceNotif, error) {
+func DecodeBsnLacpConvergenceNotif(parent *BsnHeader, decoder *openflow.Decoder) (*BsnLacpConvergenceNotif, error) {
 	_bsnlacpconvergencenotif := &BsnLacpConvergenceNotif{BsnHeader: parent}
 	if decoder.Length() < 36 {
 		return nil, fmt.Errorf("BsnLacpConvergenceNotif packet too short: %d < 36", decoder.Length())
@@ -4377,7 +4376,7 @@ func (self *BsnLacpStatsReply) SetEntries(v []*BsnLacpStatsEntry) {
 	self.Entries = v
 }
 
-func (self *BsnLacpStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnLacpStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4393,7 +4392,7 @@ func (self *BsnLacpStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnLacpStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnLacpStatsReply, error) {
+func DecodeBsnLacpStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnLacpStatsReply, error) {
 	_bsnlacpstatsreply := &BsnLacpStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 36 {
@@ -4423,7 +4422,7 @@ type IBsnLacpStatsRequest interface {
 	IBsnStatsRequest
 }
 
-func (self *BsnLacpStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnLacpStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4433,7 +4432,7 @@ func (self *BsnLacpStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnLacpStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnLacpStatsRequest, error) {
+func DecodeBsnLacpStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnLacpStatsRequest, error) {
 	_bsnlacpstatsrequest := &BsnLacpStatsRequest{BsnStatsRequest: parent}
 	return _bsnlacpstatsrequest, nil
 }
@@ -4473,7 +4472,7 @@ func (self *BsnLog) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *BsnLog) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnLog) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4486,7 +4485,7 @@ func (self *BsnLog) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnLog(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnLog, error) {
+func DecodeBsnLog(parent *BsnHeader, decoder *openflow.Decoder) (*BsnLog, error) {
 	_bsnlog := &BsnLog{BsnHeader: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("BsnLog packet too short: %d < 1", decoder.Length())
@@ -4521,7 +4520,7 @@ func (self *BsnLuaCommandReply) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *BsnLuaCommandReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnLuaCommandReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4533,7 +4532,7 @@ func (self *BsnLuaCommandReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnLuaCommandReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnLuaCommandReply, error) {
+func DecodeBsnLuaCommandReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnLuaCommandReply, error) {
 	_bsnluacommandreply := &BsnLuaCommandReply{BsnHeader: parent}
 	_bsnluacommandreply.Data = decoder.Read(int(decoder.Length()))
 	return _bsnluacommandreply, nil
@@ -4564,7 +4563,7 @@ func (self *BsnLuaCommandRequest) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *BsnLuaCommandRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnLuaCommandRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4576,7 +4575,7 @@ func (self *BsnLuaCommandRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnLuaCommandRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnLuaCommandRequest, error) {
+func DecodeBsnLuaCommandRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnLuaCommandRequest, error) {
 	_bsnluacommandrequest := &BsnLuaCommandRequest{BsnHeader: parent}
 	_bsnluacommandrequest.Data = decoder.Read(int(decoder.Length()))
 	return _bsnluacommandrequest, nil
@@ -4607,7 +4606,7 @@ func (self *BsnLuaNotification) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *BsnLuaNotification) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnLuaNotification) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4619,7 +4618,7 @@ func (self *BsnLuaNotification) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnLuaNotification(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnLuaNotification, error) {
+func DecodeBsnLuaNotification(parent *BsnHeader, decoder *openflow.Decoder) (*BsnLuaNotification, error) {
 	_bsnluanotification := &BsnLuaNotification{BsnHeader: parent}
 	_bsnluanotification.Data = decoder.Read(int(decoder.Length()))
 	return _bsnluanotification, nil
@@ -4670,7 +4669,7 @@ func (self *BsnLuaUpload) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *BsnLuaUpload) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnLuaUpload) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4684,7 +4683,7 @@ func (self *BsnLuaUpload) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnLuaUpload(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnLuaUpload, error) {
+func DecodeBsnLuaUpload(parent *BsnHeader, decoder *openflow.Decoder) (*BsnLuaUpload, error) {
 	_bsnluaupload := &BsnLuaUpload{BsnHeader: parent}
 	if decoder.Length() < 66 {
 		return nil, fmt.Errorf("BsnLuaUpload packet too short: %d < 66", decoder.Length())
@@ -4740,7 +4739,7 @@ func (self *BsnPduRxReply) SetSlotNum(v uint8) {
 	self.SlotNum = v
 }
 
-func (self *BsnPduRxReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnPduRxReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4754,7 +4753,7 @@ func (self *BsnPduRxReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnPduRxReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnPduRxReply, error) {
+func DecodeBsnPduRxReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnPduRxReply, error) {
 	_bsnpdurxreply := &BsnPduRxReply{BsnHeader: parent}
 	if decoder.Length() < 9 {
 		return nil, fmt.Errorf("BsnPduRxReply packet too short: %d < 9", decoder.Length())
@@ -4820,7 +4819,7 @@ func (self *BsnPduRxRequest) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *BsnPduRxRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnPduRxRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4836,7 +4835,7 @@ func (self *BsnPduRxRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnPduRxRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnPduRxRequest, error) {
+func DecodeBsnPduRxRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnPduRxRequest, error) {
 	_bsnpdurxrequest := &BsnPduRxRequest{BsnHeader: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("BsnPduRxRequest packet too short: %d < 12", decoder.Length())
@@ -4884,7 +4883,7 @@ func (self *BsnPduRxTimeout) SetSlotNum(v uint8) {
 	self.SlotNum = v
 }
 
-func (self *BsnPduRxTimeout) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnPduRxTimeout) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4897,7 +4896,7 @@ func (self *BsnPduRxTimeout) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnPduRxTimeout(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnPduRxTimeout, error) {
+func DecodeBsnPduRxTimeout(parent *BsnHeader, decoder *openflow.Decoder) (*BsnPduRxTimeout, error) {
 	_bsnpdurxtimeout := &BsnPduRxTimeout{BsnHeader: parent}
 	if decoder.Length() < 5 {
 		return nil, fmt.Errorf("BsnPduRxTimeout packet too short: %d < 5", decoder.Length())
@@ -4952,7 +4951,7 @@ func (self *BsnPduTxReply) SetSlotNum(v uint8) {
 	self.SlotNum = v
 }
 
-func (self *BsnPduTxReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnPduTxReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4966,7 +4965,7 @@ func (self *BsnPduTxReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnPduTxReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnPduTxReply, error) {
+func DecodeBsnPduTxReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnPduTxReply, error) {
 	_bsnpdutxreply := &BsnPduTxReply{BsnHeader: parent}
 	if decoder.Length() < 9 {
 		return nil, fmt.Errorf("BsnPduTxReply packet too short: %d < 9", decoder.Length())
@@ -5032,7 +5031,7 @@ func (self *BsnPduTxRequest) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *BsnPduTxRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnPduTxRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5048,7 +5047,7 @@ func (self *BsnPduTxRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnPduTxRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnPduTxRequest, error) {
+func DecodeBsnPduTxRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnPduTxRequest, error) {
 	_bsnpdutxrequest := &BsnPduTxRequest{BsnHeader: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("BsnPduTxRequest packet too short: %d < 12", decoder.Length())
@@ -5086,7 +5085,7 @@ func (self *BsnPortCounterStatsReply) SetEntries(v []*BsnPortCounterStatsEntry) 
 	self.Entries = v
 }
 
-func (self *BsnPortCounterStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnPortCounterStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5102,7 +5101,7 @@ func (self *BsnPortCounterStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnPortCounterStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnPortCounterStatsReply, error) {
+func DecodeBsnPortCounterStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnPortCounterStatsReply, error) {
 	_bsnportcounterstatsreply := &BsnPortCounterStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 8 {
@@ -5142,7 +5141,7 @@ func (self *BsnPortCounterStatsRequest) SetPortNo(v Port) {
 	self.PortNo = v
 }
 
-func (self *BsnPortCounterStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnPortCounterStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5154,7 +5153,7 @@ func (self *BsnPortCounterStatsRequest) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeBsnPortCounterStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnPortCounterStatsRequest, error) {
+func DecodeBsnPortCounterStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnPortCounterStatsRequest, error) {
 	_bsnportcounterstatsrequest := &BsnPortCounterStatsRequest{BsnStatsRequest: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnPortCounterStatsRequest packet too short: %d < 4", decoder.Length())
@@ -5208,7 +5207,7 @@ func (self *BsnRoleStatus) SetGenerationId(v uint64) {
 	self.GenerationId = v
 }
 
-func (self *BsnRoleStatus) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnRoleStatus) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5223,7 +5222,7 @@ func (self *BsnRoleStatus) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnRoleStatus(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnRoleStatus, error) {
+func DecodeBsnRoleStatus(parent *BsnHeader, decoder *openflow.Decoder) (*BsnRoleStatus, error) {
 	_bsnrolestatus := &BsnRoleStatus{BsnHeader: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("BsnRoleStatus packet too short: %d < 16", decoder.Length())
@@ -5270,7 +5269,7 @@ func (self *BsnSetAuxCxnsReply) SetStatus(v uint32) {
 	self.Status = v
 }
 
-func (self *BsnSetAuxCxnsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnSetAuxCxnsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5283,7 +5282,7 @@ func (self *BsnSetAuxCxnsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnSetAuxCxnsReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnSetAuxCxnsReply, error) {
+func DecodeBsnSetAuxCxnsReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnSetAuxCxnsReply, error) {
 	_bsnsetauxcxnsreply := &BsnSetAuxCxnsReply{BsnHeader: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("BsnSetAuxCxnsReply packet too short: %d < 8", decoder.Length())
@@ -5318,7 +5317,7 @@ func (self *BsnSetAuxCxnsRequest) SetNumAux(v uint32) {
 	self.NumAux = v
 }
 
-func (self *BsnSetAuxCxnsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnSetAuxCxnsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5330,7 +5329,7 @@ func (self *BsnSetAuxCxnsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnSetAuxCxnsRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnSetAuxCxnsRequest, error) {
+func DecodeBsnSetAuxCxnsRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnSetAuxCxnsRequest, error) {
 	_bsnsetauxcxnsrequest := &BsnSetAuxCxnsRequest{BsnHeader: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnSetAuxCxnsRequest packet too short: %d < 4", decoder.Length())
@@ -5374,7 +5373,7 @@ func (self *BsnSetLacpReply) SetPortNo(v Port) {
 	self.PortNo = v
 }
 
-func (self *BsnSetLacpReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnSetLacpReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5387,7 +5386,7 @@ func (self *BsnSetLacpReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnSetLacpReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnSetLacpReply, error) {
+func DecodeBsnSetLacpReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnSetLacpReply, error) {
 	_bsnsetlacpreply := &BsnSetLacpReply{BsnHeader: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("BsnSetLacpReply packet too short: %d < 8", decoder.Length())
@@ -5482,7 +5481,7 @@ func (self *BsnSetLacpRequest) SetActorKey(v uint16) {
 	self.ActorKey = v
 }
 
-func (self *BsnSetLacpRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnSetLacpRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5501,7 +5500,7 @@ func (self *BsnSetLacpRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnSetLacpRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnSetLacpRequest, error) {
+func DecodeBsnSetLacpRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnSetLacpRequest, error) {
 	_bsnsetlacprequest := &BsnSetLacpRequest{BsnHeader: parent}
 	if decoder.Length() < 22 {
 		return nil, fmt.Errorf("BsnSetLacpRequest packet too short: %d < 22", decoder.Length())
@@ -5542,7 +5541,7 @@ func (self *BsnSetMirroring) SetReportMirrorPorts(v uint8) {
 	self.ReportMirrorPorts = v
 }
 
-func (self *BsnSetMirroring) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnSetMirroring) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5555,7 +5554,7 @@ func (self *BsnSetMirroring) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnSetMirroring(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnSetMirroring, error) {
+func DecodeBsnSetMirroring(parent *BsnHeader, decoder *openflow.Decoder) (*BsnSetMirroring, error) {
 	_bsnsetmirroring := &BsnSetMirroring{BsnHeader: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnSetMirroring packet too short: %d < 4", decoder.Length())
@@ -5590,7 +5589,7 @@ func (self *BsnSetPktinSuppressionReply) SetStatus(v uint32) {
 	self.Status = v
 }
 
-func (self *BsnSetPktinSuppressionReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnSetPktinSuppressionReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5602,7 +5601,7 @@ func (self *BsnSetPktinSuppressionReply) Serialize(encoder *goloxi.Encoder) erro
 	return nil
 }
 
-func DecodeBsnSetPktinSuppressionReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnSetPktinSuppressionReply, error) {
+func DecodeBsnSetPktinSuppressionReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnSetPktinSuppressionReply, error) {
 	_bsnsetpktinsuppressionreply := &BsnSetPktinSuppressionReply{BsnHeader: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnSetPktinSuppressionReply packet too short: %d < 4", decoder.Length())
@@ -5676,7 +5675,7 @@ func (self *BsnSetPktinSuppressionRequest) SetCookie(v uint64) {
 	self.Cookie = v
 }
 
-func (self *BsnSetPktinSuppressionRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnSetPktinSuppressionRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5693,7 +5692,7 @@ func (self *BsnSetPktinSuppressionRequest) Serialize(encoder *goloxi.Encoder) er
 	return nil
 }
 
-func DecodeBsnSetPktinSuppressionRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnSetPktinSuppressionRequest, error) {
+func DecodeBsnSetPktinSuppressionRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnSetPktinSuppressionRequest, error) {
 	_bsnsetpktinsuppressionrequest := &BsnSetPktinSuppressionRequest{BsnHeader: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("BsnSetPktinSuppressionRequest packet too short: %d < 16", decoder.Length())
@@ -5732,7 +5731,7 @@ func (self *BsnSetSwitchPipelineReply) SetStatus(v uint32) {
 	self.Status = v
 }
 
-func (self *BsnSetSwitchPipelineReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnSetSwitchPipelineReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5744,7 +5743,7 @@ func (self *BsnSetSwitchPipelineReply) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeBsnSetSwitchPipelineReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnSetSwitchPipelineReply, error) {
+func DecodeBsnSetSwitchPipelineReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnSetSwitchPipelineReply, error) {
 	_bsnsetswitchpipelinereply := &BsnSetSwitchPipelineReply{BsnHeader: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnSetSwitchPipelineReply packet too short: %d < 4", decoder.Length())
@@ -5778,7 +5777,7 @@ func (self *BsnSetSwitchPipelineRequest) SetPipeline(v string) {
 	self.Pipeline = v
 }
 
-func (self *BsnSetSwitchPipelineRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnSetSwitchPipelineRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5790,7 +5789,7 @@ func (self *BsnSetSwitchPipelineRequest) Serialize(encoder *goloxi.Encoder) erro
 	return nil
 }
 
-func DecodeBsnSetSwitchPipelineRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnSetSwitchPipelineRequest, error) {
+func DecodeBsnSetSwitchPipelineRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnSetSwitchPipelineRequest, error) {
 	_bsnsetswitchpipelinerequest := &BsnSetSwitchPipelineRequest{BsnHeader: parent}
 	if decoder.Length() < 256 {
 		return nil, fmt.Errorf("BsnSetSwitchPipelineRequest packet too short: %d < 256", decoder.Length())
@@ -5824,7 +5823,7 @@ func (self *BsnSwitchPipelineStatsReply) SetEntries(v []*BsnSwitchPipelineStatsE
 	self.Entries = v
 }
 
-func (self *BsnSwitchPipelineStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnSwitchPipelineStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5840,7 +5839,7 @@ func (self *BsnSwitchPipelineStatsReply) Serialize(encoder *goloxi.Encoder) erro
 	return nil
 }
 
-func DecodeBsnSwitchPipelineStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnSwitchPipelineStatsReply, error) {
+func DecodeBsnSwitchPipelineStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnSwitchPipelineStatsReply, error) {
 	_bsnswitchpipelinestatsreply := &BsnSwitchPipelineStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 256 {
@@ -5870,7 +5869,7 @@ type IBsnSwitchPipelineStatsRequest interface {
 	IBsnStatsRequest
 }
 
-func (self *BsnSwitchPipelineStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnSwitchPipelineStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5880,7 +5879,7 @@ func (self *BsnSwitchPipelineStatsRequest) Serialize(encoder *goloxi.Encoder) er
 	return nil
 }
 
-func DecodeBsnSwitchPipelineStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnSwitchPipelineStatsRequest, error) {
+func DecodeBsnSwitchPipelineStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnSwitchPipelineStatsRequest, error) {
 	_bsnswitchpipelinestatsrequest := &BsnSwitchPipelineStatsRequest{BsnStatsRequest: parent}
 	return _bsnswitchpipelinestatsrequest, nil
 }
@@ -5910,7 +5909,7 @@ func (self *BsnTableChecksumStatsReply) SetEntries(v []*BsnTableChecksumStatsEnt
 	self.Entries = v
 }
 
-func (self *BsnTableChecksumStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnTableChecksumStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5926,7 +5925,7 @@ func (self *BsnTableChecksumStatsReply) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeBsnTableChecksumStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnTableChecksumStatsReply, error) {
+func DecodeBsnTableChecksumStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnTableChecksumStatsReply, error) {
 	_bsntablechecksumstatsreply := &BsnTableChecksumStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 9 {
@@ -5956,7 +5955,7 @@ type IBsnTableChecksumStatsRequest interface {
 	IBsnStatsRequest
 }
 
-func (self *BsnTableChecksumStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnTableChecksumStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5966,7 +5965,7 @@ func (self *BsnTableChecksumStatsRequest) Serialize(encoder *goloxi.Encoder) err
 	return nil
 }
 
-func DecodeBsnTableChecksumStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnTableChecksumStatsRequest, error) {
+func DecodeBsnTableChecksumStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnTableChecksumStatsRequest, error) {
 	_bsntablechecksumstatsrequest := &BsnTableChecksumStatsRequest{BsnStatsRequest: parent}
 	return _bsntablechecksumstatsrequest, nil
 }
@@ -6006,7 +6005,7 @@ func (self *BsnTableSetBucketsSize) SetBucketsSize(v uint32) {
 	self.BucketsSize = v
 }
 
-func (self *BsnTableSetBucketsSize) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnTableSetBucketsSize) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6021,7 +6020,7 @@ func (self *BsnTableSetBucketsSize) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnTableSetBucketsSize(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnTableSetBucketsSize, error) {
+func DecodeBsnTableSetBucketsSize(parent *BsnHeader, decoder *openflow.Decoder) (*BsnTableSetBucketsSize, error) {
 	_bsntablesetbucketssize := &BsnTableSetBucketsSize{BsnHeader: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("BsnTableSetBucketsSize packet too short: %d < 8", decoder.Length())
@@ -6058,7 +6057,7 @@ func (self *BsnTimeReply) SetTimeMs(v uint64) {
 	self.TimeMs = v
 }
 
-func (self *BsnTimeReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnTimeReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6070,7 +6069,7 @@ func (self *BsnTimeReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnTimeReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnTimeReply, error) {
+func DecodeBsnTimeReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnTimeReply, error) {
 	_bsntimereply := &BsnTimeReply{BsnHeader: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("BsnTimeReply packet too short: %d < 8", decoder.Length())
@@ -6094,7 +6093,7 @@ type IBsnTimeRequest interface {
 	IBsnHeader
 }
 
-func (self *BsnTimeRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnTimeRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6104,7 +6103,7 @@ func (self *BsnTimeRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnTimeRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnTimeRequest, error) {
+func DecodeBsnTimeRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnTimeRequest, error) {
 	_bsntimerequest := &BsnTimeRequest{BsnHeader: parent}
 	return _bsntimerequest, nil
 }
@@ -6144,7 +6143,7 @@ func (self *BsnVirtualPortCreateReply) SetVportNo(v uint32) {
 	self.VportNo = v
 }
 
-func (self *BsnVirtualPortCreateReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnVirtualPortCreateReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6157,7 +6156,7 @@ func (self *BsnVirtualPortCreateReply) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeBsnVirtualPortCreateReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnVirtualPortCreateReply, error) {
+func DecodeBsnVirtualPortCreateReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnVirtualPortCreateReply, error) {
 	_bsnvirtualportcreatereply := &BsnVirtualPortCreateReply{BsnHeader: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("BsnVirtualPortCreateReply packet too short: %d < 8", decoder.Length())
@@ -6192,7 +6191,7 @@ func (self *BsnVirtualPortCreateRequest) SetVport(v BSNVport) {
 	self.Vport = v
 }
 
-func (self *BsnVirtualPortCreateRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnVirtualPortCreateRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6206,7 +6205,7 @@ func (self *BsnVirtualPortCreateRequest) Serialize(encoder *goloxi.Encoder) erro
 	return nil
 }
 
-func DecodeBsnVirtualPortCreateRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnVirtualPortCreateRequest, error) {
+func DecodeBsnVirtualPortCreateRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnVirtualPortCreateRequest, error) {
 	_bsnvirtualportcreaterequest := &BsnVirtualPortCreateRequest{BsnHeader: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnVirtualPortCreateRequest packet too short: %d < 4", decoder.Length())
@@ -6243,7 +6242,7 @@ func (self *BsnVirtualPortRemoveReply) SetStatus(v uint32) {
 	self.Status = v
 }
 
-func (self *BsnVirtualPortRemoveReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnVirtualPortRemoveReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6255,7 +6254,7 @@ func (self *BsnVirtualPortRemoveReply) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeBsnVirtualPortRemoveReply(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnVirtualPortRemoveReply, error) {
+func DecodeBsnVirtualPortRemoveReply(parent *BsnHeader, decoder *openflow.Decoder) (*BsnVirtualPortRemoveReply, error) {
 	_bsnvirtualportremovereply := &BsnVirtualPortRemoveReply{BsnHeader: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnVirtualPortRemoveReply packet too short: %d < 4", decoder.Length())
@@ -6289,7 +6288,7 @@ func (self *BsnVirtualPortRemoveRequest) SetVportNo(v uint32) {
 	self.VportNo = v
 }
 
-func (self *BsnVirtualPortRemoveRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnVirtualPortRemoveRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6301,7 +6300,7 @@ func (self *BsnVirtualPortRemoveRequest) Serialize(encoder *goloxi.Encoder) erro
 	return nil
 }
 
-func DecodeBsnVirtualPortRemoveRequest(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnVirtualPortRemoveRequest, error) {
+func DecodeBsnVirtualPortRemoveRequest(parent *BsnHeader, decoder *openflow.Decoder) (*BsnVirtualPortRemoveRequest, error) {
 	_bsnvirtualportremoverequest := &BsnVirtualPortRemoveRequest{BsnHeader: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnVirtualPortRemoveRequest packet too short: %d < 4", decoder.Length())
@@ -6335,7 +6334,7 @@ func (self *BsnVlanCounterClear) SetVlanVid(v uint16) {
 	self.VlanVid = v
 }
 
-func (self *BsnVlanCounterClear) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnVlanCounterClear) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnHeader.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6347,7 +6346,7 @@ func (self *BsnVlanCounterClear) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnVlanCounterClear(parent *BsnHeader, decoder *goloxi.Decoder) (*BsnVlanCounterClear, error) {
+func DecodeBsnVlanCounterClear(parent *BsnHeader, decoder *openflow.Decoder) (*BsnVlanCounterClear, error) {
 	_bsnvlancounterclear := &BsnVlanCounterClear{BsnHeader: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("BsnVlanCounterClear packet too short: %d < 2", decoder.Length())
@@ -6381,7 +6380,7 @@ func (self *BsnVlanCounterStatsReply) SetEntries(v []*BsnVlanCounterStatsEntry) 
 	self.Entries = v
 }
 
-func (self *BsnVlanCounterStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnVlanCounterStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6397,7 +6396,7 @@ func (self *BsnVlanCounterStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnVlanCounterStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnVlanCounterStatsReply, error) {
+func DecodeBsnVlanCounterStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnVlanCounterStatsReply, error) {
 	_bsnvlancounterstatsreply := &BsnVlanCounterStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 8 {
@@ -6437,7 +6436,7 @@ func (self *BsnVlanCounterStatsRequest) SetVlanVid(v uint16) {
 	self.VlanVid = v
 }
 
-func (self *BsnVlanCounterStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnVlanCounterStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6449,7 +6448,7 @@ func (self *BsnVlanCounterStatsRequest) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeBsnVlanCounterStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnVlanCounterStatsRequest, error) {
+func DecodeBsnVlanCounterStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnVlanCounterStatsRequest, error) {
 	_bsnvlancounterstatsrequest := &BsnVlanCounterStatsRequest{BsnStatsRequest: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("BsnVlanCounterStatsRequest packet too short: %d < 2", decoder.Length())
@@ -6483,7 +6482,7 @@ func (self *BsnVrfCounterStatsReply) SetEntries(v []*BsnVrfCounterStatsEntry) {
 	self.Entries = v
 }
 
-func (self *BsnVrfCounterStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnVrfCounterStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6499,7 +6498,7 @@ func (self *BsnVrfCounterStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeBsnVrfCounterStatsReply(parent *BsnStatsReply, decoder *goloxi.Decoder) (*BsnVrfCounterStatsReply, error) {
+func DecodeBsnVrfCounterStatsReply(parent *BsnStatsReply, decoder *openflow.Decoder) (*BsnVrfCounterStatsReply, error) {
 	_bsnvrfcounterstatsreply := &BsnVrfCounterStatsReply{BsnStatsReply: parent}
 
 	for decoder.Length() >= 8 {
@@ -6539,7 +6538,7 @@ func (self *BsnVrfCounterStatsRequest) SetVrf(v uint32) {
 	self.Vrf = v
 }
 
-func (self *BsnVrfCounterStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *BsnVrfCounterStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.BsnStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6551,7 +6550,7 @@ func (self *BsnVrfCounterStatsRequest) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeBsnVrfCounterStatsRequest(parent *BsnStatsRequest, decoder *goloxi.Decoder) (*BsnVrfCounterStatsRequest, error) {
+func DecodeBsnVrfCounterStatsRequest(parent *BsnStatsRequest, decoder *openflow.Decoder) (*BsnVrfCounterStatsRequest, error) {
 	_bsnvrfcounterstatsrequest := &BsnVrfCounterStatsRequest{BsnStatsRequest: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("BsnVrfCounterStatsRequest packet too short: %d < 4", decoder.Length())
@@ -6625,7 +6624,7 @@ func (self *DescStatsReply) SetDpDesc(v string) {
 	self.DpDesc = v
 }
 
-func (self *DescStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *DescStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6642,7 +6641,7 @@ func (self *DescStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeDescStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (*DescStatsReply, error) {
+func DecodeDescStatsReply(parent *StatsReply, decoder *openflow.Decoder) (*DescStatsReply, error) {
 	_descstatsreply := &DescStatsReply{StatsReply: parent}
 	if decoder.Length() < 1060 {
 		return nil, fmt.Errorf("DescStatsReply packet too short: %d < 1060", decoder.Length())
@@ -6671,7 +6670,7 @@ type IDescStatsRequest interface {
 	IStatsRequest
 }
 
-func (self *DescStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *DescStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6683,7 +6682,7 @@ func (self *DescStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeDescStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (*DescStatsRequest, error) {
+func DecodeDescStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (*DescStatsRequest, error) {
 	_descstatsrequest := &DescStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("DescStatsRequest packet too short: %d < 4", decoder.Length())
@@ -6717,7 +6716,7 @@ func (self *EchoReply) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *EchoReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *EchoReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6729,7 +6728,7 @@ func (self *EchoReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeEchoReply(parent *Header, decoder *goloxi.Decoder) (*EchoReply, error) {
+func DecodeEchoReply(parent *Header, decoder *openflow.Decoder) (*EchoReply, error) {
 	_echoreply := &EchoReply{Header: parent}
 	_echoreply.Data = decoder.Read(int(decoder.Length()))
 	return _echoreply, nil
@@ -6760,7 +6759,7 @@ func (self *EchoRequest) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *EchoRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *EchoRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6772,7 +6771,7 @@ func (self *EchoRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeEchoRequest(parent *Header, decoder *goloxi.Decoder) (*EchoRequest, error) {
+func DecodeEchoRequest(parent *Header, decoder *openflow.Decoder) (*EchoRequest, error) {
 	_echorequest := &EchoRequest{Header: parent}
 	_echorequest.Data = decoder.Read(int(decoder.Length()))
 	return _echorequest, nil
@@ -6853,7 +6852,7 @@ func (self *FeaturesReply) SetReserved(v uint32) {
 	self.Reserved = v
 }
 
-func (self *FeaturesReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *FeaturesReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6871,7 +6870,7 @@ func (self *FeaturesReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeFeaturesReply(parent *Header, decoder *goloxi.Decoder) (*FeaturesReply, error) {
+func DecodeFeaturesReply(parent *Header, decoder *openflow.Decoder) (*FeaturesReply, error) {
 	_featuresreply := &FeaturesReply{Header: parent}
 	if decoder.Length() < 24 {
 		return nil, fmt.Errorf("FeaturesReply packet too short: %d < 24", decoder.Length())
@@ -6901,7 +6900,7 @@ type IFeaturesRequest interface {
 	IHeader
 }
 
-func (self *FeaturesRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *FeaturesRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -6911,7 +6910,7 @@ func (self *FeaturesRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeFeaturesRequest(parent *Header, decoder *goloxi.Decoder) (*FeaturesRequest, error) {
+func DecodeFeaturesRequest(parent *Header, decoder *openflow.Decoder) (*FeaturesRequest, error) {
 	_featuresrequest := &FeaturesRequest{Header: parent}
 	return _featuresrequest, nil
 }
@@ -7061,7 +7060,7 @@ func (self *FlowMod) SetInstructions(v []IInstruction) {
 	self.Instructions = v
 }
 
-func (self *FlowMod) Serialize(encoder *goloxi.Encoder) error {
+func (self *FlowMod) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7091,7 +7090,7 @@ func (self *FlowMod) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeFlowMod(parent *Header, decoder *goloxi.Decoder) (IFlowMod, error) {
+func DecodeFlowMod(parent *Header, decoder *openflow.Decoder) (IFlowMod, error) {
 	_flowmod := &FlowMod{Header: parent}
 	if decoder.Length() < 48 {
 		return nil, fmt.Errorf("FlowMod packet too short: %d < 48", decoder.Length())
@@ -7156,7 +7155,7 @@ type IFlowAdd interface {
 	IFlowMod
 }
 
-func (self *FlowAdd) Serialize(encoder *goloxi.Encoder) error {
+func (self *FlowAdd) Serialize(encoder *openflow.Encoder) error {
 	if err := self.FlowMod.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7166,7 +7165,7 @@ func (self *FlowAdd) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeFlowAdd(parent *FlowMod, decoder *goloxi.Decoder) (*FlowAdd, error) {
+func DecodeFlowAdd(parent *FlowMod, decoder *openflow.Decoder) (*FlowAdd, error) {
 	_flowadd := &FlowAdd{FlowMod: parent}
 	return _flowadd, nil
 }
@@ -7186,7 +7185,7 @@ type IFlowDelete interface {
 	IFlowMod
 }
 
-func (self *FlowDelete) Serialize(encoder *goloxi.Encoder) error {
+func (self *FlowDelete) Serialize(encoder *openflow.Encoder) error {
 	if err := self.FlowMod.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7196,7 +7195,7 @@ func (self *FlowDelete) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeFlowDelete(parent *FlowMod, decoder *goloxi.Decoder) (*FlowDelete, error) {
+func DecodeFlowDelete(parent *FlowMod, decoder *openflow.Decoder) (*FlowDelete, error) {
 	_flowdelete := &FlowDelete{FlowMod: parent}
 	return _flowdelete, nil
 }
@@ -7216,7 +7215,7 @@ type IFlowDeleteStrict interface {
 	IFlowMod
 }
 
-func (self *FlowDeleteStrict) Serialize(encoder *goloxi.Encoder) error {
+func (self *FlowDeleteStrict) Serialize(encoder *openflow.Encoder) error {
 	if err := self.FlowMod.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7226,7 +7225,7 @@ func (self *FlowDeleteStrict) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeFlowDeleteStrict(parent *FlowMod, decoder *goloxi.Decoder) (*FlowDeleteStrict, error) {
+func DecodeFlowDeleteStrict(parent *FlowMod, decoder *openflow.Decoder) (*FlowDeleteStrict, error) {
 	_flowdeletestrict := &FlowDeleteStrict{FlowMod: parent}
 	return _flowdeletestrict, nil
 }
@@ -7266,7 +7265,7 @@ func (self *FlowModFailedErrorMsg) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *FlowModFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *FlowModFailedErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7279,7 +7278,7 @@ func (self *FlowModFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeFlowModFailedErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (*FlowModFailedErrorMsg, error) {
+func DecodeFlowModFailedErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (*FlowModFailedErrorMsg, error) {
 	_flowmodfailederrormsg := &FlowModFailedErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("FlowModFailedErrorMsg packet too short: %d < 2", decoder.Length())
@@ -7304,7 +7303,7 @@ type IFlowModify interface {
 	IFlowMod
 }
 
-func (self *FlowModify) Serialize(encoder *goloxi.Encoder) error {
+func (self *FlowModify) Serialize(encoder *openflow.Encoder) error {
 	if err := self.FlowMod.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7314,7 +7313,7 @@ func (self *FlowModify) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeFlowModify(parent *FlowMod, decoder *goloxi.Decoder) (*FlowModify, error) {
+func DecodeFlowModify(parent *FlowMod, decoder *openflow.Decoder) (*FlowModify, error) {
 	_flowmodify := &FlowModify{FlowMod: parent}
 	return _flowmodify, nil
 }
@@ -7334,7 +7333,7 @@ type IFlowModifyStrict interface {
 	IFlowMod
 }
 
-func (self *FlowModifyStrict) Serialize(encoder *goloxi.Encoder) error {
+func (self *FlowModifyStrict) Serialize(encoder *openflow.Encoder) error {
 	if err := self.FlowMod.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7344,7 +7343,7 @@ func (self *FlowModifyStrict) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeFlowModifyStrict(parent *FlowMod, decoder *goloxi.Decoder) (*FlowModifyStrict, error) {
+func DecodeFlowModifyStrict(parent *FlowMod, decoder *openflow.Decoder) (*FlowModifyStrict, error) {
 	_flowmodifystrict := &FlowModifyStrict{FlowMod: parent}
 	return _flowmodifystrict, nil
 }
@@ -7474,7 +7473,7 @@ func (self *FlowRemoved) SetMatch(v Match) {
 	self.Match = v
 }
 
-func (self *FlowRemoved) Serialize(encoder *goloxi.Encoder) error {
+func (self *FlowRemoved) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7498,7 +7497,7 @@ func (self *FlowRemoved) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeFlowRemoved(parent *Header, decoder *goloxi.Decoder) (*FlowRemoved, error) {
+func DecodeFlowRemoved(parent *Header, decoder *openflow.Decoder) (*FlowRemoved, error) {
 	_flowremoved := &FlowRemoved{Header: parent}
 	if decoder.Length() < 48 {
 		return nil, fmt.Errorf("FlowRemoved packet too short: %d < 48", decoder.Length())
@@ -7546,7 +7545,7 @@ func (self *FlowStatsReply) SetEntries(v []*FlowStatsEntry) {
 	self.Entries = v
 }
 
-func (self *FlowStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *FlowStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7563,7 +7562,7 @@ func (self *FlowStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeFlowStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (*FlowStatsReply, error) {
+func DecodeFlowStatsReply(parent *StatsReply, decoder *openflow.Decoder) (*FlowStatsReply, error) {
 	_flowstatsreply := &FlowStatsReply{StatsReply: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("FlowStatsReply packet too short: %d < 4", decoder.Length())
@@ -7657,7 +7656,7 @@ func (self *FlowStatsRequest) SetMatch(v Match) {
 	self.Match = v
 }
 
-func (self *FlowStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *FlowStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7679,7 +7678,7 @@ func (self *FlowStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeFlowStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (*FlowStatsRequest, error) {
+func DecodeFlowStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (*FlowStatsRequest, error) {
 	_flowstatsrequest := &FlowStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 28 {
 		return nil, fmt.Errorf("FlowStatsRequest packet too short: %d < 28", decoder.Length())
@@ -7735,7 +7734,7 @@ func (self *GetConfigReply) SetMissSendLen(v uint16) {
 	self.MissSendLen = v
 }
 
-func (self *GetConfigReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *GetConfigReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7748,7 +7747,7 @@ func (self *GetConfigReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeGetConfigReply(parent *Header, decoder *goloxi.Decoder) (*GetConfigReply, error) {
+func DecodeGetConfigReply(parent *Header, decoder *openflow.Decoder) (*GetConfigReply, error) {
 	_getconfigreply := &GetConfigReply{Header: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("GetConfigReply packet too short: %d < 4", decoder.Length())
@@ -7773,7 +7772,7 @@ type IGetConfigRequest interface {
 	IHeader
 }
 
-func (self *GetConfigRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *GetConfigRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7783,7 +7782,7 @@ func (self *GetConfigRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeGetConfigRequest(parent *Header, decoder *goloxi.Decoder) (*GetConfigRequest, error) {
+func DecodeGetConfigRequest(parent *Header, decoder *openflow.Decoder) (*GetConfigRequest, error) {
 	_getconfigrequest := &GetConfigRequest{Header: parent}
 	return _getconfigrequest, nil
 }
@@ -7843,7 +7842,7 @@ func (self *GroupMod) SetBuckets(v []*Bucket) {
 	self.Buckets = v
 }
 
-func (self *GroupMod) Serialize(encoder *goloxi.Encoder) error {
+func (self *GroupMod) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7861,7 +7860,7 @@ func (self *GroupMod) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeGroupMod(parent *Header, decoder *goloxi.Decoder) (IGroupMod, error) {
+func DecodeGroupMod(parent *Header, decoder *openflow.Decoder) (IGroupMod, error) {
 	_groupmod := &GroupMod{Header: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("GroupMod packet too short: %d < 8", decoder.Length())
@@ -7909,7 +7908,7 @@ type IGroupAdd interface {
 	IGroupMod
 }
 
-func (self *GroupAdd) Serialize(encoder *goloxi.Encoder) error {
+func (self *GroupAdd) Serialize(encoder *openflow.Encoder) error {
 	if err := self.GroupMod.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7919,7 +7918,7 @@ func (self *GroupAdd) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeGroupAdd(parent *GroupMod, decoder *goloxi.Decoder) (*GroupAdd, error) {
+func DecodeGroupAdd(parent *GroupMod, decoder *openflow.Decoder) (*GroupAdd, error) {
 	_groupadd := &GroupAdd{GroupMod: parent}
 	return _groupadd, nil
 }
@@ -7939,7 +7938,7 @@ type IGroupDelete interface {
 	IGroupMod
 }
 
-func (self *GroupDelete) Serialize(encoder *goloxi.Encoder) error {
+func (self *GroupDelete) Serialize(encoder *openflow.Encoder) error {
 	if err := self.GroupMod.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7949,7 +7948,7 @@ func (self *GroupDelete) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeGroupDelete(parent *GroupMod, decoder *goloxi.Decoder) (*GroupDelete, error) {
+func DecodeGroupDelete(parent *GroupMod, decoder *openflow.Decoder) (*GroupDelete, error) {
 	_groupdelete := &GroupDelete{GroupMod: parent}
 	return _groupdelete, nil
 }
@@ -7979,7 +7978,7 @@ func (self *GroupDescStatsReply) SetEntries(v []*GroupDescStatsEntry) {
 	self.Entries = v
 }
 
-func (self *GroupDescStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *GroupDescStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -7996,7 +7995,7 @@ func (self *GroupDescStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeGroupDescStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (*GroupDescStatsReply, error) {
+func DecodeGroupDescStatsReply(parent *StatsReply, decoder *openflow.Decoder) (*GroupDescStatsReply, error) {
 	_groupdescstatsreply := &GroupDescStatsReply{StatsReply: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("GroupDescStatsReply packet too short: %d < 4", decoder.Length())
@@ -8030,7 +8029,7 @@ type IGroupDescStatsRequest interface {
 	IStatsRequest
 }
 
-func (self *GroupDescStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *GroupDescStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8042,7 +8041,7 @@ func (self *GroupDescStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeGroupDescStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (*GroupDescStatsRequest, error) {
+func DecodeGroupDescStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (*GroupDescStatsRequest, error) {
 	_groupdescstatsrequest := &GroupDescStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("GroupDescStatsRequest packet too short: %d < 4", decoder.Length())
@@ -8166,7 +8165,7 @@ func (self *GroupFeaturesStatsReply) SetActionsFf(v uint32) {
 	self.ActionsFf = v
 }
 
-func (self *GroupFeaturesStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *GroupFeaturesStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8188,7 +8187,7 @@ func (self *GroupFeaturesStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeGroupFeaturesStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (*GroupFeaturesStatsReply, error) {
+func DecodeGroupFeaturesStatsReply(parent *StatsReply, decoder *openflow.Decoder) (*GroupFeaturesStatsReply, error) {
 	_groupfeaturesstatsreply := &GroupFeaturesStatsReply{StatsReply: parent}
 	if decoder.Length() < 44 {
 		return nil, fmt.Errorf("GroupFeaturesStatsReply packet too short: %d < 44", decoder.Length())
@@ -8222,7 +8221,7 @@ type IGroupFeaturesStatsRequest interface {
 	IStatsRequest
 }
 
-func (self *GroupFeaturesStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *GroupFeaturesStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8234,7 +8233,7 @@ func (self *GroupFeaturesStatsRequest) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeGroupFeaturesStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (*GroupFeaturesStatsRequest, error) {
+func DecodeGroupFeaturesStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (*GroupFeaturesStatsRequest, error) {
 	_groupfeaturesstatsrequest := &GroupFeaturesStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("GroupFeaturesStatsRequest packet too short: %d < 4", decoder.Length())
@@ -8278,7 +8277,7 @@ func (self *GroupModFailedErrorMsg) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *GroupModFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *GroupModFailedErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8291,7 +8290,7 @@ func (self *GroupModFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeGroupModFailedErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (*GroupModFailedErrorMsg, error) {
+func DecodeGroupModFailedErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (*GroupModFailedErrorMsg, error) {
 	_groupmodfailederrormsg := &GroupModFailedErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("GroupModFailedErrorMsg packet too short: %d < 2", decoder.Length())
@@ -8316,7 +8315,7 @@ type IGroupModify interface {
 	IGroupMod
 }
 
-func (self *GroupModify) Serialize(encoder *goloxi.Encoder) error {
+func (self *GroupModify) Serialize(encoder *openflow.Encoder) error {
 	if err := self.GroupMod.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8326,7 +8325,7 @@ func (self *GroupModify) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeGroupModify(parent *GroupMod, decoder *goloxi.Decoder) (*GroupModify, error) {
+func DecodeGroupModify(parent *GroupMod, decoder *openflow.Decoder) (*GroupModify, error) {
 	_groupmodify := &GroupModify{GroupMod: parent}
 	return _groupmodify, nil
 }
@@ -8356,7 +8355,7 @@ func (self *GroupStatsReply) SetEntries(v []*GroupStatsEntry) {
 	self.Entries = v
 }
 
-func (self *GroupStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *GroupStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8373,7 +8372,7 @@ func (self *GroupStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeGroupStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (*GroupStatsReply, error) {
+func DecodeGroupStatsReply(parent *StatsReply, decoder *openflow.Decoder) (*GroupStatsReply, error) {
 	_groupstatsreply := &GroupStatsReply{StatsReply: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("GroupStatsReply packet too short: %d < 4", decoder.Length())
@@ -8417,7 +8416,7 @@ func (self *GroupStatsRequest) SetGroupId(v uint32) {
 	self.GroupId = v
 }
 
-func (self *GroupStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *GroupStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8431,7 +8430,7 @@ func (self *GroupStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeGroupStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (*GroupStatsRequest, error) {
+func DecodeGroupStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (*GroupStatsRequest, error) {
 	_groupstatsrequest := &GroupStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("GroupStatsRequest packet too short: %d < 4", decoder.Length())
@@ -8467,7 +8466,7 @@ func (self *Hello) SetElements(v []IHelloElem) {
 	self.Elements = v
 }
 
-func (self *Hello) Serialize(encoder *goloxi.Encoder) error {
+func (self *Hello) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8483,7 +8482,7 @@ func (self *Hello) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeHello(parent *Header, decoder *goloxi.Decoder) (*Hello, error) {
+func DecodeHello(parent *Header, decoder *openflow.Decoder) (*Hello, error) {
 	_hello := &Hello{Header: parent}
 
 	for decoder.Length() >= 4 {
@@ -8533,7 +8532,7 @@ func (self *HelloFailedErrorMsg) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *HelloFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *HelloFailedErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8546,7 +8545,7 @@ func (self *HelloFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeHelloFailedErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (*HelloFailedErrorMsg, error) {
+func DecodeHelloFailedErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (*HelloFailedErrorMsg, error) {
 	_hellofailederrormsg := &HelloFailedErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("HelloFailedErrorMsg packet too short: %d < 2", decoder.Length())
@@ -8581,7 +8580,7 @@ func (self *MeterConfigStatsReply) SetEntries(v []*MeterConfig) {
 	self.Entries = v
 }
 
-func (self *MeterConfigStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *MeterConfigStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8598,7 +8597,7 @@ func (self *MeterConfigStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeMeterConfigStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (*MeterConfigStatsReply, error) {
+func DecodeMeterConfigStatsReply(parent *StatsReply, decoder *openflow.Decoder) (*MeterConfigStatsReply, error) {
 	_meterconfigstatsreply := &MeterConfigStatsReply{StatsReply: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("MeterConfigStatsReply packet too short: %d < 4", decoder.Length())
@@ -8642,7 +8641,7 @@ func (self *MeterConfigStatsRequest) SetMeterId(v uint32) {
 	self.MeterId = v
 }
 
-func (self *MeterConfigStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *MeterConfigStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8656,7 +8655,7 @@ func (self *MeterConfigStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeMeterConfigStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (*MeterConfigStatsRequest, error) {
+func DecodeMeterConfigStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (*MeterConfigStatsRequest, error) {
 	_meterconfigstatsrequest := &MeterConfigStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("MeterConfigStatsRequest packet too short: %d < 4", decoder.Length())
@@ -8692,7 +8691,7 @@ func (self *MeterFeaturesStatsReply) SetFeatures(v MeterFeatures) {
 	self.Features = v
 }
 
-func (self *MeterFeaturesStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *MeterFeaturesStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8707,7 +8706,7 @@ func (self *MeterFeaturesStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeMeterFeaturesStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (*MeterFeaturesStatsReply, error) {
+func DecodeMeterFeaturesStatsReply(parent *StatsReply, decoder *openflow.Decoder) (*MeterFeaturesStatsReply, error) {
 	_meterfeaturesstatsreply := &MeterFeaturesStatsReply{StatsReply: parent}
 	if decoder.Length() < 20 {
 		return nil, fmt.Errorf("MeterFeaturesStatsReply packet too short: %d < 20", decoder.Length())
@@ -8735,7 +8734,7 @@ type IMeterFeaturesStatsRequest interface {
 	IStatsRequest
 }
 
-func (self *MeterFeaturesStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *MeterFeaturesStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8747,7 +8746,7 @@ func (self *MeterFeaturesStatsRequest) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeMeterFeaturesStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (*MeterFeaturesStatsRequest, error) {
+func DecodeMeterFeaturesStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (*MeterFeaturesStatsRequest, error) {
 	_meterfeaturesstatsrequest := &MeterFeaturesStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("MeterFeaturesStatsRequest packet too short: %d < 4", decoder.Length())
@@ -8811,7 +8810,7 @@ func (self *MeterMod) SetMeters(v []IMeterBand) {
 	self.Meters = v
 }
 
-func (self *MeterMod) Serialize(encoder *goloxi.Encoder) error {
+func (self *MeterMod) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8830,7 +8829,7 @@ func (self *MeterMod) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeMeterMod(parent *Header, decoder *goloxi.Decoder) (*MeterMod, error) {
+func DecodeMeterMod(parent *Header, decoder *openflow.Decoder) (*MeterMod, error) {
 	_metermod := &MeterMod{Header: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("MeterMod packet too short: %d < 8", decoder.Length())
@@ -8886,7 +8885,7 @@ func (self *MeterModFailedErrorMsg) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *MeterModFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *MeterModFailedErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8899,7 +8898,7 @@ func (self *MeterModFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeMeterModFailedErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (*MeterModFailedErrorMsg, error) {
+func DecodeMeterModFailedErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (*MeterModFailedErrorMsg, error) {
 	_metermodfailederrormsg := &MeterModFailedErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("MeterModFailedErrorMsg packet too short: %d < 2", decoder.Length())
@@ -8934,7 +8933,7 @@ func (self *MeterStatsReply) SetEntries(v []*MeterStats) {
 	self.Entries = v
 }
 
-func (self *MeterStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *MeterStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -8951,7 +8950,7 @@ func (self *MeterStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeMeterStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (*MeterStatsReply, error) {
+func DecodeMeterStatsReply(parent *StatsReply, decoder *openflow.Decoder) (*MeterStatsReply, error) {
 	_meterstatsreply := &MeterStatsReply{StatsReply: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("MeterStatsReply packet too short: %d < 4", decoder.Length())
@@ -8995,7 +8994,7 @@ func (self *MeterStatsRequest) SetMeterId(v uint32) {
 	self.MeterId = v
 }
 
-func (self *MeterStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *MeterStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9009,7 +9008,7 @@ func (self *MeterStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeMeterStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (*MeterStatsRequest, error) {
+func DecodeMeterStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (*MeterStatsRequest, error) {
 	_meterstatsrequest := &MeterStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("MeterStatsRequest packet too short: %d < 4", decoder.Length())
@@ -9035,7 +9034,7 @@ type INiciraStatsReply interface {
 	IExperimenterStatsReply
 }
 
-func (self *NiciraStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *NiciraStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ExperimenterStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9043,7 +9042,7 @@ func (self *NiciraStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNiciraStatsReply(parent *ExperimenterStatsReply, decoder *goloxi.Decoder) (INiciraStatsReply, error) {
+func DecodeNiciraStatsReply(parent *ExperimenterStatsReply, decoder *openflow.Decoder) (INiciraStatsReply, error) {
 	_nicirastatsreply := &NiciraStatsReply{ExperimenterStatsReply: parent}
 	if decoder.Length() < -4 {
 		return nil, fmt.Errorf("NiciraStatsReply packet too short: %d < -4", decoder.Length())
@@ -9085,7 +9084,7 @@ func (self *NiciraFlowMonitorReply) SetUpdates(v []INiciraFlowUpdateEvent) {
 	self.Updates = v
 }
 
-func (self *NiciraFlowMonitorReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *NiciraFlowMonitorReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.NiciraStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9102,7 +9101,7 @@ func (self *NiciraFlowMonitorReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNiciraFlowMonitorReply(parent *NiciraStatsReply, decoder *goloxi.Decoder) (*NiciraFlowMonitorReply, error) {
+func DecodeNiciraFlowMonitorReply(parent *NiciraStatsReply, decoder *openflow.Decoder) (*NiciraFlowMonitorReply, error) {
 	_niciraflowmonitorreply := &NiciraFlowMonitorReply{NiciraStatsReply: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NiciraFlowMonitorReply packet too short: %d < 4", decoder.Length())
@@ -9196,7 +9195,7 @@ func (self *NiciraFlowMonitorRequest) SetMatch(v NiciraMatch) {
 	self.Match = v
 }
 
-func (self *NiciraFlowMonitorRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *NiciraFlowMonitorRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ExperimenterStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9217,7 +9216,7 @@ func (self *NiciraFlowMonitorRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNiciraFlowMonitorRequest(parent *ExperimenterStatsRequest, decoder *goloxi.Decoder) (*NiciraFlowMonitorRequest, error) {
+func DecodeNiciraFlowMonitorRequest(parent *ExperimenterStatsRequest, decoder *openflow.Decoder) (*NiciraFlowMonitorRequest, error) {
 	_niciraflowmonitorrequest := &NiciraFlowMonitorRequest{ExperimenterStatsRequest: parent}
 	if decoder.Length() < 22 {
 		return nil, fmt.Errorf("NiciraFlowMonitorRequest packet too short: %d < 22", decoder.Length())
@@ -9262,7 +9261,7 @@ func (self *NiciraFlowStatsReply) SetStats(v []*NiciraFlowStats) {
 	self.Stats = v
 }
 
-func (self *NiciraFlowStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *NiciraFlowStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.NiciraStatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9279,7 +9278,7 @@ func (self *NiciraFlowStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNiciraFlowStatsReply(parent *NiciraStatsReply, decoder *goloxi.Decoder) (*NiciraFlowStatsReply, error) {
+func DecodeNiciraFlowStatsReply(parent *NiciraStatsReply, decoder *openflow.Decoder) (*NiciraFlowStatsReply, error) {
 	_niciraflowstatsreply := &NiciraFlowStatsReply{NiciraStatsReply: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("NiciraFlowStatsReply packet too short: %d < 4", decoder.Length())
@@ -9343,7 +9342,7 @@ func (self *NiciraFlowStatsRequest) SetTableId(v uint8) {
 	self.TableId = v
 }
 
-func (self *NiciraFlowStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *NiciraFlowStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ExperimenterStatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9359,7 +9358,7 @@ func (self *NiciraFlowStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNiciraFlowStatsRequest(parent *ExperimenterStatsRequest, decoder *goloxi.Decoder) (*NiciraFlowStatsRequest, error) {
+func DecodeNiciraFlowStatsRequest(parent *ExperimenterStatsRequest, decoder *openflow.Decoder) (*NiciraFlowStatsRequest, error) {
 	_niciraflowstatsrequest := &NiciraFlowStatsRequest{ExperimenterStatsRequest: parent}
 	if decoder.Length() < 14 {
 		return nil, fmt.Errorf("NiciraFlowStatsRequest packet too short: %d < 14", decoder.Length())
@@ -9387,7 +9386,7 @@ type INiciraHeader interface {
 	IExperimenter
 }
 
-func (self *NiciraHeader) Serialize(encoder *goloxi.Encoder) error {
+func (self *NiciraHeader) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Experimenter.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9395,7 +9394,7 @@ func (self *NiciraHeader) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeNiciraHeader(parent *Experimenter, decoder *goloxi.Decoder) (INiciraHeader, error) {
+func DecodeNiciraHeader(parent *Experimenter, decoder *openflow.Decoder) (INiciraHeader, error) {
 	_niciraheader := &NiciraHeader{Experimenter: parent}
 	return _niciraheader, nil
 }
@@ -9486,7 +9485,7 @@ func (self *PacketIn) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *PacketIn) Serialize(encoder *goloxi.Encoder) error {
+func (self *PacketIn) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9508,7 +9507,7 @@ func (self *PacketIn) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodePacketIn(parent *Header, decoder *goloxi.Decoder) (*PacketIn, error) {
+func DecodePacketIn(parent *Header, decoder *openflow.Decoder) (*PacketIn, error) {
 	_packetin := &PacketIn{Header: parent}
 	if decoder.Length() < 26 {
 		return nil, fmt.Errorf("PacketIn packet too short: %d < 26", decoder.Length())
@@ -9540,7 +9539,7 @@ type PacketOut struct {
 	BufferId   uint32
 	InPort     Port
 	ActionsLen uint16
-	Actions    []goloxi.IAction
+	Actions    []openflow.IAction
 	Data       []byte
 }
 
@@ -9549,7 +9548,7 @@ type IPacketOut interface {
 	GetBufferId() uint32
 	GetInPort() Port
 	GetActionsLen() uint16
-	GetActions() []goloxi.IAction
+	GetActions() []openflow.IAction
 	GetData() []byte
 }
 
@@ -9577,11 +9576,11 @@ func (self *PacketOut) SetActionsLen(v uint16) {
 	self.ActionsLen = v
 }
 
-func (self *PacketOut) GetActions() []goloxi.IAction {
+func (self *PacketOut) GetActions() []openflow.IAction {
 	return self.Actions
 }
 
-func (self *PacketOut) SetActions(v []goloxi.IAction) {
+func (self *PacketOut) SetActions(v []openflow.IAction) {
 	self.Actions = v
 }
 
@@ -9593,7 +9592,7 @@ func (self *PacketOut) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *PacketOut) Serialize(encoder *goloxi.Encoder) error {
+func (self *PacketOut) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9614,7 +9613,7 @@ func (self *PacketOut) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodePacketOut(parent *Header, decoder *goloxi.Decoder) (*PacketOut, error) {
+func DecodePacketOut(parent *Header, decoder *openflow.Decoder) (*PacketOut, error) {
 	_packetout := &PacketOut{Header: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("PacketOut packet too short: %d < 16", decoder.Length())
@@ -9662,7 +9661,7 @@ func (self *PortDescStatsReply) SetEntries(v []*PortDesc) {
 	self.Entries = v
 }
 
-func (self *PortDescStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *PortDescStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9679,7 +9678,7 @@ func (self *PortDescStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodePortDescStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (*PortDescStatsReply, error) {
+func DecodePortDescStatsReply(parent *StatsReply, decoder *openflow.Decoder) (*PortDescStatsReply, error) {
 	_portdescstatsreply := &PortDescStatsReply{StatsReply: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("PortDescStatsReply packet too short: %d < 4", decoder.Length())
@@ -9713,7 +9712,7 @@ type IPortDescStatsRequest interface {
 	IStatsRequest
 }
 
-func (self *PortDescStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *PortDescStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9725,7 +9724,7 @@ func (self *PortDescStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodePortDescStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (*PortDescStatsRequest, error) {
+func DecodePortDescStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (*PortDescStatsRequest, error) {
 	_portdescstatsrequest := &PortDescStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("PortDescStatsRequest packet too short: %d < 4", decoder.Length())
@@ -9799,7 +9798,7 @@ func (self *PortMod) SetAdvertise(v uint32) {
 	self.Advertise = v
 }
 
-func (self *PortMod) Serialize(encoder *goloxi.Encoder) error {
+func (self *PortMod) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9818,7 +9817,7 @@ func (self *PortMod) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodePortMod(parent *Header, decoder *goloxi.Decoder) (*PortMod, error) {
+func DecodePortMod(parent *Header, decoder *openflow.Decoder) (*PortMod, error) {
 	_portmod := &PortMod{Header: parent}
 	if decoder.Length() < 32 {
 		return nil, fmt.Errorf("PortMod packet too short: %d < 32", decoder.Length())
@@ -9869,7 +9868,7 @@ func (self *PortModFailedErrorMsg) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *PortModFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *PortModFailedErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9882,7 +9881,7 @@ func (self *PortModFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodePortModFailedErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (*PortModFailedErrorMsg, error) {
+func DecodePortModFailedErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (*PortModFailedErrorMsg, error) {
 	_portmodfailederrormsg := &PortModFailedErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("PortModFailedErrorMsg packet too short: %d < 2", decoder.Length())
@@ -9917,7 +9916,7 @@ func (self *PortStatsReply) SetEntries(v []*PortStatsEntry) {
 	self.Entries = v
 }
 
-func (self *PortStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *PortStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9934,7 +9933,7 @@ func (self *PortStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodePortStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (*PortStatsReply, error) {
+func DecodePortStatsReply(parent *StatsReply, decoder *openflow.Decoder) (*PortStatsReply, error) {
 	_portstatsreply := &PortStatsReply{StatsReply: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("PortStatsReply packet too short: %d < 4", decoder.Length())
@@ -9978,7 +9977,7 @@ func (self *PortStatsRequest) SetPortNo(v Port) {
 	self.PortNo = v
 }
 
-func (self *PortStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *PortStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -9992,7 +9991,7 @@ func (self *PortStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodePortStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (*PortStatsRequest, error) {
+func DecodePortStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (*PortStatsRequest, error) {
 	_portstatsrequest := &PortStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("PortStatsRequest packet too short: %d < 4", decoder.Length())
@@ -10038,7 +10037,7 @@ func (self *PortStatus) SetDesc(v PortDesc) {
 	self.Desc = v
 }
 
-func (self *PortStatus) Serialize(encoder *goloxi.Encoder) error {
+func (self *PortStatus) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10054,7 +10053,7 @@ func (self *PortStatus) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodePortStatus(parent *Header, decoder *goloxi.Decoder) (*PortStatus, error) {
+func DecodePortStatus(parent *Header, decoder *openflow.Decoder) (*PortStatus, error) {
 	_portstatus := &PortStatus{Header: parent}
 	if decoder.Length() < 72 {
 		return nil, fmt.Errorf("PortStatus packet too short: %d < 72", decoder.Length())
@@ -10103,7 +10102,7 @@ func (self *QueueGetConfigReply) SetQueues(v []*PacketQueue) {
 	self.Queues = v
 }
 
-func (self *QueueGetConfigReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *QueueGetConfigReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10121,7 +10120,7 @@ func (self *QueueGetConfigReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeQueueGetConfigReply(parent *Header, decoder *goloxi.Decoder) (*QueueGetConfigReply, error) {
+func DecodeQueueGetConfigReply(parent *Header, decoder *openflow.Decoder) (*QueueGetConfigReply, error) {
 	_queuegetconfigreply := &QueueGetConfigReply{Header: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("QueueGetConfigReply packet too short: %d < 8", decoder.Length())
@@ -10166,7 +10165,7 @@ func (self *QueueGetConfigRequest) SetPort(v Port) {
 	self.Port = v
 }
 
-func (self *QueueGetConfigRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *QueueGetConfigRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10179,7 +10178,7 @@ func (self *QueueGetConfigRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeQueueGetConfigRequest(parent *Header, decoder *goloxi.Decoder) (*QueueGetConfigRequest, error) {
+func DecodeQueueGetConfigRequest(parent *Header, decoder *openflow.Decoder) (*QueueGetConfigRequest, error) {
 	_queuegetconfigrequest := &QueueGetConfigRequest{Header: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("QueueGetConfigRequest packet too short: %d < 8", decoder.Length())
@@ -10224,7 +10223,7 @@ func (self *QueueOpFailedErrorMsg) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *QueueOpFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *QueueOpFailedErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10237,7 +10236,7 @@ func (self *QueueOpFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeQueueOpFailedErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (*QueueOpFailedErrorMsg, error) {
+func DecodeQueueOpFailedErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (*QueueOpFailedErrorMsg, error) {
 	_queueopfailederrormsg := &QueueOpFailedErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("QueueOpFailedErrorMsg packet too short: %d < 2", decoder.Length())
@@ -10272,7 +10271,7 @@ func (self *QueueStatsReply) SetEntries(v []*QueueStatsEntry) {
 	self.Entries = v
 }
 
-func (self *QueueStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *QueueStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10289,7 +10288,7 @@ func (self *QueueStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeQueueStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (*QueueStatsReply, error) {
+func DecodeQueueStatsReply(parent *StatsReply, decoder *openflow.Decoder) (*QueueStatsReply, error) {
 	_queuestatsreply := &QueueStatsReply{StatsReply: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("QueueStatsReply packet too short: %d < 4", decoder.Length())
@@ -10343,7 +10342,7 @@ func (self *QueueStatsRequest) SetQueueId(v uint32) {
 	self.QueueId = v
 }
 
-func (self *QueueStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *QueueStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10357,7 +10356,7 @@ func (self *QueueStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeQueueStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (*QueueStatsRequest, error) {
+func DecodeQueueStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (*QueueStatsRequest, error) {
 	_queuestatsrequest := &QueueStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("QueueStatsRequest packet too short: %d < 12", decoder.Length())
@@ -10403,7 +10402,7 @@ func (self *RoleReply) SetGenerationId(v uint64) {
 	self.GenerationId = v
 }
 
-func (self *RoleReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *RoleReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10417,7 +10416,7 @@ func (self *RoleReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeRoleReply(parent *Header, decoder *goloxi.Decoder) (*RoleReply, error) {
+func DecodeRoleReply(parent *Header, decoder *openflow.Decoder) (*RoleReply, error) {
 	_rolereply := &RoleReply{Header: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("RoleReply packet too short: %d < 16", decoder.Length())
@@ -10463,7 +10462,7 @@ func (self *RoleRequest) SetGenerationId(v uint64) {
 	self.GenerationId = v
 }
 
-func (self *RoleRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *RoleRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10477,7 +10476,7 @@ func (self *RoleRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeRoleRequest(parent *Header, decoder *goloxi.Decoder) (*RoleRequest, error) {
+func DecodeRoleRequest(parent *Header, decoder *openflow.Decoder) (*RoleRequest, error) {
 	_rolerequest := &RoleRequest{Header: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("RoleRequest packet too short: %d < 16", decoder.Length())
@@ -10523,7 +10522,7 @@ func (self *RoleRequestFailedErrorMsg) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *RoleRequestFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *RoleRequestFailedErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10536,7 +10535,7 @@ func (self *RoleRequestFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeRoleRequestFailedErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (*RoleRequestFailedErrorMsg, error) {
+func DecodeRoleRequestFailedErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (*RoleRequestFailedErrorMsg, error) {
 	_rolerequestfailederrormsg := &RoleRequestFailedErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("RoleRequestFailedErrorMsg packet too short: %d < 2", decoder.Length())
@@ -10581,7 +10580,7 @@ func (self *SetConfig) SetMissSendLen(v uint16) {
 	self.MissSendLen = v
 }
 
-func (self *SetConfig) Serialize(encoder *goloxi.Encoder) error {
+func (self *SetConfig) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10594,7 +10593,7 @@ func (self *SetConfig) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeSetConfig(parent *Header, decoder *goloxi.Decoder) (*SetConfig, error) {
+func DecodeSetConfig(parent *Header, decoder *openflow.Decoder) (*SetConfig, error) {
 	_setconfig := &SetConfig{Header: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("SetConfig packet too short: %d < 4", decoder.Length())
@@ -10639,7 +10638,7 @@ func (self *SwitchConfigFailedErrorMsg) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *SwitchConfigFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *SwitchConfigFailedErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10652,7 +10651,7 @@ func (self *SwitchConfigFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error
 	return nil
 }
 
-func DecodeSwitchConfigFailedErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (*SwitchConfigFailedErrorMsg, error) {
+func DecodeSwitchConfigFailedErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (*SwitchConfigFailedErrorMsg, error) {
 	_switchconfigfailederrormsg := &SwitchConfigFailedErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("SwitchConfigFailedErrorMsg packet too short: %d < 2", decoder.Length())
@@ -10697,7 +10696,7 @@ func (self *TableFeaturesFailedErrorMsg) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *TableFeaturesFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *TableFeaturesFailedErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10710,7 +10709,7 @@ func (self *TableFeaturesFailedErrorMsg) Serialize(encoder *goloxi.Encoder) erro
 	return nil
 }
 
-func DecodeTableFeaturesFailedErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (*TableFeaturesFailedErrorMsg, error) {
+func DecodeTableFeaturesFailedErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (*TableFeaturesFailedErrorMsg, error) {
 	_tablefeaturesfailederrormsg := &TableFeaturesFailedErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("TableFeaturesFailedErrorMsg packet too short: %d < 2", decoder.Length())
@@ -10745,7 +10744,7 @@ func (self *TableFeaturesStatsReply) SetEntries(v []*TableFeatures) {
 	self.Entries = v
 }
 
-func (self *TableFeaturesStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *TableFeaturesStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10762,7 +10761,7 @@ func (self *TableFeaturesStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeTableFeaturesStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (*TableFeaturesStatsReply, error) {
+func DecodeTableFeaturesStatsReply(parent *StatsReply, decoder *openflow.Decoder) (*TableFeaturesStatsReply, error) {
 	_tablefeaturesstatsreply := &TableFeaturesStatsReply{StatsReply: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("TableFeaturesStatsReply packet too short: %d < 4", decoder.Length())
@@ -10806,7 +10805,7 @@ func (self *TableFeaturesStatsRequest) SetEntries(v []*TableFeatures) {
 	self.Entries = v
 }
 
-func (self *TableFeaturesStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *TableFeaturesStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10823,7 +10822,7 @@ func (self *TableFeaturesStatsRequest) Serialize(encoder *goloxi.Encoder) error 
 	return nil
 }
 
-func DecodeTableFeaturesStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (*TableFeaturesStatsRequest, error) {
+func DecodeTableFeaturesStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (*TableFeaturesStatsRequest, error) {
 	_tablefeaturesstatsrequest := &TableFeaturesStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("TableFeaturesStatsRequest packet too short: %d < 4", decoder.Length())
@@ -10877,7 +10876,7 @@ func (self *TableMod) SetConfig(v uint32) {
 	self.Config = v
 }
 
-func (self *TableMod) Serialize(encoder *goloxi.Encoder) error {
+func (self *TableMod) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Header.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10891,7 +10890,7 @@ func (self *TableMod) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeTableMod(parent *Header, decoder *goloxi.Decoder) (*TableMod, error) {
+func DecodeTableMod(parent *Header, decoder *openflow.Decoder) (*TableMod, error) {
 	_tablemod := &TableMod{Header: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("TableMod packet too short: %d < 8", decoder.Length())
@@ -10937,7 +10936,7 @@ func (self *TableModFailedErrorMsg) SetData(v []byte) {
 	self.Data = v
 }
 
-func (self *TableModFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
+func (self *TableModFailedErrorMsg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ErrorMsg.Serialize(encoder); err != nil {
 		return err
 	}
@@ -10950,7 +10949,7 @@ func (self *TableModFailedErrorMsg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeTableModFailedErrorMsg(parent *ErrorMsg, decoder *goloxi.Decoder) (*TableModFailedErrorMsg, error) {
+func DecodeTableModFailedErrorMsg(parent *ErrorMsg, decoder *openflow.Decoder) (*TableModFailedErrorMsg, error) {
 	_tablemodfailederrormsg := &TableModFailedErrorMsg{ErrorMsg: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("TableModFailedErrorMsg packet too short: %d < 2", decoder.Length())
@@ -10985,7 +10984,7 @@ func (self *TableStatsReply) SetEntries(v []*TableStatsEntry) {
 	self.Entries = v
 }
 
-func (self *TableStatsReply) Serialize(encoder *goloxi.Encoder) error {
+func (self *TableStatsReply) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsReply.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11002,7 +11001,7 @@ func (self *TableStatsReply) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeTableStatsReply(parent *StatsReply, decoder *goloxi.Decoder) (*TableStatsReply, error) {
+func DecodeTableStatsReply(parent *StatsReply, decoder *openflow.Decoder) (*TableStatsReply, error) {
 	_tablestatsreply := &TableStatsReply{StatsReply: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("TableStatsReply packet too short: %d < 4", decoder.Length())
@@ -11036,7 +11035,7 @@ type ITableStatsRequest interface {
 	IStatsRequest
 }
 
-func (self *TableStatsRequest) Serialize(encoder *goloxi.Encoder) error {
+func (self *TableStatsRequest) Serialize(encoder *openflow.Encoder) error {
 	if err := self.StatsRequest.Serialize(encoder); err != nil {
 		return err
 	}
@@ -11048,7 +11047,7 @@ func (self *TableStatsRequest) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeTableStatsRequest(parent *StatsRequest, decoder *goloxi.Decoder) (*TableStatsRequest, error) {
+func DecodeTableStatsRequest(parent *StatsRequest, decoder *openflow.Decoder) (*TableStatsRequest, error) {
 	_tablestatsrequest := &TableStatsRequest{StatsRequest: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("TableStatsRequest packet too short: %d < 4", decoder.Length())

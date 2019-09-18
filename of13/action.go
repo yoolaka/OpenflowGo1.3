@@ -16,7 +16,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/skydive-project/goloxi"
+	"github.com/yoolaka/openflow"
 )
 
 type Action struct {
@@ -25,7 +25,7 @@ type Action struct {
 }
 
 type IAction interface {
-	goloxi.Serializable
+	openflow.Serializable
 	GetType() uint16
 	GetLen() uint16
 	GetActionName() string
@@ -48,7 +48,7 @@ func (self *Action) SetLen(v uint16) {
 	self.Len = v
 }
 
-func (self *Action) Serialize(encoder *goloxi.Encoder) error {
+func (self *Action) Serialize(encoder *openflow.Encoder) error {
 
 	encoder.PutUint16(uint16(self.Type))
 	encoder.PutUint16(uint16(self.Len))
@@ -56,7 +56,7 @@ func (self *Action) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeAction(decoder *goloxi.Decoder) (goloxi.IAction, error) {
+func DecodeAction(decoder *openflow.Decoder) (openflow.IAction, error) {
 	_action := &Action{}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("Action packet too short: %d < 4", decoder.Length())
@@ -119,7 +119,7 @@ type ActionExperimenter struct {
 }
 
 type IActionExperimenter interface {
-	goloxi.IAction
+	openflow.IAction
 	GetExperimenter() uint32
 }
 
@@ -131,7 +131,7 @@ func (self *ActionExperimenter) SetExperimenter(v uint32) {
 	self.Experimenter = v
 }
 
-func (self *ActionExperimenter) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionExperimenter) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -141,7 +141,7 @@ func (self *ActionExperimenter) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionExperimenter(parent *Action, decoder *goloxi.Decoder) (IActionExperimenter, error) {
+func DecodeActionExperimenter(parent *Action, decoder *openflow.Decoder) (IActionExperimenter, error) {
 	_actionexperimenter := &ActionExperimenter{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionExperimenter packet too short: %d < 4", decoder.Length())
@@ -201,7 +201,7 @@ func (self *ActionBsn) SetSubtype(v uint32) {
 	self.Subtype = v
 }
 
-func (self *ActionBsn) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionBsn) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionExperimenter.Serialize(encoder); err != nil {
 		return err
 	}
@@ -211,7 +211,7 @@ func (self *ActionBsn) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionBsn(parent *ActionExperimenter, decoder *goloxi.Decoder) (IActionBsn, error) {
+func DecodeActionBsn(parent *ActionExperimenter, decoder *openflow.Decoder) (IActionBsn, error) {
 	_actionbsn := &ActionBsn{ActionExperimenter: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionBsn packet too short: %d < 4", decoder.Length())
@@ -275,7 +275,7 @@ func (self *ActionBsnChecksum) SetChecksum(v Checksum128) {
 	self.Checksum = v
 }
 
-func (self *ActionBsnChecksum) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionBsnChecksum) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionBsn.Serialize(encoder); err != nil {
 		return err
 	}
@@ -287,7 +287,7 @@ func (self *ActionBsnChecksum) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionBsnChecksum(parent *ActionBsn, decoder *goloxi.Decoder) (*ActionBsnChecksum, error) {
+func DecodeActionBsnChecksum(parent *ActionBsn, decoder *openflow.Decoder) (*ActionBsnChecksum, error) {
 	_actionbsnchecksum := &ActionBsnChecksum{ActionBsn: parent}
 	if decoder.Length() < 16 {
 		return nil, fmt.Errorf("ActionBsnChecksum packet too short: %d < 16", decoder.Length())
@@ -348,7 +348,7 @@ func (self *ActionBsnGentable) SetKey(v []IBsnTlv) {
 	self.Key = v
 }
 
-func (self *ActionBsnGentable) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionBsnGentable) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionBsn.Serialize(encoder); err != nil {
 		return err
 	}
@@ -365,7 +365,7 @@ func (self *ActionBsnGentable) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionBsnGentable(parent *ActionBsn, decoder *goloxi.Decoder) (*ActionBsnGentable, error) {
+func DecodeActionBsnGentable(parent *ActionBsn, decoder *openflow.Decoder) (*ActionBsnGentable, error) {
 	_actionbsngentable := &ActionBsnGentable{ActionBsn: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionBsnGentable packet too short: %d < 4", decoder.Length())
@@ -447,7 +447,7 @@ func (self *ActionBsnMirror) SetCopyStage(v uint8) {
 	self.CopyStage = v
 }
 
-func (self *ActionBsnMirror) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionBsnMirror) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionBsn.Serialize(encoder); err != nil {
 		return err
 	}
@@ -462,7 +462,7 @@ func (self *ActionBsnMirror) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionBsnMirror(parent *ActionBsn, decoder *goloxi.Decoder) (*ActionBsnMirror, error) {
+func DecodeActionBsnMirror(parent *ActionBsn, decoder *openflow.Decoder) (*ActionBsnMirror, error) {
 	_actionbsnmirror := &ActionBsnMirror{ActionBsn: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("ActionBsnMirror packet too short: %d < 12", decoder.Length())
@@ -518,7 +518,7 @@ func (self *ActionBsnSetTunnelDst) SetDst(v uint32) {
 	self.Dst = v
 }
 
-func (self *ActionBsnSetTunnelDst) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionBsnSetTunnelDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionBsn.Serialize(encoder); err != nil {
 		return err
 	}
@@ -530,7 +530,7 @@ func (self *ActionBsnSetTunnelDst) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionBsnSetTunnelDst(parent *ActionBsn, decoder *goloxi.Decoder) (*ActionBsnSetTunnelDst, error) {
+func DecodeActionBsnSetTunnelDst(parent *ActionBsn, decoder *openflow.Decoder) (*ActionBsnSetTunnelDst, error) {
 	_actionbsnsettunneldst := &ActionBsnSetTunnelDst{ActionBsn: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionBsnSetTunnelDst packet too short: %d < 4", decoder.Length())
@@ -568,10 +568,10 @@ type ActionCopyTtlIn struct {
 }
 
 type IActionCopyTtlIn interface {
-	goloxi.IAction
+	openflow.IAction
 }
 
-func (self *ActionCopyTtlIn) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionCopyTtlIn) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -583,7 +583,7 @@ func (self *ActionCopyTtlIn) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionCopyTtlIn(parent *Action, decoder *goloxi.Decoder) (*ActionCopyTtlIn, error) {
+func DecodeActionCopyTtlIn(parent *Action, decoder *openflow.Decoder) (*ActionCopyTtlIn, error) {
 	_actioncopyttlin := &ActionCopyTtlIn{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionCopyTtlIn packet too short: %d < 4", decoder.Length())
@@ -619,10 +619,10 @@ type ActionCopyTtlOut struct {
 }
 
 type IActionCopyTtlOut interface {
-	goloxi.IAction
+	openflow.IAction
 }
 
-func (self *ActionCopyTtlOut) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionCopyTtlOut) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -634,7 +634,7 @@ func (self *ActionCopyTtlOut) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionCopyTtlOut(parent *Action, decoder *goloxi.Decoder) (*ActionCopyTtlOut, error) {
+func DecodeActionCopyTtlOut(parent *Action, decoder *openflow.Decoder) (*ActionCopyTtlOut, error) {
 	_actioncopyttlout := &ActionCopyTtlOut{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionCopyTtlOut packet too short: %d < 4", decoder.Length())
@@ -670,10 +670,10 @@ type ActionDecMplsTtl struct {
 }
 
 type IActionDecMplsTtl interface {
-	goloxi.IAction
+	openflow.IAction
 }
 
-func (self *ActionDecMplsTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionDecMplsTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -685,7 +685,7 @@ func (self *ActionDecMplsTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionDecMplsTtl(parent *Action, decoder *goloxi.Decoder) (*ActionDecMplsTtl, error) {
+func DecodeActionDecMplsTtl(parent *Action, decoder *openflow.Decoder) (*ActionDecMplsTtl, error) {
 	_actiondecmplsttl := &ActionDecMplsTtl{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionDecMplsTtl packet too short: %d < 4", decoder.Length())
@@ -721,10 +721,10 @@ type ActionDecNwTtl struct {
 }
 
 type IActionDecNwTtl interface {
-	goloxi.IAction
+	openflow.IAction
 }
 
-func (self *ActionDecNwTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionDecNwTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -736,7 +736,7 @@ func (self *ActionDecNwTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionDecNwTtl(parent *Action, decoder *goloxi.Decoder) (*ActionDecNwTtl, error) {
+func DecodeActionDecNwTtl(parent *Action, decoder *openflow.Decoder) (*ActionDecNwTtl, error) {
 	_actiondecnwttl := &ActionDecNwTtl{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionDecNwTtl packet too short: %d < 4", decoder.Length())
@@ -773,7 +773,7 @@ type ActionGroup struct {
 }
 
 type IActionGroup interface {
-	goloxi.IAction
+	openflow.IAction
 	GetGroupId() uint32
 }
 
@@ -785,7 +785,7 @@ func (self *ActionGroup) SetGroupId(v uint32) {
 	self.GroupId = v
 }
 
-func (self *ActionGroup) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionGroup) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -797,7 +797,7 @@ func (self *ActionGroup) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionGroup(parent *Action, decoder *goloxi.Decoder) (*ActionGroup, error) {
+func DecodeActionGroup(parent *Action, decoder *openflow.Decoder) (*ActionGroup, error) {
 	_actiongroup := &ActionGroup{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionGroup packet too short: %d < 4", decoder.Length())
@@ -848,7 +848,7 @@ func (self *ActionNicira) SetSubtype(v uint16) {
 	self.Subtype = v
 }
 
-func (self *ActionNicira) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNicira) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionExperimenter.Serialize(encoder); err != nil {
 		return err
 	}
@@ -858,7 +858,7 @@ func (self *ActionNicira) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNicira(parent *ActionExperimenter, decoder *goloxi.Decoder) (IActionNicira, error) {
+func DecodeActionNicira(parent *ActionExperimenter, decoder *openflow.Decoder) (IActionNicira, error) {
 	_actionnicira := &ActionNicira{ActionExperimenter: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("ActionNicira packet too short: %d < 2", decoder.Length())
@@ -1000,7 +1000,7 @@ type IActionNiciraDecTtl interface {
 	IActionNicira
 }
 
-func (self *ActionNiciraDecTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNiciraDecTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1013,7 +1013,7 @@ func (self *ActionNiciraDecTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNiciraDecTtl(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNiciraDecTtl, error) {
+func DecodeActionNiciraDecTtl(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNiciraDecTtl, error) {
 	_actionniciradecttl := &ActionNiciraDecTtl{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionNiciraDecTtl packet too short: %d < 6", decoder.Length())
@@ -1053,7 +1053,7 @@ type ActionNxBundle struct {
 	SlaveType ActionNxBundleSlaveType
 	NSlaves   uint16
 	OfsNbits  uint16
-	Dst       goloxi.IOxmId
+	Dst       openflow.IOxmId
 }
 
 type IActionNxBundle interface {
@@ -1064,7 +1064,7 @@ type IActionNxBundle interface {
 	GetSlaveType() ActionNxBundleSlaveType
 	GetNSlaves() uint16
 	GetOfsNbits() uint16
-	GetDst() goloxi.IOxmId
+	GetDst() openflow.IOxmId
 }
 
 func (self *ActionNxBundle) GetAlgorithm() uint16 {
@@ -1115,15 +1115,15 @@ func (self *ActionNxBundle) SetOfsNbits(v uint16) {
 	self.OfsNbits = v
 }
 
-func (self *ActionNxBundle) GetDst() goloxi.IOxmId {
+func (self *ActionNxBundle) GetDst() openflow.IOxmId {
 	return self.Dst
 }
 
-func (self *ActionNxBundle) SetDst(v goloxi.IOxmId) {
+func (self *ActionNxBundle) SetDst(v openflow.IOxmId) {
 	self.Dst = v
 }
 
-func (self *ActionNxBundle) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxBundle) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1142,7 +1142,7 @@ func (self *ActionNxBundle) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxBundle(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxBundle, error) {
+func DecodeActionNxBundle(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxBundle, error) {
 	_actionnxbundle := &ActionNxBundle{ActionNicira: parent}
 	if decoder.Length() < 22 {
 		return nil, fmt.Errorf("ActionNxBundle packet too short: %d < 22", decoder.Length())
@@ -1201,7 +1201,7 @@ type ActionNxBundleLoad struct {
 	SlaveType ActionNxBundleSlaveType
 	NSlaves   uint16
 	OfsNbits  uint16
-	Dst       goloxi.IOxmId
+	Dst       openflow.IOxmId
 }
 
 type IActionNxBundleLoad interface {
@@ -1212,7 +1212,7 @@ type IActionNxBundleLoad interface {
 	GetSlaveType() ActionNxBundleSlaveType
 	GetNSlaves() uint16
 	GetOfsNbits() uint16
-	GetDst() goloxi.IOxmId
+	GetDst() openflow.IOxmId
 }
 
 func (self *ActionNxBundleLoad) GetAlgorithm() NxBdAlgorithms {
@@ -1263,15 +1263,15 @@ func (self *ActionNxBundleLoad) SetOfsNbits(v uint16) {
 	self.OfsNbits = v
 }
 
-func (self *ActionNxBundleLoad) GetDst() goloxi.IOxmId {
+func (self *ActionNxBundleLoad) GetDst() openflow.IOxmId {
 	return self.Dst
 }
 
-func (self *ActionNxBundleLoad) SetDst(v goloxi.IOxmId) {
+func (self *ActionNxBundleLoad) SetDst(v openflow.IOxmId) {
 	self.Dst = v
 }
 
-func (self *ActionNxBundleLoad) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxBundleLoad) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1287,7 +1287,7 @@ func (self *ActionNxBundleLoad) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxBundleLoad(parent *ActionNicira, decoder *goloxi.Decoder) (IActionNxBundleLoad, error) {
+func DecodeActionNxBundleLoad(parent *ActionNicira, decoder *openflow.Decoder) (IActionNxBundleLoad, error) {
 	_actionnxbundleload := &ActionNxBundleLoad{ActionNicira: parent}
 	if decoder.Length() < 18 {
 		return nil, fmt.Errorf("ActionNxBundleLoad packet too short: %d < 18", decoder.Length())
@@ -1346,7 +1346,7 @@ type ActionNxBundleLoadInPort struct {
 	SlaveType ActionNxBundleSlaveType
 	NSlaves   uint16
 	OfsNbits  uint16
-	Dst       goloxi.IOxmId
+	Dst       openflow.IOxmId
 	InPorts   []*ActionNxBundleLoadSlave
 }
 
@@ -1358,7 +1358,7 @@ type IActionNxBundleLoadInPort interface {
 	GetSlaveType() ActionNxBundleSlaveType
 	GetNSlaves() uint16
 	GetOfsNbits() uint16
-	GetDst() goloxi.IOxmId
+	GetDst() openflow.IOxmId
 	GetInPorts() []*ActionNxBundleLoadSlave
 }
 
@@ -1410,11 +1410,11 @@ func (self *ActionNxBundleLoadInPort) SetOfsNbits(v uint16) {
 	self.OfsNbits = v
 }
 
-func (self *ActionNxBundleLoadInPort) GetDst() goloxi.IOxmId {
+func (self *ActionNxBundleLoadInPort) GetDst() openflow.IOxmId {
 	return self.Dst
 }
 
-func (self *ActionNxBundleLoadInPort) SetDst(v goloxi.IOxmId) {
+func (self *ActionNxBundleLoadInPort) SetDst(v openflow.IOxmId) {
 	self.Dst = v
 }
 
@@ -1426,7 +1426,7 @@ func (self *ActionNxBundleLoadInPort) SetInPorts(v []*ActionNxBundleLoadSlave) {
 	self.InPorts = v
 }
 
-func (self *ActionNxBundleLoadInPort) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxBundleLoadInPort) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1450,7 +1450,7 @@ func (self *ActionNxBundleLoadInPort) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxBundleLoadInPort(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxBundleLoadInPort, error) {
+func DecodeActionNxBundleLoadInPort(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxBundleLoadInPort, error) {
 	_actionnxbundleloadinport := &ActionNxBundleLoadInPort{ActionNicira: parent}
 	if decoder.Length() < 22 {
 		return nil, fmt.Errorf("ActionNxBundleLoadInPort packet too short: %d < 22", decoder.Length())
@@ -1514,23 +1514,23 @@ func (self *ActionNxBundleLoadInPort) MarshalJSON() ([]byte, error) {
 
 type ActionNxClone struct {
 	*ActionNicira
-	Actions []goloxi.IAction
+	Actions []openflow.IAction
 }
 
 type IActionNxClone interface {
 	IActionNicira
-	GetActions() []goloxi.IAction
+	GetActions() []openflow.IAction
 }
 
-func (self *ActionNxClone) GetActions() []goloxi.IAction {
+func (self *ActionNxClone) GetActions() []openflow.IAction {
 	return self.Actions
 }
 
-func (self *ActionNxClone) SetActions(v []goloxi.IAction) {
+func (self *ActionNxClone) SetActions(v []openflow.IAction) {
 	self.Actions = v
 }
 
-func (self *ActionNxClone) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxClone) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1547,7 +1547,7 @@ func (self *ActionNxClone) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxClone(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxClone, error) {
+func DecodeActionNxClone(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxClone, error) {
 	_actionnxclone := &ActionNxClone{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionNxClone packet too short: %d < 6", decoder.Length())
@@ -1628,7 +1628,7 @@ func (self *ActionNxConjunction) SetId(v uint32) {
 	self.Id = v
 }
 
-func (self *ActionNxConjunction) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxConjunction) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1642,7 +1642,7 @@ func (self *ActionNxConjunction) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxConjunction(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxConjunction, error) {
+func DecodeActionNxConjunction(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxConjunction, error) {
 	_actionnxconjunction := &ActionNxConjunction{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionNxConjunction packet too short: %d < 6", decoder.Length())
@@ -1717,7 +1717,7 @@ func (self *ActionNxController) SetReason(v uint8) {
 	self.Reason = v
 }
 
-func (self *ActionNxController) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxController) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1732,7 +1732,7 @@ func (self *ActionNxController) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxController(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxController, error) {
+func DecodeActionNxController(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxController, error) {
 	_actionnxcontroller := &ActionNxController{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionNxController packet too short: %d < 6", decoder.Length())
@@ -1788,7 +1788,7 @@ func (self *ActionNxController2) SetProperties(v []IActionNxController2Property)
 	self.Properties = v
 }
 
-func (self *ActionNxController2) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxController2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1805,7 +1805,7 @@ func (self *ActionNxController2) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxController2(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxController2, error) {
+func DecodeActionNxController2(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxController2, error) {
 	_actionnxcontroller2 := &ActionNxController2{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionNxController2 packet too short: %d < 6", decoder.Length())
@@ -1851,21 +1851,21 @@ func (self *ActionNxController2) MarshalJSON() ([]byte, error) {
 type ActionNxCt struct {
 	*ActionNicira
 	Flags       NxConntrackFlags
-	ZoneSrc     goloxi.IOxmId
+	ZoneSrc     openflow.IOxmId
 	Value       uint16
 	RecircTable uint8
 	Alg         uint16
-	Actions     []goloxi.IAction
+	Actions     []openflow.IAction
 }
 
 type IActionNxCt interface {
 	IActionNicira
 	GetFlags() NxConntrackFlags
-	GetZoneSrc() goloxi.IOxmId
+	GetZoneSrc() openflow.IOxmId
 	GetValue() uint16
 	GetRecircTable() uint8
 	GetAlg() uint16
-	GetActions() []goloxi.IAction
+	GetActions() []openflow.IAction
 }
 
 func (self *ActionNxCt) GetFlags() NxConntrackFlags {
@@ -1876,11 +1876,11 @@ func (self *ActionNxCt) SetFlags(v NxConntrackFlags) {
 	self.Flags = v
 }
 
-func (self *ActionNxCt) GetZoneSrc() goloxi.IOxmId {
+func (self *ActionNxCt) GetZoneSrc() openflow.IOxmId {
 	return self.ZoneSrc
 }
 
-func (self *ActionNxCt) SetZoneSrc(v goloxi.IOxmId) {
+func (self *ActionNxCt) SetZoneSrc(v openflow.IOxmId) {
 	self.ZoneSrc = v
 }
 
@@ -1908,15 +1908,15 @@ func (self *ActionNxCt) SetAlg(v uint16) {
 	self.Alg = v
 }
 
-func (self *ActionNxCt) GetActions() []goloxi.IAction {
+func (self *ActionNxCt) GetActions() []openflow.IAction {
 	return self.Actions
 }
 
-func (self *ActionNxCt) SetActions(v []goloxi.IAction) {
+func (self *ActionNxCt) SetActions(v []openflow.IAction) {
 	self.Actions = v
 }
 
-func (self *ActionNxCt) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxCt) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -1938,7 +1938,7 @@ func (self *ActionNxCt) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxCt(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxCt, error) {
+func DecodeActionNxCt(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxCt, error) {
 	_actionnxct := &ActionNxCt{ActionNicira: parent}
 	if decoder.Length() < 14 {
 		return nil, fmt.Errorf("ActionNxCt packet too short: %d < 14", decoder.Length())
@@ -2004,7 +2004,7 @@ type IActionNxCtClear interface {
 	IActionNicira
 }
 
-func (self *ActionNxCtClear) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxCtClear) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2014,7 +2014,7 @@ func (self *ActionNxCtClear) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxCtClear(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxCtClear, error) {
+func DecodeActionNxCtClear(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxCtClear, error) {
 	_actionnxctclear := &ActionNxCtClear{ActionNicira: parent}
 	return _actionnxctclear, nil
 }
@@ -2049,7 +2049,7 @@ type IActionNxDebugRecirc interface {
 	IActionNicira
 }
 
-func (self *ActionNxDebugRecirc) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxDebugRecirc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2059,7 +2059,7 @@ func (self *ActionNxDebugRecirc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxDebugRecirc(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxDebugRecirc, error) {
+func DecodeActionNxDebugRecirc(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxDebugRecirc, error) {
 	_actionnxdebugrecirc := &ActionNxDebugRecirc{ActionNicira: parent}
 	return _actionnxdebugrecirc, nil
 }
@@ -2094,7 +2094,7 @@ type IActionNxDebugSlow interface {
 	IActionNicira
 }
 
-func (self *ActionNxDebugSlow) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxDebugSlow) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2104,7 +2104,7 @@ func (self *ActionNxDebugSlow) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxDebugSlow(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxDebugSlow, error) {
+func DecodeActionNxDebugSlow(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxDebugSlow, error) {
 	_actionnxdebugslow := &ActionNxDebugSlow{ActionNicira: parent}
 	return _actionnxdebugslow, nil
 }
@@ -2139,7 +2139,7 @@ type IActionNxDecMplsTtl interface {
 	IActionNicira
 }
 
-func (self *ActionNxDecMplsTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxDecMplsTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2149,7 +2149,7 @@ func (self *ActionNxDecMplsTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxDecMplsTtl(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxDecMplsTtl, error) {
+func DecodeActionNxDecMplsTtl(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxDecMplsTtl, error) {
 	_actionnxdecmplsttl := &ActionNxDecMplsTtl{ActionNicira: parent}
 	return _actionnxdecmplsttl, nil
 }
@@ -2184,7 +2184,7 @@ type IActionNxDecNshTtl interface {
 	IActionNicira
 }
 
-func (self *ActionNxDecNshTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxDecNshTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2194,7 +2194,7 @@ func (self *ActionNxDecNshTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxDecNshTtl(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxDecNshTtl, error) {
+func DecodeActionNxDecNshTtl(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxDecNshTtl, error) {
 	_actionnxdecnshttl := &ActionNxDecNshTtl{ActionNicira: parent}
 	return _actionnxdecnshttl, nil
 }
@@ -2239,7 +2239,7 @@ func (self *ActionNxDecTtlCntIds) SetNControllers(v uint16) {
 	self.NControllers = v
 }
 
-func (self *ActionNxDecTtlCntIds) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxDecTtlCntIds) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2252,7 +2252,7 @@ func (self *ActionNxDecTtlCntIds) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxDecTtlCntIds(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxDecTtlCntIds, error) {
+func DecodeActionNxDecTtlCntIds(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxDecTtlCntIds, error) {
 	_actionnxdecttlcntids := &ActionNxDecTtlCntIds{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionNxDecTtlCntIds packet too short: %d < 6", decoder.Length())
@@ -2304,7 +2304,7 @@ func (self *ActionNxDecap) SetNewPktType(v uint32) {
 	self.NewPktType = v
 }
 
-func (self *ActionNxDecap) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxDecap) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2317,7 +2317,7 @@ func (self *ActionNxDecap) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxDecap(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxDecap, error) {
+func DecodeActionNxDecap(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxDecap, error) {
 	_actionnxdecap := &ActionNxDecap{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionNxDecap packet too short: %d < 6", decoder.Length())
@@ -2389,7 +2389,7 @@ func (self *ActionNxEncap) SetProps(v []IEdPropHeader) {
 	self.Props = v
 }
 
-func (self *ActionNxEncap) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxEncap) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2407,7 +2407,7 @@ func (self *ActionNxEncap) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxEncap(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxEncap, error) {
+func DecodeActionNxEncap(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxEncap, error) {
 	_actionnxencap := &ActionNxEncap{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionNxEncap packet too short: %d < 6", decoder.Length())
@@ -2461,7 +2461,7 @@ type IActionNxExit interface {
 	IActionNicira
 }
 
-func (self *ActionNxExit) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxExit) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2471,7 +2471,7 @@ func (self *ActionNxExit) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxExit(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxExit, error) {
+func DecodeActionNxExit(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxExit, error) {
 	_actionnxexit := &ActionNxExit{ActionNicira: parent}
 	return _actionnxexit, nil
 }
@@ -2526,7 +2526,7 @@ func (self *ActionNxFinTimeout) SetFinHardTimeout(v uint16) {
 	self.FinHardTimeout = v
 }
 
-func (self *ActionNxFinTimeout) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxFinTimeout) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2540,7 +2540,7 @@ func (self *ActionNxFinTimeout) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxFinTimeout(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxFinTimeout, error) {
+func DecodeActionNxFinTimeout(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxFinTimeout, error) {
 	_actionnxfintimeout := &ActionNxFinTimeout{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionNxFinTimeout packet too short: %d < 6", decoder.Length())
@@ -2594,7 +2594,7 @@ func (self *ActionNxGroup) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *ActionNxGroup) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxGroup) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2606,7 +2606,7 @@ func (self *ActionNxGroup) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxGroup(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxGroup, error) {
+func DecodeActionNxGroup(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxGroup, error) {
 	_actionnxgroup := &ActionNxGroup{ActionNicira: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionNxGroup packet too short: %d < 4", decoder.Length())
@@ -2737,7 +2737,7 @@ func (self *ActionNxLearn) SetFlowMods(v []IFlowModSpec) {
 	self.FlowMods = v
 }
 
-func (self *ActionNxLearn) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxLearn) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2762,7 +2762,7 @@ func (self *ActionNxLearn) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxLearn(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxLearn, error) {
+func DecodeActionNxLearn(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxLearn, error) {
 	_actionnxlearn := &ActionNxLearn{ActionNicira: parent}
 	if decoder.Length() < 22 {
 		return nil, fmt.Errorf("ActionNxLearn packet too short: %d < 22", decoder.Length())
@@ -2829,7 +2829,7 @@ type IActionNxLearn2 interface {
 	IActionNicira
 }
 
-func (self *ActionNxLearn2) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxLearn2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2839,7 +2839,7 @@ func (self *ActionNxLearn2) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxLearn2(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxLearn2, error) {
+func DecodeActionNxLearn2(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxLearn2, error) {
 	_actionnxlearn2 := &ActionNxLearn2{ActionNicira: parent}
 	return _actionnxlearn2, nil
 }
@@ -2874,7 +2874,7 @@ type ActionNxMultipath struct {
 	MaxLink   uint16
 	Arg       uint32
 	OfsNbits  uint16
-	Dst       goloxi.IOxmId
+	Dst       openflow.IOxmId
 }
 
 type IActionNxMultipath interface {
@@ -2885,7 +2885,7 @@ type IActionNxMultipath interface {
 	GetMaxLink() uint16
 	GetArg() uint32
 	GetOfsNbits() uint16
-	GetDst() goloxi.IOxmId
+	GetDst() openflow.IOxmId
 }
 
 func (self *ActionNxMultipath) GetFields() NxHashFields {
@@ -2936,15 +2936,15 @@ func (self *ActionNxMultipath) SetOfsNbits(v uint16) {
 	self.OfsNbits = v
 }
 
-func (self *ActionNxMultipath) GetDst() goloxi.IOxmId {
+func (self *ActionNxMultipath) GetDst() openflow.IOxmId {
 	return self.Dst
 }
 
-func (self *ActionNxMultipath) SetDst(v goloxi.IOxmId) {
+func (self *ActionNxMultipath) SetDst(v openflow.IOxmId) {
 	self.Dst = v
 }
 
-func (self *ActionNxMultipath) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxMultipath) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -2964,7 +2964,7 @@ func (self *ActionNxMultipath) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxMultipath(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxMultipath, error) {
+func DecodeActionNxMultipath(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxMultipath, error) {
 	_actionnxmultipath := &ActionNxMultipath{ActionNicira: parent}
 	if decoder.Length() < 22 {
 		return nil, fmt.Errorf("ActionNxMultipath packet too short: %d < 22", decoder.Length())
@@ -3104,7 +3104,7 @@ func (self *ActionNxNat) SetProtoMax(v uint32) {
 	self.ProtoMax = v
 }
 
-func (self *ActionNxNat) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxNat) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3124,7 +3124,7 @@ func (self *ActionNxNat) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxNat(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxNat, error) {
+func DecodeActionNxNat(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxNat, error) {
 	_actionnxnat := &ActionNxNat{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionNxNat packet too short: %d < 6", decoder.Length())
@@ -3202,7 +3202,7 @@ func (self *ActionNxNote) SetNote(v []byte) {
 	self.Note = v
 }
 
-func (self *ActionNxNote) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxNote) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3214,7 +3214,7 @@ func (self *ActionNxNote) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxNote(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxNote, error) {
+func DecodeActionNxNote(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxNote, error) {
 	_actionnxnote := &ActionNxNote{ActionNicira: parent}
 	_actionnxnote.Note = decoder.Read(int(decoder.Length()))
 	return _actionnxnote, nil
@@ -3282,7 +3282,7 @@ func (self *ActionNxOutputReg) SetMaxLen(v uint16) {
 	self.MaxLen = v
 }
 
-func (self *ActionNxOutputReg) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxOutputReg) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3297,7 +3297,7 @@ func (self *ActionNxOutputReg) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxOutputReg(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxOutputReg, error) {
+func DecodeActionNxOutputReg(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxOutputReg, error) {
 	_actionnxoutputreg := &ActionNxOutputReg{ActionNicira: parent}
 	if decoder.Length() < 14 {
 		return nil, fmt.Errorf("ActionNxOutputReg packet too short: %d < 14", decoder.Length())
@@ -3363,7 +3363,7 @@ func (self *ActionNxOutputReg2) SetMaxLen(v uint16) {
 	self.MaxLen = v
 }
 
-func (self *ActionNxOutputReg2) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxOutputReg2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3377,7 +3377,7 @@ func (self *ActionNxOutputReg2) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxOutputReg2(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxOutputReg2, error) {
+func DecodeActionNxOutputReg2(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxOutputReg2, error) {
 	_actionnxoutputreg2 := &ActionNxOutputReg2{ActionNicira: parent}
 	if decoder.Length() < 14 {
 		return nil, fmt.Errorf("ActionNxOutputReg2 packet too short: %d < 14", decoder.Length())
@@ -3441,7 +3441,7 @@ func (self *ActionNxOutputTrunc) SetMaxLen(v uint32) {
 	self.MaxLen = v
 }
 
-func (self *ActionNxOutputTrunc) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxOutputTrunc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3454,7 +3454,7 @@ func (self *ActionNxOutputTrunc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxOutputTrunc(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxOutputTrunc, error) {
+func DecodeActionNxOutputTrunc(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxOutputTrunc, error) {
 	_actionnxoutputtrunc := &ActionNxOutputTrunc{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionNxOutputTrunc packet too short: %d < 6", decoder.Length())
@@ -3507,7 +3507,7 @@ func (self *ActionNxPopMpls) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *ActionNxPopMpls) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxPopMpls) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3519,7 +3519,7 @@ func (self *ActionNxPopMpls) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxPopMpls(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxPopMpls, error) {
+func DecodeActionNxPopMpls(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxPopMpls, error) {
 	_actionnxpopmpls := &ActionNxPopMpls{ActionNicira: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("ActionNxPopMpls packet too short: %d < 2", decoder.Length())
@@ -3560,7 +3560,7 @@ type IActionNxPopQueue interface {
 	IActionNicira
 }
 
-func (self *ActionNxPopQueue) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxPopQueue) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3570,7 +3570,7 @@ func (self *ActionNxPopQueue) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxPopQueue(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxPopQueue, error) {
+func DecodeActionNxPopQueue(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxPopQueue, error) {
 	_actionnxpopqueue := &ActionNxPopQueue{ActionNicira: parent}
 	return _actionnxpopqueue, nil
 }
@@ -3615,7 +3615,7 @@ func (self *ActionNxPushMpls) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *ActionNxPushMpls) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxPushMpls) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3627,7 +3627,7 @@ func (self *ActionNxPushMpls) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxPushMpls(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxPushMpls, error) {
+func DecodeActionNxPushMpls(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxPushMpls, error) {
 	_actionnxpushmpls := &ActionNxPushMpls{ActionNicira: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("ActionNxPushMpls packet too short: %d < 2", decoder.Length())
@@ -3663,14 +3663,14 @@ func (self *ActionNxPushMpls) MarshalJSON() ([]byte, error) {
 type ActionNxRegLoad struct {
 	*ActionNicira
 	OfsNbits uint16
-	SrcField goloxi.IOxmId
+	SrcField openflow.IOxmId
 	Value    uint64
 }
 
 type IActionNxRegLoad interface {
 	IActionNicira
 	GetOfsNbits() uint16
-	GetSrcField() goloxi.IOxmId
+	GetSrcField() openflow.IOxmId
 	GetValue() uint64
 }
 
@@ -3682,11 +3682,11 @@ func (self *ActionNxRegLoad) SetOfsNbits(v uint16) {
 	self.OfsNbits = v
 }
 
-func (self *ActionNxRegLoad) GetSrcField() goloxi.IOxmId {
+func (self *ActionNxRegLoad) GetSrcField() openflow.IOxmId {
 	return self.SrcField
 }
 
-func (self *ActionNxRegLoad) SetSrcField(v goloxi.IOxmId) {
+func (self *ActionNxRegLoad) SetSrcField(v openflow.IOxmId) {
 	self.SrcField = v
 }
 
@@ -3698,7 +3698,7 @@ func (self *ActionNxRegLoad) SetValue(v uint64) {
 	self.Value = v
 }
 
-func (self *ActionNxRegLoad) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxRegLoad) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3712,7 +3712,7 @@ func (self *ActionNxRegLoad) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxRegLoad(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxRegLoad, error) {
+func DecodeActionNxRegLoad(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxRegLoad, error) {
 	_actionnxregload := &ActionNxRegLoad{ActionNicira: parent}
 	if decoder.Length() < 14 {
 		return nil, fmt.Errorf("ActionNxRegLoad packet too short: %d < 14", decoder.Length())
@@ -3762,7 +3762,7 @@ type IActionNxRegLoad2 interface {
 	IActionNicira
 }
 
-func (self *ActionNxRegLoad2) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxRegLoad2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3774,7 +3774,7 @@ func (self *ActionNxRegLoad2) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxRegLoad2(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxRegLoad2, error) {
+func DecodeActionNxRegLoad2(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxRegLoad2, error) {
 	_actionnxregload2 := &ActionNxRegLoad2{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionNxRegLoad2 packet too short: %d < 6", decoder.Length())
@@ -3810,8 +3810,8 @@ type ActionNxRegMove struct {
 	NBits  uint16
 	SrcOfs uint16
 	DstOfs uint16
-	Src    goloxi.IOxmId
-	Dst    goloxi.IOxmId
+	Src    openflow.IOxmId
+	Dst    openflow.IOxmId
 }
 
 type IActionNxRegMove interface {
@@ -3819,8 +3819,8 @@ type IActionNxRegMove interface {
 	GetNBits() uint16
 	GetSrcOfs() uint16
 	GetDstOfs() uint16
-	GetSrc() goloxi.IOxmId
-	GetDst() goloxi.IOxmId
+	GetSrc() openflow.IOxmId
+	GetDst() openflow.IOxmId
 }
 
 func (self *ActionNxRegMove) GetNBits() uint16 {
@@ -3847,23 +3847,23 @@ func (self *ActionNxRegMove) SetDstOfs(v uint16) {
 	self.DstOfs = v
 }
 
-func (self *ActionNxRegMove) GetSrc() goloxi.IOxmId {
+func (self *ActionNxRegMove) GetSrc() openflow.IOxmId {
 	return self.Src
 }
 
-func (self *ActionNxRegMove) SetSrc(v goloxi.IOxmId) {
+func (self *ActionNxRegMove) SetSrc(v openflow.IOxmId) {
 	self.Src = v
 }
 
-func (self *ActionNxRegMove) GetDst() goloxi.IOxmId {
+func (self *ActionNxRegMove) GetDst() openflow.IOxmId {
 	return self.Dst
 }
 
-func (self *ActionNxRegMove) SetDst(v goloxi.IOxmId) {
+func (self *ActionNxRegMove) SetDst(v openflow.IOxmId) {
 	self.Dst = v
 }
 
-func (self *ActionNxRegMove) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxRegMove) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3879,7 +3879,7 @@ func (self *ActionNxRegMove) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxRegMove(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxRegMove, error) {
+func DecodeActionNxRegMove(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxRegMove, error) {
 	_actionnxregmove := &ActionNxRegMove{ActionNicira: parent}
 	if decoder.Length() < 14 {
 		return nil, fmt.Errorf("ActionNxRegMove packet too short: %d < 14", decoder.Length())
@@ -3948,7 +3948,7 @@ func (self *ActionNxResubmit) SetValue(v uint16) {
 	self.Value = v
 }
 
-func (self *ActionNxResubmit) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxResubmit) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -3960,7 +3960,7 @@ func (self *ActionNxResubmit) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxResubmit(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxResubmit, error) {
+func DecodeActionNxResubmit(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxResubmit, error) {
 	_actionnxresubmit := &ActionNxResubmit{ActionNicira: parent}
 	if decoder.Length() < 2 {
 		return nil, fmt.Errorf("ActionNxResubmit packet too short: %d < 2", decoder.Length())
@@ -4021,7 +4021,7 @@ func (self *ActionNxResubmitTable) SetTable(v uint8) {
 	self.Table = v
 }
 
-func (self *ActionNxResubmitTable) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxResubmitTable) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4035,7 +4035,7 @@ func (self *ActionNxResubmitTable) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxResubmitTable(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxResubmitTable, error) {
+func DecodeActionNxResubmitTable(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxResubmitTable, error) {
 	_actionnxresubmittable := &ActionNxResubmitTable{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionNxResubmitTable packet too short: %d < 6", decoder.Length())
@@ -4099,7 +4099,7 @@ func (self *ActionNxResubmitTableCt) SetTable(v uint8) {
 	self.Table = v
 }
 
-func (self *ActionNxResubmitTableCt) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxResubmitTableCt) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4113,7 +4113,7 @@ func (self *ActionNxResubmitTableCt) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxResubmitTableCt(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxResubmitTableCt, error) {
+func DecodeActionNxResubmitTableCt(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxResubmitTableCt, error) {
 	_actionnxresubmittablect := &ActionNxResubmitTableCt{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionNxResubmitTableCt packet too short: %d < 6", decoder.Length())
@@ -4197,7 +4197,7 @@ func (self *ActionNxSample) SetObsPointId(v uint32) {
 	self.ObsPointId = v
 }
 
-func (self *ActionNxSample) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxSample) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4212,7 +4212,7 @@ func (self *ActionNxSample) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxSample(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxSample, error) {
+func DecodeActionNxSample(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxSample, error) {
 	_actionnxsample := &ActionNxSample{ActionNicira: parent}
 	if decoder.Length() < 14 {
 		return nil, fmt.Errorf("ActionNxSample packet too short: %d < 14", decoder.Length())
@@ -4319,7 +4319,7 @@ func (self *ActionNxSample2) SetDirection(v uint8) {
 	self.Direction = v
 }
 
-func (self *ActionNxSample2) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxSample2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4337,7 +4337,7 @@ func (self *ActionNxSample2) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxSample2(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxSample2, error) {
+func DecodeActionNxSample2(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxSample2, error) {
 	_actionnxsample2 := &ActionNxSample2{ActionNicira: parent}
 	if decoder.Length() < 22 {
 		return nil, fmt.Errorf("ActionNxSample2 packet too short: %d < 22", decoder.Length())
@@ -4449,7 +4449,7 @@ func (self *ActionNxSample3) SetDirection(v uint8) {
 	self.Direction = v
 }
 
-func (self *ActionNxSample3) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxSample3) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4467,7 +4467,7 @@ func (self *ActionNxSample3) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxSample3(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxSample3, error) {
+func DecodeActionNxSample3(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxSample3, error) {
 	_actionnxsample3 := &ActionNxSample3{ActionNicira: parent}
 	if decoder.Length() < 22 {
 		return nil, fmt.Errorf("ActionNxSample3 packet too short: %d < 22", decoder.Length())
@@ -4529,7 +4529,7 @@ func (self *ActionNxSetMplsLabel) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *ActionNxSetMplsLabel) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxSetMplsLabel) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4541,7 +4541,7 @@ func (self *ActionNxSetMplsLabel) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxSetMplsLabel(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxSetMplsLabel, error) {
+func DecodeActionNxSetMplsLabel(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxSetMplsLabel, error) {
 	_actionnxsetmplslabel := &ActionNxSetMplsLabel{ActionNicira: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionNxSetMplsLabel packet too short: %d < 4", decoder.Length())
@@ -4592,7 +4592,7 @@ func (self *ActionNxSetMplsTc) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *ActionNxSetMplsTc) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxSetMplsTc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4604,7 +4604,7 @@ func (self *ActionNxSetMplsTc) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxSetMplsTc(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxSetMplsTc, error) {
+func DecodeActionNxSetMplsTc(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxSetMplsTc, error) {
 	_actionnxsetmplstc := &ActionNxSetMplsTc{ActionNicira: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("ActionNxSetMplsTc packet too short: %d < 1", decoder.Length())
@@ -4655,7 +4655,7 @@ func (self *ActionNxSetMplsTtl) SetValue(v uint8) {
 	self.Value = v
 }
 
-func (self *ActionNxSetMplsTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxSetMplsTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4667,7 +4667,7 @@ func (self *ActionNxSetMplsTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxSetMplsTtl(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxSetMplsTtl, error) {
+func DecodeActionNxSetMplsTtl(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxSetMplsTtl, error) {
 	_actionnxsetmplsttl := &ActionNxSetMplsTtl{ActionNicira: parent}
 	if decoder.Length() < 1 {
 		return nil, fmt.Errorf("ActionNxSetMplsTtl packet too short: %d < 1", decoder.Length())
@@ -4718,7 +4718,7 @@ func (self *ActionNxSetQueue) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *ActionNxSetQueue) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxSetQueue) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4730,7 +4730,7 @@ func (self *ActionNxSetQueue) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxSetQueue(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxSetQueue, error) {
+func DecodeActionNxSetQueue(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxSetQueue, error) {
 	_actionnxsetqueue := &ActionNxSetQueue{ActionNicira: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionNxSetQueue packet too short: %d < 4", decoder.Length())
@@ -4781,7 +4781,7 @@ func (self *ActionNxSetTunnel) SetValue(v uint32) {
 	self.Value = v
 }
 
-func (self *ActionNxSetTunnel) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxSetTunnel) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4793,7 +4793,7 @@ func (self *ActionNxSetTunnel) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxSetTunnel(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxSetTunnel, error) {
+func DecodeActionNxSetTunnel(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxSetTunnel, error) {
 	_actionnxsettunnel := &ActionNxSetTunnel{ActionNicira: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionNxSetTunnel packet too short: %d < 4", decoder.Length())
@@ -4844,7 +4844,7 @@ func (self *ActionNxSetTunnel64) SetValue(v uint64) {
 	self.Value = v
 }
 
-func (self *ActionNxSetTunnel64) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxSetTunnel64) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4856,7 +4856,7 @@ func (self *ActionNxSetTunnel64) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxSetTunnel64(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxSetTunnel64, error) {
+func DecodeActionNxSetTunnel64(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxSetTunnel64, error) {
 	_actionnxsettunnel64 := &ActionNxSetTunnel64{ActionNicira: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("ActionNxSetTunnel64 packet too short: %d < 8", decoder.Length())
@@ -4892,14 +4892,14 @@ func (self *ActionNxSetTunnel64) MarshalJSON() ([]byte, error) {
 type ActionNxStackPop struct {
 	*ActionNicira
 	Offset uint16
-	Field  goloxi.IOxmId
+	Field  openflow.IOxmId
 	NBits  uint16
 }
 
 type IActionNxStackPop interface {
 	IActionNicira
 	GetOffset() uint16
-	GetField() goloxi.IOxmId
+	GetField() openflow.IOxmId
 	GetNBits() uint16
 }
 
@@ -4911,11 +4911,11 @@ func (self *ActionNxStackPop) SetOffset(v uint16) {
 	self.Offset = v
 }
 
-func (self *ActionNxStackPop) GetField() goloxi.IOxmId {
+func (self *ActionNxStackPop) GetField() openflow.IOxmId {
 	return self.Field
 }
 
-func (self *ActionNxStackPop) SetField(v goloxi.IOxmId) {
+func (self *ActionNxStackPop) SetField(v openflow.IOxmId) {
 	self.Field = v
 }
 
@@ -4927,7 +4927,7 @@ func (self *ActionNxStackPop) SetNBits(v uint16) {
 	self.NBits = v
 }
 
-func (self *ActionNxStackPop) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxStackPop) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -4941,7 +4941,7 @@ func (self *ActionNxStackPop) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxStackPop(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxStackPop, error) {
+func DecodeActionNxStackPop(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxStackPop, error) {
 	_actionnxstackpop := &ActionNxStackPop{ActionNicira: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("ActionNxStackPop packet too short: %d < 8", decoder.Length())
@@ -4986,14 +4986,14 @@ func (self *ActionNxStackPop) MarshalJSON() ([]byte, error) {
 type ActionNxStackPush struct {
 	*ActionNicira
 	Offset uint16
-	Field  goloxi.IOxmId
+	Field  openflow.IOxmId
 	NBits  uint16
 }
 
 type IActionNxStackPush interface {
 	IActionNicira
 	GetOffset() uint16
-	GetField() goloxi.IOxmId
+	GetField() openflow.IOxmId
 	GetNBits() uint16
 }
 
@@ -5005,11 +5005,11 @@ func (self *ActionNxStackPush) SetOffset(v uint16) {
 	self.Offset = v
 }
 
-func (self *ActionNxStackPush) GetField() goloxi.IOxmId {
+func (self *ActionNxStackPush) GetField() openflow.IOxmId {
 	return self.Field
 }
 
-func (self *ActionNxStackPush) SetField(v goloxi.IOxmId) {
+func (self *ActionNxStackPush) SetField(v openflow.IOxmId) {
 	self.Field = v
 }
 
@@ -5021,7 +5021,7 @@ func (self *ActionNxStackPush) SetNBits(v uint16) {
 	self.NBits = v
 }
 
-func (self *ActionNxStackPush) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxStackPush) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5035,7 +5035,7 @@ func (self *ActionNxStackPush) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxStackPush(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxStackPush, error) {
+func DecodeActionNxStackPush(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxStackPush, error) {
 	_actionnxstackpush := &ActionNxStackPush{ActionNicira: parent}
 	if decoder.Length() < 8 {
 		return nil, fmt.Errorf("ActionNxStackPush packet too short: %d < 8", decoder.Length())
@@ -5105,7 +5105,7 @@ func (self *ActionNxWriteMetadata) SetMask(v uint64) {
 	self.Mask = v
 }
 
-func (self *ActionNxWriteMetadata) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionNxWriteMetadata) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5119,7 +5119,7 @@ func (self *ActionNxWriteMetadata) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionNxWriteMetadata(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionNxWriteMetadata, error) {
+func DecodeActionNxWriteMetadata(parent *ActionNicira, decoder *openflow.Decoder) (*ActionNxWriteMetadata, error) {
 	_actionnxwritemetadata := &ActionNxWriteMetadata{ActionNicira: parent}
 	if decoder.Length() < 22 {
 		return nil, fmt.Errorf("ActionNxWriteMetadata packet too short: %d < 22", decoder.Length())
@@ -5162,7 +5162,7 @@ type ActionOutput struct {
 }
 
 type IActionOutput interface {
-	goloxi.IAction
+	openflow.IAction
 	GetPort() Port
 	GetMaxLen() uint16
 }
@@ -5183,7 +5183,7 @@ func (self *ActionOutput) SetMaxLen(v uint16) {
 	self.MaxLen = v
 }
 
-func (self *ActionOutput) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionOutput) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5197,7 +5197,7 @@ func (self *ActionOutput) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionOutput(parent *Action, decoder *goloxi.Decoder) (*ActionOutput, error) {
+func DecodeActionOutput(parent *Action, decoder *openflow.Decoder) (*ActionOutput, error) {
 	_actionoutput := &ActionOutput{Action: parent}
 	if decoder.Length() < 12 {
 		return nil, fmt.Errorf("ActionOutput packet too short: %d < 12", decoder.Length())
@@ -5239,7 +5239,7 @@ type ActionPopMpls struct {
 }
 
 type IActionPopMpls interface {
-	goloxi.IAction
+	openflow.IAction
 	GetEthertype() uint16
 }
 
@@ -5251,7 +5251,7 @@ func (self *ActionPopMpls) SetEthertype(v uint16) {
 	self.Ethertype = v
 }
 
-func (self *ActionPopMpls) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionPopMpls) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5264,7 +5264,7 @@ func (self *ActionPopMpls) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionPopMpls(parent *Action, decoder *goloxi.Decoder) (*ActionPopMpls, error) {
+func DecodeActionPopMpls(parent *Action, decoder *openflow.Decoder) (*ActionPopMpls, error) {
 	_actionpopmpls := &ActionPopMpls{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionPopMpls packet too short: %d < 4", decoder.Length())
@@ -5303,10 +5303,10 @@ type ActionPopPbb struct {
 }
 
 type IActionPopPbb interface {
-	goloxi.IAction
+	openflow.IAction
 }
 
-func (self *ActionPopPbb) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionPopPbb) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5318,7 +5318,7 @@ func (self *ActionPopPbb) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionPopPbb(parent *Action, decoder *goloxi.Decoder) (*ActionPopPbb, error) {
+func DecodeActionPopPbb(parent *Action, decoder *openflow.Decoder) (*ActionPopPbb, error) {
 	_actionpoppbb := &ActionPopPbb{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionPopPbb packet too short: %d < 4", decoder.Length())
@@ -5354,10 +5354,10 @@ type ActionPopVlan struct {
 }
 
 type IActionPopVlan interface {
-	goloxi.IAction
+	openflow.IAction
 }
 
-func (self *ActionPopVlan) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionPopVlan) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5369,7 +5369,7 @@ func (self *ActionPopVlan) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionPopVlan(parent *Action, decoder *goloxi.Decoder) (*ActionPopVlan, error) {
+func DecodeActionPopVlan(parent *Action, decoder *openflow.Decoder) (*ActionPopVlan, error) {
 	_actionpopvlan := &ActionPopVlan{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionPopVlan packet too short: %d < 4", decoder.Length())
@@ -5406,7 +5406,7 @@ type ActionPushMpls struct {
 }
 
 type IActionPushMpls interface {
-	goloxi.IAction
+	openflow.IAction
 	GetEthertype() uint16
 }
 
@@ -5418,7 +5418,7 @@ func (self *ActionPushMpls) SetEthertype(v uint16) {
 	self.Ethertype = v
 }
 
-func (self *ActionPushMpls) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionPushMpls) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5431,7 +5431,7 @@ func (self *ActionPushMpls) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionPushMpls(parent *Action, decoder *goloxi.Decoder) (*ActionPushMpls, error) {
+func DecodeActionPushMpls(parent *Action, decoder *openflow.Decoder) (*ActionPushMpls, error) {
 	_actionpushmpls := &ActionPushMpls{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionPushMpls packet too short: %d < 4", decoder.Length())
@@ -5471,7 +5471,7 @@ type ActionPushPbb struct {
 }
 
 type IActionPushPbb interface {
-	goloxi.IAction
+	openflow.IAction
 	GetEthertype() uint16
 }
 
@@ -5483,7 +5483,7 @@ func (self *ActionPushPbb) SetEthertype(v uint16) {
 	self.Ethertype = v
 }
 
-func (self *ActionPushPbb) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionPushPbb) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5496,7 +5496,7 @@ func (self *ActionPushPbb) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionPushPbb(parent *Action, decoder *goloxi.Decoder) (*ActionPushPbb, error) {
+func DecodeActionPushPbb(parent *Action, decoder *openflow.Decoder) (*ActionPushPbb, error) {
 	_actionpushpbb := &ActionPushPbb{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionPushPbb packet too short: %d < 4", decoder.Length())
@@ -5536,7 +5536,7 @@ type ActionPushVlan struct {
 }
 
 type IActionPushVlan interface {
-	goloxi.IAction
+	openflow.IAction
 	GetEthertype() uint16
 }
 
@@ -5548,7 +5548,7 @@ func (self *ActionPushVlan) SetEthertype(v uint16) {
 	self.Ethertype = v
 }
 
-func (self *ActionPushVlan) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionPushVlan) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5561,7 +5561,7 @@ func (self *ActionPushVlan) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionPushVlan(parent *Action, decoder *goloxi.Decoder) (*ActionPushVlan, error) {
+func DecodeActionPushVlan(parent *Action, decoder *openflow.Decoder) (*ActionPushVlan, error) {
 	_actionpushvlan := &ActionPushVlan{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionPushVlan packet too short: %d < 4", decoder.Length())
@@ -5623,7 +5623,7 @@ func (self *ActionResubmit) SetTable(v uint8) {
 	self.Table = v
 }
 
-func (self *ActionResubmit) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionResubmit) Serialize(encoder *openflow.Encoder) error {
 	if err := self.ActionNicira.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5637,7 +5637,7 @@ func (self *ActionResubmit) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionResubmit(parent *ActionNicira, decoder *goloxi.Decoder) (*ActionResubmit, error) {
+func DecodeActionResubmit(parent *ActionNicira, decoder *openflow.Decoder) (*ActionResubmit, error) {
 	_actionresubmit := &ActionResubmit{ActionNicira: parent}
 	if decoder.Length() < 6 {
 		return nil, fmt.Errorf("ActionResubmit packet too short: %d < 6", decoder.Length())
@@ -5675,23 +5675,23 @@ func (self *ActionResubmit) MarshalJSON() ([]byte, error) {
 
 type ActionSetField struct {
 	*Action
-	Field goloxi.IOxm
+	Field openflow.IOxm
 }
 
 type IActionSetField interface {
-	goloxi.IAction
-	GetField() goloxi.IOxm
+	openflow.IAction
+	GetField() openflow.IOxm
 }
 
-func (self *ActionSetField) GetField() goloxi.IOxm {
+func (self *ActionSetField) GetField() openflow.IOxm {
 	return self.Field
 }
 
-func (self *ActionSetField) SetField(v goloxi.IOxm) {
+func (self *ActionSetField) SetField(v openflow.IOxm) {
 	self.Field = v
 }
 
-func (self *ActionSetField) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionSetField) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5703,7 +5703,7 @@ func (self *ActionSetField) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionSetField(parent *Action, decoder *goloxi.Decoder) (*ActionSetField, error) {
+func DecodeActionSetField(parent *Action, decoder *openflow.Decoder) (*ActionSetField, error) {
 	_actionsetfield := &ActionSetField{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionSetField packet too short: %d < 4", decoder.Length())
@@ -5747,7 +5747,7 @@ type ActionSetMplsTtl struct {
 }
 
 type IActionSetMplsTtl interface {
-	goloxi.IAction
+	openflow.IAction
 	GetMplsTtl() uint8
 }
 
@@ -5759,7 +5759,7 @@ func (self *ActionSetMplsTtl) SetMplsTtl(v uint8) {
 	self.MplsTtl = v
 }
 
-func (self *ActionSetMplsTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionSetMplsTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5772,7 +5772,7 @@ func (self *ActionSetMplsTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionSetMplsTtl(parent *Action, decoder *goloxi.Decoder) (*ActionSetMplsTtl, error) {
+func DecodeActionSetMplsTtl(parent *Action, decoder *openflow.Decoder) (*ActionSetMplsTtl, error) {
 	_actionsetmplsttl := &ActionSetMplsTtl{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionSetMplsTtl packet too short: %d < 4", decoder.Length())
@@ -5812,7 +5812,7 @@ type ActionSetNwTtl struct {
 }
 
 type IActionSetNwTtl interface {
-	goloxi.IAction
+	openflow.IAction
 	GetNwTtl() uint8
 }
 
@@ -5824,7 +5824,7 @@ func (self *ActionSetNwTtl) SetNwTtl(v uint8) {
 	self.NwTtl = v
 }
 
-func (self *ActionSetNwTtl) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionSetNwTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5837,7 +5837,7 @@ func (self *ActionSetNwTtl) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionSetNwTtl(parent *Action, decoder *goloxi.Decoder) (*ActionSetNwTtl, error) {
+func DecodeActionSetNwTtl(parent *Action, decoder *openflow.Decoder) (*ActionSetNwTtl, error) {
 	_actionsetnwttl := &ActionSetNwTtl{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionSetNwTtl packet too short: %d < 4", decoder.Length())
@@ -5877,7 +5877,7 @@ type ActionSetQueue struct {
 }
 
 type IActionSetQueue interface {
-	goloxi.IAction
+	openflow.IAction
 	GetQueueId() uint32
 }
 
@@ -5889,7 +5889,7 @@ func (self *ActionSetQueue) SetQueueId(v uint32) {
 	self.QueueId = v
 }
 
-func (self *ActionSetQueue) Serialize(encoder *goloxi.Encoder) error {
+func (self *ActionSetQueue) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Action.Serialize(encoder); err != nil {
 		return err
 	}
@@ -5901,7 +5901,7 @@ func (self *ActionSetQueue) Serialize(encoder *goloxi.Encoder) error {
 	return nil
 }
 
-func DecodeActionSetQueue(parent *Action, decoder *goloxi.Decoder) (*ActionSetQueue, error) {
+func DecodeActionSetQueue(parent *Action, decoder *openflow.Decoder) (*ActionSetQueue, error) {
 	_actionsetqueue := &ActionSetQueue{Action: parent}
 	if decoder.Length() < 4 {
 		return nil, fmt.Errorf("ActionSetQueue packet too short: %d < 4", decoder.Length())

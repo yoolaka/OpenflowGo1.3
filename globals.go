@@ -1,4 +1,4 @@
-package goloxi
+package openflow
 
 import "fmt"
 

@@ -3,14 +3,13 @@ package of13
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/yoolaka/openflow"
 	"net"
-
-	"github.com/skydive-project/goloxi"
 )
 
 // TODO: set real types
 type OXM = Oxm
-type uint128 = goloxi.Uint128
+type uint128 = openflow.Uint128
 type Checksum128 [16]byte
 type Bitmap128 uint128
 type Bitmap512 struct {
@@ -28,74 +27,74 @@ func (h *Header) MessageName() string {
 	return Type(h.Type).String()
 }
 
-func (self *Checksum128) Decode(decoder *goloxi.Decoder) error {
+func (self *Checksum128) Decode(decoder *openflow.Decoder) error {
 	return nil
 }
 
-func (self *Checksum128) Serialize(encoder *goloxi.Encoder) error {
+func (self *Checksum128) Serialize(encoder *openflow.Encoder) error {
 	return nil
 }
-func (self *Bitmap128) Decode(decoder *goloxi.Decoder) error {
-	return nil
-}
-
-func (self *Bitmap128) Serialize(encoder *goloxi.Encoder) error {
-	return nil
-}
-func (self *Bitmap512) Decode(decoder *goloxi.Decoder) error {
+func (self *Bitmap128) Decode(decoder *openflow.Decoder) error {
 	return nil
 }
 
-func (self *Bitmap512) Serialize(encoder *goloxi.Encoder) error {
+func (self *Bitmap128) Serialize(encoder *openflow.Encoder) error {
 	return nil
 }
-func (self *BSNVport) Decode(decoder *goloxi.Decoder) error {
-	return nil
-}
-
-func (self *BSNVport) Serialize(encoder *goloxi.Encoder) error {
-	return nil
-}
-func (self *ControllerURI) Decode(decoder *goloxi.Decoder) error {
+func (self *Bitmap512) Decode(decoder *openflow.Decoder) error {
 	return nil
 }
 
-func (self *ControllerURI) Serialize(encoder *goloxi.Encoder) error {
+func (self *Bitmap512) Serialize(encoder *openflow.Encoder) error {
+	return nil
+}
+func (self *BSNVport) Decode(decoder *openflow.Decoder) error {
+	return nil
+}
+
+func (self *BSNVport) Serialize(encoder *openflow.Encoder) error {
+	return nil
+}
+func (self *ControllerURI) Decode(decoder *openflow.Decoder) error {
+	return nil
+}
+
+func (self *ControllerURI) Serialize(encoder *openflow.Encoder) error {
 	return nil
 }
 
 type FmCmd uint8
 
-func (self *FmCmd) Serialize(encoder *goloxi.Encoder) error {
+func (self *FmCmd) Serialize(encoder *openflow.Encoder) error {
 	encoder.PutUint8(uint8(*self))
 	return nil
 }
 
-func (self *FmCmd) Decode(decoder *goloxi.Decoder) error {
+func (self *FmCmd) Decode(decoder *openflow.Decoder) error {
 	*self = FmCmd(decoder.ReadUint8())
 	return nil
 }
 
 type MatchBmap uint64
 
-func (self *MatchBmap) Serialize(encoder *goloxi.Encoder) error {
+func (self *MatchBmap) Serialize(encoder *openflow.Encoder) error {
 	encoder.PutUint64(uint64(*self))
 	return nil
 }
 
-func (self *MatchBmap) Decode(decoder *goloxi.Decoder) error {
+func (self *MatchBmap) Decode(decoder *openflow.Decoder) error {
 	*self = MatchBmap(decoder.ReadUint64())
 	return nil
 }
 
 type WcBmap uint64
 
-func (self *WcBmap) Serialize(encoder *goloxi.Encoder) error {
+func (self *WcBmap) Serialize(encoder *openflow.Encoder) error {
 	encoder.PutUint64(uint64(*self))
 	return nil
 }
 
-func (self *WcBmap) Decode(decoder *goloxi.Decoder) error {
+func (self *WcBmap) Decode(decoder *openflow.Decoder) error {
 	*self = WcBmap(decoder.ReadUint64())
 	return nil
 }
@@ -103,31 +102,31 @@ func (self *WcBmap) Decode(decoder *goloxi.Decoder) error {
 type Match = MatchV3
 type PortNo uint32
 
-func (self *PortNo) Serialize(encoder *goloxi.Encoder) error {
+func (self *PortNo) Serialize(encoder *openflow.Encoder) error {
 	encoder.PutUint32(uint32(*self))
 	return nil
 }
 
-func (self *PortNo) Decode(decoder *goloxi.Decoder) error {
+func (self *PortNo) Decode(decoder *openflow.Decoder) error {
 	*self = PortNo(decoder.ReadUint32())
 	return nil
 }
 
-func DecodeMessage(data []byte) (goloxi.Message, error) {
-	header, err := DecodeHeader(goloxi.NewDecoder(data))
+func DecodeMessage(data []byte) (openflow.Message, error) {
+	header, err := DecodeHeader(openflow.NewDecoder(data))
 	if err != nil {
 		return nil, err
 	}
 
-	return header.(goloxi.Message), nil
+	return header.(openflow.Message), nil
 }
 
-func (self *Port) Serialize(encoder *goloxi.Encoder) error {
+func (self *Port) Serialize(encoder *openflow.Encoder) error {
 	portNo := PortNo(*self)
 	return portNo.Serialize(encoder)
 }
 
-func (self *Port) Decode(decoder *goloxi.Decoder) error {
+func (self *Port) Decode(decoder *openflow.Decoder) error {
 	portNo := PortNo(*self)
 	if err := portNo.Decode(decoder); err != nil {
 		return err
