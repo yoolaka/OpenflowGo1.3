@@ -19,6 +19,15 @@ const (
 	OFPTExperimenter = 4
 )
 const (
+	OFPInstructionGotoTableLen = 8
+	OFPInstructionActionsLen   = 8
+)
+const (
+	OFPActionOutputLen   = 16
+	OFPActionPushLen     = 8
+	OFPActionSetFieldLen = 4
+)
+const (
 	OxmDefaultLen  = 4
 	EthAddrLen     = 6
 	EthAddrMaskLen = 6
