@@ -5724,7 +5724,10 @@ func (self *ActionSetField) GetField() openflow.IOxm {
 
 func (self *ActionSetField) SetField(v openflow.IOxm) {
 	self.Field = v
-	self.Len += v.GetLength()
+	self.Len += v.GetLength() + openflow.OxmDefaultLen
+	if self.Len%8 != 0 {
+		self.Len += 8 - self.Len%8
+	}
 }
 
 func (self *ActionSetField) Serialize(encoder *openflow.Encoder) error {
@@ -5733,6 +5736,8 @@ func (self *ActionSetField) Serialize(encoder *openflow.Encoder) error {
 	}
 
 	self.Field.Serialize(encoder)
+
+	encoder.SkipAlign()
 
 	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
 

@@ -13705,7 +13705,7 @@ func (self *MatchV3) SetLength(v uint16) {
 	self.Length = v
 }
 func (self *MatchV3) AddOxmToList(v openflow.IOxm) {
-	self.Length += v.GetLength()
+	self.Length += v.GetLength() + openflow.OxmDefaultLen
 	self.OxmList = append(self.OxmList, v)
 }
 func (self *MatchV3) GetOxmList() []openflow.IOxm {

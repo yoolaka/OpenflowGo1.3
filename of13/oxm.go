@@ -858,8 +858,8 @@ func DecodeOxm(decoder *openflow.Decoder) (openflow.IOxm, error) {
 func NewOxm(_type_len uint32) *Oxm {
 	obj := &Oxm{}
 	obj.TypeLen = _type_len
-	obj.Length = openflow.OxmDefaultLen
-	switch obj.TypeLen {
+	//obj.Length = openflow.OxmDefaultLen
+	/*switch obj.TypeLen {
 	case 73736: //NxmTunId
 		obj.Length += openflow.TunIdLen
 	case 2147485964, 2147485452:
@@ -886,7 +886,8 @@ func NewOxm(_type_len uint32) *Oxm {
 		obj.Length += openflow.IPv4Len + openflow.IPv4MaskLen
 	case 2147486210:
 		obj.Length += openflow.EthTypeLen
-	}
+	}*/
+	obj.Length = uint16(obj.TypeLen) & 0xff
 	return obj
 }
 

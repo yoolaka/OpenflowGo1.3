@@ -111,6 +111,11 @@ func (self *InstructionApplyActions) GetActions() []openflow.IAction {
 }
 
 func (self *InstructionApplyActions) SetActions(v []openflow.IAction) {
+	actionsLen := uint16(0)
+	for _, elem := range v {
+		actionsLen += elem.GetLen()
+	}
+	self.Len = openflow.OFPInstructionActionsLen + actionsLen
 	self.Actions = v
 }
 
@@ -1068,6 +1073,12 @@ func (self *InstructionWriteActions) GetActions() []openflow.IAction {
 }
 
 func (self *InstructionWriteActions) SetActions(v []openflow.IAction) {
+
+	actionsLen := uint16(0)
+	for _, elem := range v {
+		actionsLen += elem.GetLen()
+	}
+	self.Len = openflow.OFPInstructionActionsLen + actionsLen
 	self.Actions = v
 }
 
