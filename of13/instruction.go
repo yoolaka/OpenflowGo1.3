@@ -63,19 +63,19 @@ func DecodeInstruction(decoder *openflow.Decoder) (IInstruction, error) {
 	decoder = decoder.SliceDecoder(int(_instruction.Len), 2+2)
 
 	switch _instruction.Type {
-	case 1:
+	case OFPITGotoTable:
 		return DecodeInstructionGotoTable(_instruction, decoder)
-	case 2:
+	case OFPITWriteMetadata:
 		return DecodeInstructionWriteMetadata(_instruction, decoder)
-	case 3:
+	case OFPITWriteActions:
 		return DecodeInstructionWriteActions(_instruction, decoder)
-	case 4:
+	case OFPITApplyActions:
 		return DecodeInstructionApplyActions(_instruction, decoder)
-	case 5:
+	case OFPITClearActions:
 		return DecodeInstructionClearActions(_instruction, decoder)
-	case 6:
+	case OFPITMeter:
 		return DecodeInstructionMeter(_instruction, decoder)
-	case 65535:
+	case OFPITExperimenter:
 		return DecodeInstructionExperimenter(_instruction, decoder)
 	default:
 		return nil, fmt.Errorf("Invalid type '%d' for 'Instruction'", _instruction.Type)
@@ -85,6 +85,14 @@ func DecodeInstruction(decoder *openflow.Decoder) (IInstruction, error) {
 func NewInstruction(_type uint16) *Instruction {
 	obj := &Instruction{}
 	obj.Type = _type
+	switch obj.Type {
+	case OFPITGotoTable:
+		obj.Len = openflow.OFPInstructionGotoTableLen
+	case OFPITWriteMetadata:
+		//TODO: fill this case if you need
+	case OFPITWriteActions, OFPITApplyActions, OFPITClearActions:
+		obj.Len = openflow.OFPInstructionActionsLen
+	}
 	return obj
 }
 
@@ -103,6 +111,11 @@ func (self *InstructionApplyActions) GetActions() []openflow.IAction {
 }
 
 func (self *InstructionApplyActions) SetActions(v []openflow.IAction) {
+	actionsLen := uint16(0)
+	for _, elem := range v {
+		actionsLen += elem.GetLen()
+	}
+	self.Len = openflow.OFPInstructionActionsLen + actionsLen
 	self.Actions = v
 }
 
@@ -1060,6 +1073,12 @@ func (self *InstructionWriteActions) GetActions() []openflow.IAction {
 }
 
 func (self *InstructionWriteActions) SetActions(v []openflow.IAction) {
+
+	actionsLen := uint16(0)
+	for _, elem := range v {
+		actionsLen += elem.GetLen()
+	}
+	self.Len = openflow.OFPInstructionActionsLen + actionsLen
 	self.Actions = v
 }
 

@@ -68,39 +68,40 @@ func DecodeAction(decoder *openflow.Decoder) (openflow.IAction, error) {
 	decoder = decoder.SliceDecoder(int(_action.Len), 2+2)
 
 	switch _action.Type {
-	case 0:
+
+	case OFPATOutput:
 		return DecodeActionOutput(_action, decoder)
-	case 11:
+	case OFPATCopyTtlOut:
 		return DecodeActionCopyTtlOut(_action, decoder)
-	case 12:
+	case OFPATCopyTtlIn:
 		return DecodeActionCopyTtlIn(_action, decoder)
-	case 15:
+	case OFPATSetMplsTtl:
 		return DecodeActionSetMplsTtl(_action, decoder)
-	case 16:
+	case OFPATDecMplsTtl:
 		return DecodeActionDecMplsTtl(_action, decoder)
-	case 17:
+	case OFPATPushVLAN:
 		return DecodeActionPushVlan(_action, decoder)
-	case 18:
+	case OFPATPopVLAN:
 		return DecodeActionPopVlan(_action, decoder)
-	case 19:
+	case OFPATPushMpls:
 		return DecodeActionPushMpls(_action, decoder)
-	case 20:
+	case OFPATPopMpls:
 		return DecodeActionPopMpls(_action, decoder)
-	case 21:
+	case OFPATSetQueue:
 		return DecodeActionSetQueue(_action, decoder)
-	case 22:
+	case OFPATGroup:
 		return DecodeActionGroup(_action, decoder)
-	case 23:
+	case OFPATSetNwTtl:
 		return DecodeActionSetNwTtl(_action, decoder)
-	case 24:
+	case OFPATDecNwTtl:
 		return DecodeActionDecNwTtl(_action, decoder)
-	case 25:
+	case OFPATSetField:
 		return DecodeActionSetField(_action, decoder)
-	case 26:
+	case OFPATPushPbb:
 		return DecodeActionPushPbb(_action, decoder)
-	case 27:
+	case OFPATPopPbb:
 		return DecodeActionPopPbb(_action, decoder)
-	case 65535:
+	case OFPATExperimenter:
 		return DecodeActionExperimenter(_action, decoder)
 	default:
 		return nil, fmt.Errorf("Invalid type '%d' for 'Action'", _action.Type)
@@ -110,6 +111,40 @@ func DecodeAction(decoder *openflow.Decoder) (openflow.IAction, error) {
 func NewAction(_type uint16) *Action {
 	obj := &Action{}
 	obj.Type = _type
+	switch obj.Type {
+
+	case OFPATOutput:
+		obj.Len = openflow.OFPActionOutputLen
+	case OFPATCopyTtlOut:
+
+	case OFPATCopyTtlIn:
+
+	case OFPATSetMplsTtl:
+
+	case OFPATDecMplsTtl:
+
+	case OFPATPushVLAN, OFPATPushMpls, OFPATPushPbb:
+		obj.Len = openflow.OFPActionPushLen
+	case OFPATPopVLAN:
+
+	case OFPATPopMpls:
+
+	case OFPATSetQueue:
+
+	case OFPATGroup:
+
+	case OFPATSetNwTtl:
+
+	case OFPATDecNwTtl:
+
+	case OFPATSetField:
+		obj.Len = openflow.OFPActionSetFieldLen
+
+	case OFPATPopPbb:
+
+	case OFPATExperimenter:
+
+	}
 	return obj
 }
 
@@ -5689,6 +5724,10 @@ func (self *ActionSetField) GetField() openflow.IOxm {
 
 func (self *ActionSetField) SetField(v openflow.IOxm) {
 	self.Field = v
+	self.Len += v.GetLength() + openflow.OxmDefaultLen
+	if self.Len%8 != 0 {
+		self.Len += 8 - self.Len%8
+	}
 }
 
 func (self *ActionSetField) Serialize(encoder *openflow.Encoder) error {
@@ -5697,6 +5736,8 @@ func (self *ActionSetField) Serialize(encoder *openflow.Encoder) error {
 	}
 
 	self.Field.Serialize(encoder)
+
+	encoder.SkipAlign()
 
 	binary.BigEndian.PutUint16(encoder.Bytes()[2:4], uint16(len(encoder.Bytes())))
 

@@ -17,6 +17,7 @@ import (
 
 type Oxm struct {
 	TypeLen uint32
+	Length  uint16
 }
 
 type IOxm interface {
@@ -857,6 +858,36 @@ func DecodeOxm(decoder *openflow.Decoder) (openflow.IOxm, error) {
 func NewOxm(_type_len uint32) *Oxm {
 	obj := &Oxm{}
 	obj.TypeLen = _type_len
+	//obj.Length = openflow.OxmDefaultLen
+	/*switch obj.TypeLen {
+	case 73736: //NxmTunId
+		obj.Length += openflow.TunIdLen
+	case 2147485964, 2147485452:
+		//OxmEthSrcMasked
+		// OxmEthDstMasked
+		obj.Length += openflow.EthAddrLen
+		obj.Length += openflow.EthAddrMaskLen
+	case 2147485702, 2147485190:
+		//OxmEthSrc
+		// OxmEthDst
+
+		obj.Length += openflow.EthAddrLen
+	case 2147489284, 2147489796, 81412, 81924:
+		//OxmIpv4Src
+		// OxmIpv4Dst
+		// NxmTunSrc
+		// NxmTunDst
+		obj.Length += openflow.IPv4Len
+	case 2147490056, 2147489544, 81672, 82184:
+		//OxmIpv4DstMasked
+		// OxmIpv4SrcMasked
+		// NxmSrcMasked
+		// NxmDstMasked
+		obj.Length += openflow.IPv4Len + openflow.IPv4MaskLen
+	case 2147486210:
+		obj.Length += openflow.EthTypeLen
+	}*/
+	obj.Length = uint16(obj.TypeLen) & 0xff
 	return obj
 }
 
@@ -876,6 +907,9 @@ func (self *NxmArpOp) GetValue() uint16 {
 
 func (self *NxmArpOp) SetValue(v uint16) {
 	self.Value = v
+}
+func (self *NxmArpOp) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmArpOp) Serialize(encoder *openflow.Encoder) error {
@@ -936,7 +970,9 @@ func (self *NxmArpSha) GetValue() net.HardwareAddr {
 func (self *NxmArpSha) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
-
+func (self *NxmArpSha) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmArpSha) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -997,7 +1033,9 @@ func (self *NxmArpShaMasked) GetValue() net.HardwareAddr {
 func (self *NxmArpShaMasked) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
-
+func (self *NxmArpShaMasked) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmArpShaMasked) GetValueMask() net.HardwareAddr {
 	return self.ValueMask
 }
@@ -1074,7 +1112,9 @@ func (self *NxmArpSpa) GetValue() net.IP {
 func (self *NxmArpSpa) SetValue(v net.IP) {
 	self.Value = v
 }
-
+func (self *NxmArpSpa) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmArpSpa) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -1135,7 +1175,9 @@ func (self *NxmArpSpaMasked) GetValue() net.IP {
 func (self *NxmArpSpaMasked) SetValue(v net.IP) {
 	self.Value = v
 }
-
+func (self *NxmArpSpaMasked) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmArpSpaMasked) GetValueMask() net.IP {
 	return self.ValueMask
 }
@@ -1212,7 +1254,9 @@ func (self *NxmArpTha) GetValue() net.HardwareAddr {
 func (self *NxmArpTha) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
-
+func (self *NxmArpTha) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmArpTha) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -1272,6 +1316,9 @@ func (self *NxmArpThaMasked) GetValue() net.HardwareAddr {
 
 func (self *NxmArpThaMasked) SetValue(v net.HardwareAddr) {
 	self.Value = v
+}
+func (self *NxmArpThaMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmArpThaMasked) GetValueMask() net.HardwareAddr {
@@ -1350,7 +1397,9 @@ func (self *NxmArpTpa) GetValue() net.IP {
 func (self *NxmArpTpa) SetValue(v net.IP) {
 	self.Value = v
 }
-
+func (self *NxmArpTpa) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmArpTpa) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -1411,7 +1460,9 @@ func (self *NxmArpTpaMasked) GetValue() net.IP {
 func (self *NxmArpTpaMasked) SetValue(v net.IP) {
 	self.Value = v
 }
-
+func (self *NxmArpTpaMasked) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmArpTpaMasked) GetValueMask() net.IP {
 	return self.ValueMask
 }
@@ -1488,7 +1539,9 @@ func (self *NxmConjId) GetValue() uint32 {
 func (self *NxmConjId) SetValue(v uint32) {
 	self.Value = v
 }
-
+func (self *NxmConjId) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmConjId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -1547,7 +1600,9 @@ func (self *NxmCtIpv6Dst) GetValue() net.IP {
 func (self *NxmCtIpv6Dst) SetValue(v net.IP) {
 	self.Value = v
 }
-
+func (self *NxmCtIpv6Dst) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtIpv6Dst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -1608,7 +1663,9 @@ func (self *NxmCtIpv6DstMasked) GetValue() net.IP {
 func (self *NxmCtIpv6DstMasked) SetValue(v net.IP) {
 	self.Value = v
 }
-
+func (self *NxmCtIpv6DstMasked) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtIpv6DstMasked) GetValueMask() net.IP {
 	return self.ValueMask
 }
@@ -1685,7 +1742,9 @@ func (self *NxmCtIpv6Src) GetValue() net.IP {
 func (self *NxmCtIpv6Src) SetValue(v net.IP) {
 	self.Value = v
 }
-
+func (self *NxmCtIpv6Src) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtIpv6Src) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -1746,7 +1805,9 @@ func (self *NxmCtIpv6SrcMasked) GetValue() net.IP {
 func (self *NxmCtIpv6SrcMasked) SetValue(v net.IP) {
 	self.Value = v
 }
-
+func (self *NxmCtIpv6SrcMasked) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtIpv6SrcMasked) GetValueMask() net.IP {
 	return self.ValueMask
 }
@@ -1823,7 +1884,9 @@ func (self *NxmCtLabel) GetValue() uint128 {
 func (self *NxmCtLabel) SetValue(v uint128) {
 	self.Value = v
 }
-
+func (self *NxmCtLabel) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtLabel) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -1884,7 +1947,9 @@ func (self *NxmCtLabelMasked) GetValue() uint128 {
 func (self *NxmCtLabelMasked) SetValue(v uint128) {
 	self.Value = v
 }
-
+func (self *NxmCtLabelMasked) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtLabelMasked) GetValueMask() uint128 {
 	return self.ValueMask
 }
@@ -1961,7 +2026,9 @@ func (self *NxmCtMark) GetValue() uint32 {
 func (self *NxmCtMark) SetValue(v uint32) {
 	self.Value = v
 }
-
+func (self *NxmCtMark) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtMark) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -2022,7 +2089,9 @@ func (self *NxmCtMarkMasked) GetValue() uint32 {
 func (self *NxmCtMarkMasked) SetValue(v uint32) {
 	self.Value = v
 }
-
+func (self *NxmCtMarkMasked) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtMarkMasked) GetValueMask() uint32 {
 	return self.ValueMask
 }
@@ -2099,7 +2168,9 @@ func (self *NxmCtNwDst) GetValue() net.IP {
 func (self *NxmCtNwDst) SetValue(v net.IP) {
 	self.Value = v
 }
-
+func (self *NxmCtNwDst) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtNwDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -2160,7 +2231,9 @@ func (self *NxmCtNwDstMasked) GetValue() net.IP {
 func (self *NxmCtNwDstMasked) SetValue(v net.IP) {
 	self.Value = v
 }
-
+func (self *NxmCtNwDstMasked) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtNwDstMasked) GetValueMask() net.IP {
 	return self.ValueMask
 }
@@ -2237,7 +2310,9 @@ func (self *NxmCtNwProto) GetValue() uint8 {
 func (self *NxmCtNwProto) SetValue(v uint8) {
 	self.Value = v
 }
-
+func (self *NxmCtNwProto) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtNwProto) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -2296,7 +2371,9 @@ func (self *NxmCtNwSrc) GetValue() net.IP {
 func (self *NxmCtNwSrc) SetValue(v net.IP) {
 	self.Value = v
 }
-
+func (self *NxmCtNwSrc) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtNwSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -2357,7 +2434,9 @@ func (self *NxmCtNwSrcMasked) GetValue() net.IP {
 func (self *NxmCtNwSrcMasked) SetValue(v net.IP) {
 	self.Value = v
 }
-
+func (self *NxmCtNwSrcMasked) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtNwSrcMasked) GetValueMask() net.IP {
 	return self.ValueMask
 }
@@ -2434,7 +2513,9 @@ func (self *NxmCtState) GetValue() []byte {
 func (self *NxmCtState) SetValue(v []byte) {
 	self.Value = v
 }
-
+func (self *NxmCtState) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtState) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -2492,7 +2573,9 @@ func (self *NxmCtStateMasked) GetValue() []byte {
 func (self *NxmCtStateMasked) SetValue(v []byte) {
 	self.Value = v
 }
-
+func (self *NxmCtStateMasked) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtStateMasked) GetValueMask() []byte {
 	return self.ValueMask
 }
@@ -2566,7 +2649,9 @@ func (self *NxmCtTpDst) GetValue() uint16 {
 func (self *NxmCtTpDst) SetValue(v uint16) {
 	self.Value = v
 }
-
+func (self *NxmCtTpDst) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtTpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -2627,7 +2712,9 @@ func (self *NxmCtTpDstMasked) GetValue() uint16 {
 func (self *NxmCtTpDstMasked) SetValue(v uint16) {
 	self.Value = v
 }
-
+func (self *NxmCtTpDstMasked) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtTpDstMasked) GetValueMask() uint16 {
 	return self.ValueMask
 }
@@ -2704,7 +2791,9 @@ func (self *NxmCtTpSrc) GetValue() uint16 {
 func (self *NxmCtTpSrc) SetValue(v uint16) {
 	self.Value = v
 }
-
+func (self *NxmCtTpSrc) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtTpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -2765,7 +2854,9 @@ func (self *NxmCtTpSrcMasked) GetValue() uint16 {
 func (self *NxmCtTpSrcMasked) SetValue(v uint16) {
 	self.Value = v
 }
-
+func (self *NxmCtTpSrcMasked) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtTpSrcMasked) GetValueMask() uint16 {
 	return self.ValueMask
 }
@@ -2842,7 +2933,9 @@ func (self *NxmCtZone) GetValue() uint16 {
 func (self *NxmCtZone) SetValue(v uint16) {
 	self.Value = v
 }
-
+func (self *NxmCtZone) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmCtZone) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -2901,7 +2994,9 @@ func (self *NxmDpHash) GetValue() uint32 {
 func (self *NxmDpHash) SetValue(v uint32) {
 	self.Value = v
 }
-
+func (self *NxmDpHash) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmDpHash) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -2962,7 +3057,9 @@ func (self *NxmDpHashMasked) GetValue() uint32 {
 func (self *NxmDpHashMasked) SetValue(v uint32) {
 	self.Value = v
 }
-
+func (self *NxmDpHashMasked) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmDpHashMasked) GetValueMask() uint32 {
 	return self.ValueMask
 }
@@ -3039,6 +3136,9 @@ func (self *NxmEthDst) GetValue() net.HardwareAddr {
 func (self *NxmEthDst) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
+func (self *NxmEthDst) GetLength() uint16 {
+	return self.Length
+}
 
 func (self *NxmEthDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
@@ -3099,6 +3199,10 @@ func (self *NxmEthDstMasked) GetValue() net.HardwareAddr {
 
 func (self *NxmEthDstMasked) SetValue(v net.HardwareAddr) {
 	self.Value = v
+}
+
+func (self *NxmEthDstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmEthDstMasked) GetValueMask() net.HardwareAddr {
@@ -3178,6 +3282,10 @@ func (self *NxmEthSrc) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
+func (self *NxmEthSrc) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmEthSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -3237,6 +3345,10 @@ func (self *NxmEthSrcMasked) GetValue() net.HardwareAddr {
 
 func (self *NxmEthSrcMasked) SetValue(v net.HardwareAddr) {
 	self.Value = v
+}
+
+func (self *NxmEthSrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmEthSrcMasked) GetValueMask() net.HardwareAddr {
@@ -3316,6 +3428,10 @@ func (self *NxmEthType) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *NxmEthType) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmEthType) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -3373,6 +3489,10 @@ func (self *NxmIcmpCode) GetValue() uint8 {
 
 func (self *NxmIcmpCode) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *NxmIcmpCode) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmIcmpCode) Serialize(encoder *openflow.Encoder) error {
@@ -3434,6 +3554,10 @@ func (self *NxmIcmpType) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *NxmIcmpType) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmIcmpType) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -3491,6 +3615,10 @@ func (self *NxmIcmpv6Code) GetValue() uint8 {
 
 func (self *NxmIcmpv6Code) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *NxmIcmpv6Code) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmIcmpv6Code) Serialize(encoder *openflow.Encoder) error {
@@ -3552,6 +3680,10 @@ func (self *NxmIcmpv6Type) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *NxmIcmpv6Type) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmIcmpv6Type) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -3609,6 +3741,10 @@ func (self *NxmInPort) GetValue() Port {
 
 func (self *NxmInPort) SetValue(v Port) {
 	self.Value = v
+}
+
+func (self *NxmInPort) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmInPort) Serialize(encoder *openflow.Encoder) error {
@@ -3670,6 +3806,10 @@ func (self *NxmIpDst) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *NxmIpDst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmIpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -3729,6 +3869,10 @@ func (self *NxmIpDstMasked) GetValue() net.IP {
 
 func (self *NxmIpDstMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *NxmIpDstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmIpDstMasked) GetValueMask() net.IP {
@@ -3808,6 +3952,10 @@ func (self *NxmIpFrag) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmIpFrag) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmIpFrag) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -3864,6 +4012,10 @@ func (self *NxmIpFragMasked) GetValue() []byte {
 
 func (self *NxmIpFragMasked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmIpFragMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmIpFragMasked) GetValueMask() []byte {
@@ -3940,6 +4092,10 @@ func (self *NxmIpSrc) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *NxmIpSrc) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmIpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -3999,6 +4155,10 @@ func (self *NxmIpSrcMasked) GetValue() net.IP {
 
 func (self *NxmIpSrcMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *NxmIpSrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmIpSrcMasked) GetValueMask() net.IP {
@@ -4078,6 +4238,10 @@ func (self *NxmIpv6Dst) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *NxmIpv6Dst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmIpv6Dst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -4137,6 +4301,10 @@ func (self *NxmIpv6DstMasked) GetValue() net.IP {
 
 func (self *NxmIpv6DstMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *NxmIpv6DstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmIpv6DstMasked) GetValueMask() net.IP {
@@ -4216,6 +4384,10 @@ func (self *NxmIpv6Label) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmIpv6Label) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmIpv6Label) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -4275,6 +4447,10 @@ func (self *NxmIpv6LabelMasked) GetValue() uint32 {
 
 func (self *NxmIpv6LabelMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmIpv6LabelMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmIpv6LabelMasked) GetValueMask() uint32 {
@@ -4354,6 +4530,10 @@ func (self *NxmIpv6Src) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *NxmIpv6Src) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmIpv6Src) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -4413,6 +4593,10 @@ func (self *NxmIpv6SrcMasked) GetValue() net.IP {
 
 func (self *NxmIpv6SrcMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *NxmIpv6SrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmIpv6SrcMasked) GetValueMask() net.IP {
@@ -4492,6 +4676,10 @@ func (self *NxmMplsTtl) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *NxmMplsTtl) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmMplsTtl) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -4549,6 +4737,10 @@ func (self *NxmNdSll) GetValue() net.HardwareAddr {
 
 func (self *NxmNdSll) SetValue(v net.HardwareAddr) {
 	self.Value = v
+}
+
+func (self *NxmNdSll) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmNdSll) Serialize(encoder *openflow.Encoder) error {
@@ -4610,6 +4802,10 @@ func (self *NxmNdSllMasked) GetValue() net.HardwareAddr {
 
 func (self *NxmNdSllMasked) SetValue(v net.HardwareAddr) {
 	self.Value = v
+}
+
+func (self *NxmNdSllMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmNdSllMasked) GetValueMask() net.HardwareAddr {
@@ -4689,6 +4885,10 @@ func (self *NxmNdTarget) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *NxmNdTarget) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmNdTarget) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -4748,6 +4948,10 @@ func (self *NxmNdTargetMasked) GetValue() net.IP {
 
 func (self *NxmNdTargetMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *NxmNdTargetMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmNdTargetMasked) GetValueMask() net.IP {
@@ -4827,6 +5031,10 @@ func (self *NxmNdTll) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
+func (self *NxmNdTll) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmNdTll) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -4886,6 +5094,10 @@ func (self *NxmNdTllMasked) GetValue() net.HardwareAddr {
 
 func (self *NxmNdTllMasked) SetValue(v net.HardwareAddr) {
 	self.Value = v
+}
+
+func (self *NxmNdTllMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmNdTllMasked) GetValueMask() net.HardwareAddr {
@@ -4965,6 +5177,10 @@ func (self *NxmNwEcn) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *NxmNwEcn) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmNwEcn) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -5022,6 +5238,10 @@ func (self *NxmNwProto) GetValue() uint8 {
 
 func (self *NxmNwProto) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *NxmNwProto) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmNwProto) Serialize(encoder *openflow.Encoder) error {
@@ -5083,6 +5303,10 @@ func (self *NxmNwTos) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *NxmNwTos) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmNwTos) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -5140,6 +5364,10 @@ func (self *NxmNwTtl) GetValue() uint8 {
 
 func (self *NxmNwTtl) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *NxmNwTtl) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmNwTtl) Serialize(encoder *openflow.Encoder) error {
@@ -5201,6 +5429,10 @@ func (self *NxmPktMark) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmPktMark) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmPktMark) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -5260,6 +5492,10 @@ func (self *NxmPktMarkMasked) GetValue() uint32 {
 
 func (self *NxmPktMarkMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmPktMarkMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmPktMarkMasked) GetValueMask() uint32 {
@@ -5339,6 +5575,10 @@ func (self *NxmRecircId) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmRecircId) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmRecircId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -5396,6 +5636,10 @@ func (self *NxmReg0) GetValue() uint32 {
 
 func (self *NxmReg0) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg0) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg0) Serialize(encoder *openflow.Encoder) error {
@@ -5457,6 +5701,10 @@ func (self *NxmReg0Masked) GetValue() uint32 {
 
 func (self *NxmReg0Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg0Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg0Masked) GetValueMask() uint32 {
@@ -5536,6 +5784,10 @@ func (self *NxmReg1) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg1) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg1) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -5593,6 +5845,10 @@ func (self *NxmReg10) GetValue() uint32 {
 
 func (self *NxmReg10) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg10) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg10) Serialize(encoder *openflow.Encoder) error {
@@ -5654,6 +5910,10 @@ func (self *NxmReg10Masked) GetValue() uint32 {
 
 func (self *NxmReg10Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg10Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg10Masked) GetValueMask() uint32 {
@@ -5733,6 +5993,10 @@ func (self *NxmReg11) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg11) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg11) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -5792,6 +6056,10 @@ func (self *NxmReg11Masked) GetValue() uint32 {
 
 func (self *NxmReg11Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg11Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg11Masked) GetValueMask() uint32 {
@@ -5871,6 +6139,10 @@ func (self *NxmReg12) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg12) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg12) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -5930,6 +6202,10 @@ func (self *NxmReg12Masked) GetValue() uint32 {
 
 func (self *NxmReg12Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg12Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg12Masked) GetValueMask() uint32 {
@@ -6009,6 +6285,10 @@ func (self *NxmReg13) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg13) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg13) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -6068,6 +6348,10 @@ func (self *NxmReg13Masked) GetValue() uint32 {
 
 func (self *NxmReg13Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg13Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg13Masked) GetValueMask() uint32 {
@@ -6147,6 +6431,10 @@ func (self *NxmReg14) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg14) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg14) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -6206,6 +6494,10 @@ func (self *NxmReg14Masked) GetValue() uint32 {
 
 func (self *NxmReg14Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg14Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg14Masked) GetValueMask() uint32 {
@@ -6285,6 +6577,10 @@ func (self *NxmReg15) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg15) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg15) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -6344,6 +6640,10 @@ func (self *NxmReg15Masked) GetValue() uint32 {
 
 func (self *NxmReg15Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg15Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg15Masked) GetValueMask() uint32 {
@@ -6425,6 +6725,10 @@ func (self *NxmReg1Masked) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg1Masked) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg1Masked) GetValueMask() uint32 {
 	return self.ValueMask
 }
@@ -6502,6 +6806,10 @@ func (self *NxmReg2) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg2) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -6561,6 +6869,10 @@ func (self *NxmReg2Masked) GetValue() uint32 {
 
 func (self *NxmReg2Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg2Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg2Masked) GetValueMask() uint32 {
@@ -6640,6 +6952,10 @@ func (self *NxmReg3) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg3) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg3) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -6699,6 +7015,10 @@ func (self *NxmReg3Masked) GetValue() uint32 {
 
 func (self *NxmReg3Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg3Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg3Masked) GetValueMask() uint32 {
@@ -6778,6 +7098,10 @@ func (self *NxmReg4) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg4) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg4) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -6837,6 +7161,10 @@ func (self *NxmReg4Masked) GetValue() uint32 {
 
 func (self *NxmReg4Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg4Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg4Masked) GetValueMask() uint32 {
@@ -6916,6 +7244,10 @@ func (self *NxmReg5) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg5) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg5) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -6975,6 +7307,10 @@ func (self *NxmReg5Masked) GetValue() uint32 {
 
 func (self *NxmReg5Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg5Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg5Masked) GetValueMask() uint32 {
@@ -7054,6 +7390,10 @@ func (self *NxmReg6) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg6) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg6) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -7113,6 +7453,10 @@ func (self *NxmReg6Masked) GetValue() uint32 {
 
 func (self *NxmReg6Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg6Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg6Masked) GetValueMask() uint32 {
@@ -7192,6 +7536,10 @@ func (self *NxmReg7) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg7) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg7) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -7251,6 +7599,10 @@ func (self *NxmReg7Masked) GetValue() uint32 {
 
 func (self *NxmReg7Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg7Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg7Masked) GetValueMask() uint32 {
@@ -7330,6 +7682,10 @@ func (self *NxmReg8) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg8) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg8) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -7389,6 +7745,10 @@ func (self *NxmReg8Masked) GetValue() uint32 {
 
 func (self *NxmReg8Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg8Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg8Masked) GetValueMask() uint32 {
@@ -7468,6 +7828,10 @@ func (self *NxmReg9) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *NxmReg9) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmReg9) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -7527,6 +7891,10 @@ func (self *NxmReg9Masked) GetValue() uint32 {
 
 func (self *NxmReg9Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *NxmReg9Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmReg9Masked) GetValueMask() uint32 {
@@ -7606,6 +7974,10 @@ func (self *NxmTcpDst) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *NxmTcpDst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTcpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -7665,6 +8037,10 @@ func (self *NxmTcpDstMasked) GetValue() uint16 {
 
 func (self *NxmTcpDstMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *NxmTcpDstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTcpDstMasked) GetValueMask() uint16 {
@@ -7744,6 +8120,10 @@ func (self *NxmTcpFlags) SetValue(v TcpFlags) {
 	self.Value = v
 }
 
+func (self *NxmTcpFlags) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTcpFlags) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -7803,6 +8183,10 @@ func (self *NxmTcpFlagsMasked) GetValue() TcpFlags {
 
 func (self *NxmTcpFlagsMasked) SetValue(v TcpFlags) {
 	self.Value = v
+}
+
+func (self *NxmTcpFlagsMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTcpFlagsMasked) GetValueMask() uint16 {
@@ -7882,6 +8266,10 @@ func (self *NxmTcpSrc) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *NxmTcpSrc) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTcpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -7941,6 +8329,10 @@ func (self *NxmTcpSrcMasked) GetValue() uint16 {
 
 func (self *NxmTcpSrcMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *NxmTcpSrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTcpSrcMasked) GetValueMask() uint16 {
@@ -8020,6 +8412,10 @@ func (self *NxmTunDst) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *NxmTunDst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -8079,6 +8475,10 @@ func (self *NxmTunDstMasked) GetValue() net.IP {
 
 func (self *NxmTunDstMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *NxmTunDstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunDstMasked) GetValueMask() net.IP {
@@ -8158,6 +8558,10 @@ func (self *NxmTunFlags) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *NxmTunFlags) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunFlags) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -8217,6 +8621,10 @@ func (self *NxmTunFlagsMasked) GetValue() uint16 {
 
 func (self *NxmTunFlagsMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *NxmTunFlagsMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunFlagsMasked) GetValueMask() uint16 {
@@ -8296,6 +8704,10 @@ func (self *NxmTunGbpFlags) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *NxmTunGbpFlags) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunGbpFlags) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -8355,6 +8767,10 @@ func (self *NxmTunGbpFlagsMasked) GetValue() uint8 {
 
 func (self *NxmTunGbpFlagsMasked) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *NxmTunGbpFlagsMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunGbpFlagsMasked) GetValueMask() uint8 {
@@ -8434,6 +8850,10 @@ func (self *NxmTunGbpId) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *NxmTunGbpId) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunGbpId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -8493,6 +8913,10 @@ func (self *NxmTunGbpIdMasked) GetValue() uint16 {
 
 func (self *NxmTunGbpIdMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *NxmTunGbpIdMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunGbpIdMasked) GetValueMask() uint16 {
@@ -8572,6 +8996,10 @@ func (self *NxmTunId) SetValue(v uint64) {
 	self.Value = v
 }
 
+func (self *NxmTunId) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -8631,6 +9059,10 @@ func (self *NxmTunIdMasked) GetValue() uint64 {
 
 func (self *NxmTunIdMasked) SetValue(v uint64) {
 	self.Value = v
+}
+
+func (self *NxmTunIdMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunIdMasked) GetValueMask() uint64 {
@@ -8710,6 +9142,10 @@ func (self *NxmTunIpv6Dst) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *NxmTunIpv6Dst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunIpv6Dst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -8769,6 +9205,10 @@ func (self *NxmTunIpv6DstMasked) GetValue() net.IP {
 
 func (self *NxmTunIpv6DstMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *NxmTunIpv6DstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunIpv6DstMasked) GetValueMask() net.IP {
@@ -8848,6 +9288,10 @@ func (self *NxmTunIpv6Src) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *NxmTunIpv6Src) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunIpv6Src) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -8907,6 +9351,10 @@ func (self *NxmTunIpv6SrcMasked) GetValue() net.IP {
 
 func (self *NxmTunIpv6SrcMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *NxmTunIpv6SrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunIpv6SrcMasked) GetValueMask() net.IP {
@@ -8986,6 +9434,10 @@ func (self *NxmTunMetadata0) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata0) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata0) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -9042,6 +9494,10 @@ func (self *NxmTunMetadata0Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata0Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata0Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata0Masked) GetValueMask() []byte {
@@ -9118,6 +9574,10 @@ func (self *NxmTunMetadata1) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata1) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata1) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -9172,6 +9632,10 @@ func (self *NxmTunMetadata10) GetValue() []byte {
 
 func (self *NxmTunMetadata10) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata10) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata10) Serialize(encoder *openflow.Encoder) error {
@@ -9230,6 +9694,10 @@ func (self *NxmTunMetadata10Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata10Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata10Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata10Masked) GetValueMask() []byte {
@@ -9306,6 +9774,10 @@ func (self *NxmTunMetadata11) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata11) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata11) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -9362,6 +9834,10 @@ func (self *NxmTunMetadata11Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata11Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata11Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata11Masked) GetValueMask() []byte {
@@ -9438,6 +9914,10 @@ func (self *NxmTunMetadata12) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata12) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata12) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -9494,6 +9974,10 @@ func (self *NxmTunMetadata12Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata12Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata12Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata12Masked) GetValueMask() []byte {
@@ -9570,6 +10054,10 @@ func (self *NxmTunMetadata13) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata13) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata13) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -9626,6 +10114,10 @@ func (self *NxmTunMetadata13Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata13Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata13Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata13Masked) GetValueMask() []byte {
@@ -9702,6 +10194,10 @@ func (self *NxmTunMetadata14) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata14) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata14) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -9758,6 +10254,10 @@ func (self *NxmTunMetadata14Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata14Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata14Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata14Masked) GetValueMask() []byte {
@@ -9834,6 +10334,10 @@ func (self *NxmTunMetadata15) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata15) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata15) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -9890,6 +10394,10 @@ func (self *NxmTunMetadata15Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata15Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata15Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata15Masked) GetValueMask() []byte {
@@ -9966,6 +10474,10 @@ func (self *NxmTunMetadata16) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata16) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata16) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -10022,6 +10534,10 @@ func (self *NxmTunMetadata16Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata16Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata16Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata16Masked) GetValueMask() []byte {
@@ -10098,6 +10614,10 @@ func (self *NxmTunMetadata17) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata17) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata17) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -10154,6 +10674,10 @@ func (self *NxmTunMetadata17Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata17Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata17Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata17Masked) GetValueMask() []byte {
@@ -10230,6 +10754,10 @@ func (self *NxmTunMetadata18) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata18) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata18) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -10286,6 +10814,10 @@ func (self *NxmTunMetadata18Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata18Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata18Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata18Masked) GetValueMask() []byte {
@@ -10362,6 +10894,10 @@ func (self *NxmTunMetadata19) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata19) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata19) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -10418,6 +10954,10 @@ func (self *NxmTunMetadata19Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata19Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata19Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata19Masked) GetValueMask() []byte {
@@ -10496,6 +11036,10 @@ func (self *NxmTunMetadata1Masked) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata1Masked) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata1Masked) GetValueMask() []byte {
 	return self.ValueMask
 }
@@ -10570,6 +11114,10 @@ func (self *NxmTunMetadata2) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata2) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -10624,6 +11172,10 @@ func (self *NxmTunMetadata20) GetValue() []byte {
 
 func (self *NxmTunMetadata20) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata20) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata20) Serialize(encoder *openflow.Encoder) error {
@@ -10682,6 +11234,10 @@ func (self *NxmTunMetadata20Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata20Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata20Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata20Masked) GetValueMask() []byte {
@@ -10758,6 +11314,10 @@ func (self *NxmTunMetadata21) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata21) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata21) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -10814,6 +11374,10 @@ func (self *NxmTunMetadata21Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata21Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata21Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata21Masked) GetValueMask() []byte {
@@ -10890,6 +11454,10 @@ func (self *NxmTunMetadata22) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata22) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata22) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -10946,6 +11514,10 @@ func (self *NxmTunMetadata22Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata22Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata22Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata22Masked) GetValueMask() []byte {
@@ -11022,6 +11594,10 @@ func (self *NxmTunMetadata23) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata23) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata23) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -11078,6 +11654,10 @@ func (self *NxmTunMetadata23Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata23Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata23Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata23Masked) GetValueMask() []byte {
@@ -11150,6 +11730,10 @@ func (self *NxmTunMetadata24) GetValue() []byte {
 	return self.Value
 }
 
+func (self *NxmTunMetadata24) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata24) SetValue(v []byte) {
 	self.Value = v
 }
@@ -11210,6 +11794,10 @@ func (self *NxmTunMetadata24Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata24Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata24Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata24Masked) GetValueMask() []byte {
@@ -11286,6 +11874,10 @@ func (self *NxmTunMetadata25) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata25) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata25) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -11342,6 +11934,10 @@ func (self *NxmTunMetadata25Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata25Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata25Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata25Masked) GetValueMask() []byte {
@@ -11418,6 +12014,10 @@ func (self *NxmTunMetadata26) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata26) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata26) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -11474,6 +12074,10 @@ func (self *NxmTunMetadata26Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata26Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata26Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata26Masked) GetValueMask() []byte {
@@ -11550,6 +12154,10 @@ func (self *NxmTunMetadata27) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata27) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata27) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -11606,6 +12214,10 @@ func (self *NxmTunMetadata27Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata27Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata27Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata27Masked) GetValueMask() []byte {
@@ -11682,6 +12294,10 @@ func (self *NxmTunMetadata28) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata28) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata28) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -11738,6 +12354,10 @@ func (self *NxmTunMetadata28Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata28Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata28Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata28Masked) GetValueMask() []byte {
@@ -11814,6 +12434,10 @@ func (self *NxmTunMetadata29) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata29) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata29) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -11870,6 +12494,10 @@ func (self *NxmTunMetadata29Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata29Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata29Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata29Masked) GetValueMask() []byte {
@@ -11948,6 +12576,10 @@ func (self *NxmTunMetadata2Masked) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata2Masked) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata2Masked) GetValueMask() []byte {
 	return self.ValueMask
 }
@@ -12022,6 +12654,10 @@ func (self *NxmTunMetadata3) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata3) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata3) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -12076,6 +12712,10 @@ func (self *NxmTunMetadata30) GetValue() []byte {
 
 func (self *NxmTunMetadata30) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata30) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata30) Serialize(encoder *openflow.Encoder) error {
@@ -12134,6 +12774,10 @@ func (self *NxmTunMetadata30Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata30Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata30Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata30Masked) GetValueMask() []byte {
@@ -12210,6 +12854,10 @@ func (self *NxmTunMetadata31) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata31) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata31) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -12266,6 +12914,10 @@ func (self *NxmTunMetadata31Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata31Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata31Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata31Masked) GetValueMask() []byte {
@@ -12342,6 +12994,10 @@ func (self *NxmTunMetadata32) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata32) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata32) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -12398,6 +13054,10 @@ func (self *NxmTunMetadata32Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata32Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata32Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata32Masked) GetValueMask() []byte {
@@ -12474,6 +13134,10 @@ func (self *NxmTunMetadata33) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata33) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata33) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -12530,6 +13194,10 @@ func (self *NxmTunMetadata33Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata33Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata33Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata33Masked) GetValueMask() []byte {
@@ -12606,6 +13274,10 @@ func (self *NxmTunMetadata34) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata34) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata34) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -12662,6 +13334,10 @@ func (self *NxmTunMetadata34Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata34Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata34Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata34Masked) GetValueMask() []byte {
@@ -12738,6 +13414,10 @@ func (self *NxmTunMetadata35) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata35) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata35) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -12794,6 +13474,10 @@ func (self *NxmTunMetadata35Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata35Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata35Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata35Masked) GetValueMask() []byte {
@@ -12870,6 +13554,10 @@ func (self *NxmTunMetadata36) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata36) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata36) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -12926,6 +13614,10 @@ func (self *NxmTunMetadata36Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata36Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata36Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata36Masked) GetValueMask() []byte {
@@ -13002,6 +13694,10 @@ func (self *NxmTunMetadata37) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata37) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata37) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -13058,6 +13754,10 @@ func (self *NxmTunMetadata37Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata37Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata37Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata37Masked) GetValueMask() []byte {
@@ -13134,6 +13834,10 @@ func (self *NxmTunMetadata38) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata38) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata38) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -13190,6 +13894,10 @@ func (self *NxmTunMetadata38Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata38Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata38Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata38Masked) GetValueMask() []byte {
@@ -13266,6 +13974,10 @@ func (self *NxmTunMetadata39) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata39) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata39) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -13322,6 +14034,10 @@ func (self *NxmTunMetadata39Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata39Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata39Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata39Masked) GetValueMask() []byte {
@@ -13400,6 +14116,10 @@ func (self *NxmTunMetadata3Masked) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata3Masked) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata3Masked) GetValueMask() []byte {
 	return self.ValueMask
 }
@@ -13474,6 +14194,10 @@ func (self *NxmTunMetadata4) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata4) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata4) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -13528,6 +14252,10 @@ func (self *NxmTunMetadata40) GetValue() []byte {
 
 func (self *NxmTunMetadata40) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata40) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata40) Serialize(encoder *openflow.Encoder) error {
@@ -13586,6 +14314,10 @@ func (self *NxmTunMetadata40Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata40Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata40Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata40Masked) GetValueMask() []byte {
@@ -13662,6 +14394,10 @@ func (self *NxmTunMetadata41) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata41) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata41) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -13718,6 +14454,10 @@ func (self *NxmTunMetadata41Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata41Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata41Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata41Masked) GetValueMask() []byte {
@@ -13794,6 +14534,10 @@ func (self *NxmTunMetadata42) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata42) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata42) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -13850,6 +14594,10 @@ func (self *NxmTunMetadata42Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata42Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata42Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata42Masked) GetValueMask() []byte {
@@ -13926,6 +14674,10 @@ func (self *NxmTunMetadata43) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata43) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata43) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -13982,6 +14734,10 @@ func (self *NxmTunMetadata43Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata43Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata43Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata43Masked) GetValueMask() []byte {
@@ -14058,6 +14814,10 @@ func (self *NxmTunMetadata44) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata44) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata44) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -14114,6 +14874,10 @@ func (self *NxmTunMetadata44Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata44Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata44Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata44Masked) GetValueMask() []byte {
@@ -14190,6 +14954,10 @@ func (self *NxmTunMetadata45) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata45) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata45) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -14246,6 +15014,10 @@ func (self *NxmTunMetadata45Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata45Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata45Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata45Masked) GetValueMask() []byte {
@@ -14322,6 +15094,10 @@ func (self *NxmTunMetadata46) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata46) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata46) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -14378,6 +15154,10 @@ func (self *NxmTunMetadata46Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata46Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata46Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata46Masked) GetValueMask() []byte {
@@ -14454,6 +15234,10 @@ func (self *NxmTunMetadata47) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata47) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata47) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -14510,6 +15294,10 @@ func (self *NxmTunMetadata47Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata47Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata47Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata47Masked) GetValueMask() []byte {
@@ -14586,6 +15374,10 @@ func (self *NxmTunMetadata48) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata48) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata48) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -14642,6 +15434,10 @@ func (self *NxmTunMetadata48Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata48Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata48Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata48Masked) GetValueMask() []byte {
@@ -14718,6 +15514,10 @@ func (self *NxmTunMetadata49) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata49) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata49) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -14774,6 +15574,10 @@ func (self *NxmTunMetadata49Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata49Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata49Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata49Masked) GetValueMask() []byte {
@@ -14852,6 +15656,10 @@ func (self *NxmTunMetadata4Masked) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata4Masked) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata4Masked) GetValueMask() []byte {
 	return self.ValueMask
 }
@@ -14926,6 +15734,10 @@ func (self *NxmTunMetadata5) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata5) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata5) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -14980,6 +15792,10 @@ func (self *NxmTunMetadata50) GetValue() []byte {
 
 func (self *NxmTunMetadata50) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata50) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata50) Serialize(encoder *openflow.Encoder) error {
@@ -15038,6 +15854,10 @@ func (self *NxmTunMetadata50Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata50Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata50Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata50Masked) GetValueMask() []byte {
@@ -15114,6 +15934,10 @@ func (self *NxmTunMetadata51) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata51) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata51) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -15170,6 +15994,10 @@ func (self *NxmTunMetadata51Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata51Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata51Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata51Masked) GetValueMask() []byte {
@@ -15246,6 +16074,10 @@ func (self *NxmTunMetadata52) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata52) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata52) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -15302,6 +16134,10 @@ func (self *NxmTunMetadata52Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata52Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata52Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata52Masked) GetValueMask() []byte {
@@ -15378,6 +16214,10 @@ func (self *NxmTunMetadata53) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata53) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata53) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -15434,6 +16274,10 @@ func (self *NxmTunMetadata53Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata53Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata53Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata53Masked) GetValueMask() []byte {
@@ -15510,6 +16354,10 @@ func (self *NxmTunMetadata54) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata54) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata54) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -15566,6 +16414,10 @@ func (self *NxmTunMetadata54Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata54Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata54Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata54Masked) GetValueMask() []byte {
@@ -15642,6 +16494,10 @@ func (self *NxmTunMetadata55) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata55) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata55) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -15698,6 +16554,10 @@ func (self *NxmTunMetadata55Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata55Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata55Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata55Masked) GetValueMask() []byte {
@@ -15774,6 +16634,10 @@ func (self *NxmTunMetadata56) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata56) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata56) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -15830,6 +16694,10 @@ func (self *NxmTunMetadata56Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata56Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata56Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata56Masked) GetValueMask() []byte {
@@ -15906,6 +16774,10 @@ func (self *NxmTunMetadata57) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata57) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata57) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -15962,6 +16834,10 @@ func (self *NxmTunMetadata57Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata57Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata57Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata57Masked) GetValueMask() []byte {
@@ -16034,6 +16910,10 @@ func (self *NxmTunMetadata58) GetValue() []byte {
 	return self.Value
 }
 
+func (self *NxmTunMetadata58) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata58) SetValue(v []byte) {
 	self.Value = v
 }
@@ -16096,6 +16976,9 @@ func (self *NxmTunMetadata58Masked) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata58Masked) GetLength() uint16 {
+	return self.Length
+}
 func (self *NxmTunMetadata58Masked) GetValueMask() []byte {
 	return self.ValueMask
 }
@@ -16170,6 +17053,10 @@ func (self *NxmTunMetadata59) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata59) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata59) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -16226,6 +17113,10 @@ func (self *NxmTunMetadata59Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata59Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata59Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata59Masked) GetValueMask() []byte {
@@ -16304,6 +17195,10 @@ func (self *NxmTunMetadata5Masked) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata5Masked) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata5Masked) GetValueMask() []byte {
 	return self.ValueMask
 }
@@ -16378,6 +17273,10 @@ func (self *NxmTunMetadata6) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata6) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata6) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -16432,6 +17331,10 @@ func (self *NxmTunMetadata60) GetValue() []byte {
 
 func (self *NxmTunMetadata60) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata60) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata60) Serialize(encoder *openflow.Encoder) error {
@@ -16490,6 +17393,10 @@ func (self *NxmTunMetadata60Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata60Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata60Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata60Masked) GetValueMask() []byte {
@@ -16566,6 +17473,10 @@ func (self *NxmTunMetadata61) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata61) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata61) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -16622,6 +17533,10 @@ func (self *NxmTunMetadata61Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata61Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata61Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata61Masked) GetValueMask() []byte {
@@ -16698,6 +17613,10 @@ func (self *NxmTunMetadata62) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata62) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata62) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -16754,6 +17673,10 @@ func (self *NxmTunMetadata62Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata62Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata62Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata62Masked) GetValueMask() []byte {
@@ -16830,6 +17753,10 @@ func (self *NxmTunMetadata63) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata63) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata63) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -16886,6 +17813,10 @@ func (self *NxmTunMetadata63Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata63Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata63Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata63Masked) GetValueMask() []byte {
@@ -16964,6 +17895,10 @@ func (self *NxmTunMetadata6Masked) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata6Masked) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata6Masked) GetValueMask() []byte {
 	return self.ValueMask
 }
@@ -17038,6 +17973,10 @@ func (self *NxmTunMetadata7) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata7) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata7) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -17094,6 +18033,10 @@ func (self *NxmTunMetadata7Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata7Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata7Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata7Masked) GetValueMask() []byte {
@@ -17170,6 +18113,10 @@ func (self *NxmTunMetadata8) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata8) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata8) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -17226,6 +18173,10 @@ func (self *NxmTunMetadata8Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata8Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata8Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata8Masked) GetValueMask() []byte {
@@ -17302,6 +18253,10 @@ func (self *NxmTunMetadata9) SetValue(v []byte) {
 	self.Value = v
 }
 
+func (self *NxmTunMetadata9) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunMetadata9) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -17358,6 +18313,10 @@ func (self *NxmTunMetadata9Masked) GetValue() []byte {
 
 func (self *NxmTunMetadata9Masked) SetValue(v []byte) {
 	self.Value = v
+}
+
+func (self *NxmTunMetadata9Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmTunMetadata9Masked) GetValueMask() []byte {
@@ -17495,6 +18454,10 @@ func (self *NxmTunSrcMasked) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *NxmTunSrcMasked) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmTunSrcMasked) GetValueMask() net.IP {
 	return self.ValueMask
 }
@@ -17572,6 +18535,10 @@ func (self *NxmUdpDst) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *NxmUdpDst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmUdpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -17631,6 +18598,10 @@ func (self *NxmUdpDstMasked) GetValue() uint16 {
 
 func (self *NxmUdpDstMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *NxmUdpDstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmUdpDstMasked) GetValueMask() uint16 {
@@ -17710,6 +18681,10 @@ func (self *NxmUdpSrc) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *NxmUdpSrc) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmUdpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -17769,6 +18744,10 @@ func (self *NxmUdpSrcMasked) GetValue() uint16 {
 
 func (self *NxmUdpSrcMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *NxmUdpSrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmUdpSrcMasked) GetValueMask() uint16 {
@@ -17848,6 +18827,10 @@ func (self *NxmVlanTci) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *NxmVlanTci) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmVlanTci) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -17907,6 +18890,10 @@ func (self *NxmVlanTciMasked) GetValue() uint16 {
 
 func (self *NxmVlanTciMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *NxmVlanTciMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmVlanTciMasked) GetValueMask() uint16 {
@@ -17986,6 +18973,10 @@ func (self *NxmXxreg0) SetValue(v uint128) {
 	self.Value = v
 }
 
+func (self *NxmXxreg0) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmXxreg0) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -18045,6 +19036,10 @@ func (self *NxmXxreg0Masked) GetValue() uint128 {
 
 func (self *NxmXxreg0Masked) SetValue(v uint128) {
 	self.Value = v
+}
+
+func (self *NxmXxreg0Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmXxreg0Masked) GetValueMask() uint128 {
@@ -18124,6 +19119,10 @@ func (self *NxmXxreg1) SetValue(v uint128) {
 	self.Value = v
 }
 
+func (self *NxmXxreg1) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmXxreg1) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -18183,6 +19182,10 @@ func (self *NxmXxreg1Masked) GetValue() uint128 {
 
 func (self *NxmXxreg1Masked) SetValue(v uint128) {
 	self.Value = v
+}
+
+func (self *NxmXxreg1Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmXxreg1Masked) GetValueMask() uint128 {
@@ -18262,6 +19265,10 @@ func (self *NxmXxreg2) SetValue(v uint128) {
 	self.Value = v
 }
 
+func (self *NxmXxreg2) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmXxreg2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -18321,6 +19328,10 @@ func (self *NxmXxreg2Masked) GetValue() uint128 {
 
 func (self *NxmXxreg2Masked) SetValue(v uint128) {
 	self.Value = v
+}
+
+func (self *NxmXxreg2Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmXxreg2Masked) GetValueMask() uint128 {
@@ -18400,6 +19411,10 @@ func (self *NxmXxreg3) SetValue(v uint128) {
 	self.Value = v
 }
 
+func (self *NxmXxreg3) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *NxmXxreg3) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -18459,6 +19474,10 @@ func (self *NxmXxreg3Masked) GetValue() uint128 {
 
 func (self *NxmXxreg3Masked) SetValue(v uint128) {
 	self.Value = v
+}
+
+func (self *NxmXxreg3Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *NxmXxreg3Masked) GetValueMask() uint128 {
@@ -18538,6 +19557,10 @@ func (self *OxmArpOp) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmArpOp) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmArpOp) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -18597,6 +19620,10 @@ func (self *OxmArpOpMasked) GetValue() uint16 {
 
 func (self *OxmArpOpMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmArpOpMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmArpOpMasked) GetValueMask() uint16 {
@@ -18676,6 +19703,10 @@ func (self *OxmArpSha) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
+func (self *OxmArpSha) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmArpSha) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -18735,6 +19766,10 @@ func (self *OxmArpShaMasked) GetValue() net.HardwareAddr {
 
 func (self *OxmArpShaMasked) SetValue(v net.HardwareAddr) {
 	self.Value = v
+}
+
+func (self *OxmArpShaMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmArpShaMasked) GetValueMask() net.HardwareAddr {
@@ -18814,6 +19849,10 @@ func (self *OxmArpSpa) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmArpSpa) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmArpSpa) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -18873,6 +19912,10 @@ func (self *OxmArpSpaMasked) GetValue() uint32 {
 
 func (self *OxmArpSpaMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmArpSpaMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmArpSpaMasked) GetValueMask() uint32 {
@@ -18952,6 +19995,10 @@ func (self *OxmArpTha) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
+func (self *OxmArpTha) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmArpTha) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -19011,6 +20058,10 @@ func (self *OxmArpThaMasked) GetValue() net.HardwareAddr {
 
 func (self *OxmArpThaMasked) SetValue(v net.HardwareAddr) {
 	self.Value = v
+}
+
+func (self *OxmArpThaMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmArpThaMasked) GetValueMask() net.HardwareAddr {
@@ -19090,6 +20141,10 @@ func (self *OxmArpTpa) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmArpTpa) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmArpTpa) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -19149,6 +20204,10 @@ func (self *OxmArpTpaMasked) GetValue() uint32 {
 
 func (self *OxmArpTpaMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmArpTpaMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmArpTpaMasked) GetValueMask() uint32 {
@@ -19228,6 +20287,10 @@ func (self *OxmBsnEgrPortGroupId) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnEgrPortGroupId) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnEgrPortGroupId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -19287,6 +20350,10 @@ func (self *OxmBsnEgrPortGroupIdMasked) GetValue() uint32 {
 
 func (self *OxmBsnEgrPortGroupIdMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnEgrPortGroupIdMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnEgrPortGroupIdMasked) GetValueMask() uint32 {
@@ -19366,6 +20433,10 @@ func (self *OxmBsnGlobalVrfAllowed) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *OxmBsnGlobalVrfAllowed) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnGlobalVrfAllowed) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -19425,6 +20496,10 @@ func (self *OxmBsnGlobalVrfAllowedMasked) GetValue() uint8 {
 
 func (self *OxmBsnGlobalVrfAllowedMasked) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *OxmBsnGlobalVrfAllowedMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnGlobalVrfAllowedMasked) GetValueMask() uint8 {
@@ -19504,6 +20579,10 @@ func (self *OxmBsnInPorts128) SetValue(v Bitmap128) {
 	self.Value = v
 }
 
+func (self *OxmBsnInPorts128) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnInPorts128) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -19563,6 +20642,10 @@ func (self *OxmBsnInPorts128Masked) GetValue() Bitmap128 {
 
 func (self *OxmBsnInPorts128Masked) SetValue(v Bitmap128) {
 	self.Value = v
+}
+
+func (self *OxmBsnInPorts128Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnInPorts128Masked) GetValueMask() Bitmap128 {
@@ -19642,6 +20725,10 @@ func (self *OxmBsnInPorts512) SetValue(v Bitmap512) {
 	self.Value = v
 }
 
+func (self *OxmBsnInPorts512) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnInPorts512) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -19701,6 +20788,10 @@ func (self *OxmBsnInPorts512Masked) GetValue() Bitmap512 {
 
 func (self *OxmBsnInPorts512Masked) SetValue(v Bitmap512) {
 	self.Value = v
+}
+
+func (self *OxmBsnInPorts512Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnInPorts512Masked) GetValueMask() Bitmap512 {
@@ -19780,6 +20871,10 @@ func (self *OxmBsnIngressPortGroupId) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnIngressPortGroupId) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnIngressPortGroupId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -19839,6 +20934,10 @@ func (self *OxmBsnIngressPortGroupIdMasked) GetValue() uint32 {
 
 func (self *OxmBsnIngressPortGroupIdMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnIngressPortGroupIdMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnIngressPortGroupIdMasked) GetValueMask() uint32 {
@@ -19918,6 +21017,10 @@ func (self *OxmBsnInnerEthDst) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
+func (self *OxmBsnInnerEthDst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnInnerEthDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -19977,6 +21080,10 @@ func (self *OxmBsnInnerEthDstMasked) GetValue() net.HardwareAddr {
 
 func (self *OxmBsnInnerEthDstMasked) SetValue(v net.HardwareAddr) {
 	self.Value = v
+}
+
+func (self *OxmBsnInnerEthDstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnInnerEthDstMasked) GetValueMask() net.HardwareAddr {
@@ -20056,6 +21163,10 @@ func (self *OxmBsnInnerEthSrc) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
+func (self *OxmBsnInnerEthSrc) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnInnerEthSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -20115,6 +21226,10 @@ func (self *OxmBsnInnerEthSrcMasked) GetValue() net.HardwareAddr {
 
 func (self *OxmBsnInnerEthSrcMasked) SetValue(v net.HardwareAddr) {
 	self.Value = v
+}
+
+func (self *OxmBsnInnerEthSrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnInnerEthSrcMasked) GetValueMask() net.HardwareAddr {
@@ -20194,6 +21309,10 @@ func (self *OxmBsnInnerVlanVid) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmBsnInnerVlanVid) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnInnerVlanVid) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -20253,6 +21372,10 @@ func (self *OxmBsnInnerVlanVidMasked) GetValue() uint16 {
 
 func (self *OxmBsnInnerVlanVidMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmBsnInnerVlanVidMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnInnerVlanVidMasked) GetValueMask() uint16 {
@@ -20332,6 +21455,10 @@ func (self *OxmBsnIpFragmentation) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *OxmBsnIpFragmentation) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnIpFragmentation) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -20391,6 +21518,10 @@ func (self *OxmBsnIpFragmentationMasked) GetValue() uint8 {
 
 func (self *OxmBsnIpFragmentationMasked) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *OxmBsnIpFragmentationMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnIpFragmentationMasked) GetValueMask() uint8 {
@@ -20470,6 +21601,10 @@ func (self *OxmBsnL2CacheHit) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *OxmBsnL2CacheHit) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnL2CacheHit) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -20529,6 +21664,10 @@ func (self *OxmBsnL2CacheHitMasked) GetValue() uint8 {
 
 func (self *OxmBsnL2CacheHitMasked) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *OxmBsnL2CacheHitMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnL2CacheHitMasked) GetValueMask() uint8 {
@@ -20608,6 +21747,10 @@ func (self *OxmBsnL3DstClassId) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnL3DstClassId) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnL3DstClassId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -20667,6 +21810,10 @@ func (self *OxmBsnL3DstClassIdMasked) GetValue() uint32 {
 
 func (self *OxmBsnL3DstClassIdMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnL3DstClassIdMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnL3DstClassIdMasked) GetValueMask() uint32 {
@@ -20746,6 +21893,10 @@ func (self *OxmBsnL3InterfaceClassId) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnL3InterfaceClassId) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnL3InterfaceClassId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -20805,6 +21956,10 @@ func (self *OxmBsnL3InterfaceClassIdMasked) GetValue() uint32 {
 
 func (self *OxmBsnL3InterfaceClassIdMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnL3InterfaceClassIdMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnL3InterfaceClassIdMasked) GetValueMask() uint32 {
@@ -20884,6 +22039,10 @@ func (self *OxmBsnL3SrcClassId) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnL3SrcClassId) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnL3SrcClassId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -20943,6 +22102,10 @@ func (self *OxmBsnL3SrcClassIdMasked) GetValue() uint32 {
 
 func (self *OxmBsnL3SrcClassIdMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnL3SrcClassIdMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnL3SrcClassIdMasked) GetValueMask() uint32 {
@@ -21022,6 +22185,10 @@ func (self *OxmBsnLagId) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnLagId) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnLagId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -21081,6 +22248,10 @@ func (self *OxmBsnLagIdMasked) GetValue() uint32 {
 
 func (self *OxmBsnLagIdMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnLagIdMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnLagIdMasked) GetValueMask() uint32 {
@@ -21160,6 +22331,10 @@ func (self *OxmBsnTcpFlags) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmBsnTcpFlags) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnTcpFlags) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -21219,6 +22394,10 @@ func (self *OxmBsnTcpFlagsMasked) GetValue() uint16 {
 
 func (self *OxmBsnTcpFlagsMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmBsnTcpFlagsMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnTcpFlagsMasked) GetValueMask() uint16 {
@@ -21298,6 +22477,10 @@ func (self *OxmBsnUdf0) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnUdf0) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnUdf0) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -21357,6 +22540,10 @@ func (self *OxmBsnUdf0Masked) GetValue() uint32 {
 
 func (self *OxmBsnUdf0Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnUdf0Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnUdf0Masked) GetValueMask() uint32 {
@@ -21436,6 +22623,10 @@ func (self *OxmBsnUdf1) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnUdf1) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnUdf1) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -21495,6 +22686,10 @@ func (self *OxmBsnUdf1Masked) GetValue() uint32 {
 
 func (self *OxmBsnUdf1Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnUdf1Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnUdf1Masked) GetValueMask() uint32 {
@@ -21574,6 +22769,10 @@ func (self *OxmBsnUdf2) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnUdf2) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnUdf2) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -21633,6 +22832,10 @@ func (self *OxmBsnUdf2Masked) GetValue() uint32 {
 
 func (self *OxmBsnUdf2Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnUdf2Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnUdf2Masked) GetValueMask() uint32 {
@@ -21712,6 +22915,10 @@ func (self *OxmBsnUdf3) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnUdf3) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnUdf3) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -21771,6 +22978,10 @@ func (self *OxmBsnUdf3Masked) GetValue() uint32 {
 
 func (self *OxmBsnUdf3Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnUdf3Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnUdf3Masked) GetValueMask() uint32 {
@@ -21850,6 +23061,10 @@ func (self *OxmBsnUdf4) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnUdf4) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnUdf4) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -21909,6 +23124,10 @@ func (self *OxmBsnUdf4Masked) GetValue() uint32 {
 
 func (self *OxmBsnUdf4Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnUdf4Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnUdf4Masked) GetValueMask() uint32 {
@@ -21988,6 +23207,10 @@ func (self *OxmBsnUdf5) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnUdf5) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnUdf5) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -22047,6 +23270,10 @@ func (self *OxmBsnUdf5Masked) GetValue() uint32 {
 
 func (self *OxmBsnUdf5Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnUdf5Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnUdf5Masked) GetValueMask() uint32 {
@@ -22126,6 +23353,10 @@ func (self *OxmBsnUdf6) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnUdf6) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnUdf6) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -22185,6 +23416,10 @@ func (self *OxmBsnUdf6Masked) GetValue() uint32 {
 
 func (self *OxmBsnUdf6Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnUdf6Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnUdf6Masked) GetValueMask() uint32 {
@@ -22264,6 +23499,10 @@ func (self *OxmBsnUdf7) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnUdf7) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnUdf7) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -22323,6 +23562,10 @@ func (self *OxmBsnUdf7Masked) GetValue() uint32 {
 
 func (self *OxmBsnUdf7Masked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnUdf7Masked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnUdf7Masked) GetValueMask() uint32 {
@@ -22402,6 +23645,10 @@ func (self *OxmBsnVfi) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmBsnVfi) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnVfi) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -22461,6 +23708,10 @@ func (self *OxmBsnVfiMasked) GetValue() uint16 {
 
 func (self *OxmBsnVfiMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmBsnVfiMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnVfiMasked) GetValueMask() uint16 {
@@ -22540,6 +23791,10 @@ func (self *OxmBsnVlanXlatePortGroupId) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnVlanXlatePortGroupId) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnVlanXlatePortGroupId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -22599,6 +23854,10 @@ func (self *OxmBsnVlanXlatePortGroupIdMasked) GetValue() uint32 {
 
 func (self *OxmBsnVlanXlatePortGroupIdMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnVlanXlatePortGroupIdMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnVlanXlatePortGroupIdMasked) GetValueMask() uint32 {
@@ -22678,6 +23937,10 @@ func (self *OxmBsnVrf) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnVrf) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnVrf) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -22737,6 +24000,10 @@ func (self *OxmBsnVrfMasked) GetValue() uint32 {
 
 func (self *OxmBsnVrfMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnVrfMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnVrfMasked) GetValueMask() uint32 {
@@ -22816,6 +24083,10 @@ func (self *OxmBsnVxlanNetworkId) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmBsnVxlanNetworkId) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmBsnVxlanNetworkId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -22875,6 +24146,10 @@ func (self *OxmBsnVxlanNetworkIdMasked) GetValue() uint32 {
 
 func (self *OxmBsnVxlanNetworkIdMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmBsnVxlanNetworkIdMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmBsnVxlanNetworkIdMasked) GetValueMask() uint32 {
@@ -22954,6 +24229,10 @@ func (self *OxmConnTrackingIpv6Dst) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *OxmConnTrackingIpv6Dst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmConnTrackingIpv6Dst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -23013,6 +24292,10 @@ func (self *OxmConnTrackingIpv6DstMasked) GetValue() net.IP {
 
 func (self *OxmConnTrackingIpv6DstMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *OxmConnTrackingIpv6DstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmConnTrackingIpv6DstMasked) GetValueMask() net.IP {
@@ -23092,6 +24375,10 @@ func (self *OxmConnTrackingIpv6Src) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *OxmConnTrackingIpv6Src) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmConnTrackingIpv6Src) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -23151,6 +24438,10 @@ func (self *OxmConnTrackingIpv6SrcMasked) GetValue() net.IP {
 
 func (self *OxmConnTrackingIpv6SrcMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *OxmConnTrackingIpv6SrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmConnTrackingIpv6SrcMasked) GetValueMask() net.IP {
@@ -23230,6 +24521,10 @@ func (self *OxmConnTrackingLabel) SetValue(v uint128) {
 	self.Value = v
 }
 
+func (self *OxmConnTrackingLabel) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmConnTrackingLabel) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -23289,6 +24584,10 @@ func (self *OxmConnTrackingLabelMasked) GetValue() uint128 {
 
 func (self *OxmConnTrackingLabelMasked) SetValue(v uint128) {
 	self.Value = v
+}
+
+func (self *OxmConnTrackingLabelMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmConnTrackingLabelMasked) GetValueMask() uint128 {
@@ -23368,6 +24667,10 @@ func (self *OxmConnTrackingMark) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmConnTrackingMark) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmConnTrackingMark) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -23427,6 +24730,10 @@ func (self *OxmConnTrackingMarkMasked) GetValue() uint32 {
 
 func (self *OxmConnTrackingMarkMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmConnTrackingMarkMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmConnTrackingMarkMasked) GetValueMask() uint32 {
@@ -23506,6 +24813,10 @@ func (self *OxmConnTrackingNwDst) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmConnTrackingNwDst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmConnTrackingNwDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -23565,6 +24876,10 @@ func (self *OxmConnTrackingNwDstMasked) GetValue() uint32 {
 
 func (self *OxmConnTrackingNwDstMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmConnTrackingNwDstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmConnTrackingNwDstMasked) GetValueMask() uint32 {
@@ -23644,6 +24959,10 @@ func (self *OxmConnTrackingNwProto) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *OxmConnTrackingNwProto) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmConnTrackingNwProto) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -23703,6 +25022,10 @@ func (self *OxmConnTrackingNwProtoMasked) GetValue() uint8 {
 
 func (self *OxmConnTrackingNwProtoMasked) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *OxmConnTrackingNwProtoMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmConnTrackingNwProtoMasked) GetValueMask() uint8 {
@@ -23782,6 +25105,10 @@ func (self *OxmConnTrackingNwSrc) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmConnTrackingNwSrc) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmConnTrackingNwSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -23841,6 +25168,10 @@ func (self *OxmConnTrackingNwSrcMasked) GetValue() uint32 {
 
 func (self *OxmConnTrackingNwSrcMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmConnTrackingNwSrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmConnTrackingNwSrcMasked) GetValueMask() uint32 {
@@ -23920,6 +25251,10 @@ func (self *OxmConnTrackingState) SetValue(v CsStates) {
 	self.Value = v
 }
 
+func (self *OxmConnTrackingState) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmConnTrackingState) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -23979,6 +25314,10 @@ func (self *OxmConnTrackingStateMasked) GetValue() CsStates {
 
 func (self *OxmConnTrackingStateMasked) SetValue(v CsStates) {
 	self.Value = v
+}
+
+func (self *OxmConnTrackingStateMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmConnTrackingStateMasked) GetValueMask() CsStates {
@@ -24058,6 +25397,10 @@ func (self *OxmConnTrackingTpDst) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmConnTrackingTpDst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmConnTrackingTpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -24117,6 +25460,10 @@ func (self *OxmConnTrackingTpDstMasked) GetValue() uint16 {
 
 func (self *OxmConnTrackingTpDstMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmConnTrackingTpDstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmConnTrackingTpDstMasked) GetValueMask() uint16 {
@@ -24196,6 +25543,10 @@ func (self *OxmConnTrackingTpSrc) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmConnTrackingTpSrc) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmConnTrackingTpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -24255,6 +25606,10 @@ func (self *OxmConnTrackingTpSrcMasked) GetValue() uint16 {
 
 func (self *OxmConnTrackingTpSrcMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmConnTrackingTpSrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmConnTrackingTpSrcMasked) GetValueMask() uint16 {
@@ -24334,6 +25689,10 @@ func (self *OxmConnTrackingZone) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmConnTrackingZone) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmConnTrackingZone) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -24393,6 +25752,10 @@ func (self *OxmConnTrackingZoneMasked) GetValue() uint16 {
 
 func (self *OxmConnTrackingZoneMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmConnTrackingZoneMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmConnTrackingZoneMasked) GetValueMask() uint16 {
@@ -24472,6 +25835,10 @@ func (self *OxmEthDst) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
+func (self *OxmEthDst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmEthDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -24531,6 +25898,10 @@ func (self *OxmEthDstMasked) GetValue() net.HardwareAddr {
 
 func (self *OxmEthDstMasked) SetValue(v net.HardwareAddr) {
 	self.Value = v
+}
+
+func (self *OxmEthDstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmEthDstMasked) GetValueMask() net.HardwareAddr {
@@ -24610,6 +25981,10 @@ func (self *OxmEthSrc) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
+func (self *OxmEthSrc) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmEthSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -24669,6 +26044,10 @@ func (self *OxmEthSrcMasked) GetValue() net.HardwareAddr {
 
 func (self *OxmEthSrcMasked) SetValue(v net.HardwareAddr) {
 	self.Value = v
+}
+
+func (self *OxmEthSrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmEthSrcMasked) GetValueMask() net.HardwareAddr {
@@ -24748,6 +26127,10 @@ func (self *OxmEthType) SetValue(v EthernetType) {
 	self.Value = v
 }
 
+func (self *OxmEthType) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmEthType) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -24807,6 +26190,10 @@ func (self *OxmEthTypeMasked) GetValue() EthernetType {
 
 func (self *OxmEthTypeMasked) SetValue(v EthernetType) {
 	self.Value = v
+}
+
+func (self *OxmEthTypeMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmEthTypeMasked) GetValueMask() uint16 {
@@ -24886,6 +26273,10 @@ func (self *OxmIcmpv4Code) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *OxmIcmpv4Code) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIcmpv4Code) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -24945,6 +26336,10 @@ func (self *OxmIcmpv4CodeMasked) GetValue() uint8 {
 
 func (self *OxmIcmpv4CodeMasked) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *OxmIcmpv4CodeMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIcmpv4CodeMasked) GetValueMask() uint8 {
@@ -25024,6 +26419,10 @@ func (self *OxmIcmpv4Type) SetValue(v IcmpType) {
 	self.Value = v
 }
 
+func (self *OxmIcmpv4Type) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIcmpv4Type) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -25083,6 +26482,10 @@ func (self *OxmIcmpv4TypeMasked) GetValue() IcmpType {
 
 func (self *OxmIcmpv4TypeMasked) SetValue(v IcmpType) {
 	self.Value = v
+}
+
+func (self *OxmIcmpv4TypeMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIcmpv4TypeMasked) GetValueMask() uint8 {
@@ -25162,6 +26565,10 @@ func (self *OxmIcmpv6Code) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *OxmIcmpv6Code) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIcmpv6Code) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -25221,6 +26628,10 @@ func (self *OxmIcmpv6CodeMasked) GetValue() uint8 {
 
 func (self *OxmIcmpv6CodeMasked) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *OxmIcmpv6CodeMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIcmpv6CodeMasked) GetValueMask() uint8 {
@@ -25300,6 +26711,10 @@ func (self *OxmIcmpv6Type) SetValue(v Icmpv6Type) {
 	self.Value = v
 }
 
+func (self *OxmIcmpv6Type) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIcmpv6Type) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -25359,6 +26774,10 @@ func (self *OxmIcmpv6TypeMasked) GetValue() Icmpv6Type {
 
 func (self *OxmIcmpv6TypeMasked) SetValue(v Icmpv6Type) {
 	self.Value = v
+}
+
+func (self *OxmIcmpv6TypeMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIcmpv6TypeMasked) GetValueMask() uint8 {
@@ -25438,6 +26857,10 @@ func (self *OxmInPhyPort) SetValue(v Port) {
 	self.Value = v
 }
 
+func (self *OxmInPhyPort) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmInPhyPort) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -25497,6 +26920,10 @@ func (self *OxmInPhyPortMasked) GetValue() Port {
 
 func (self *OxmInPhyPortMasked) SetValue(v Port) {
 	self.Value = v
+}
+
+func (self *OxmInPhyPortMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmInPhyPortMasked) GetValueMask() Port {
@@ -25576,6 +27003,10 @@ func (self *OxmInPort) SetValue(v Port) {
 	self.Value = v
 }
 
+func (self *OxmInPort) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmInPort) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -25635,6 +27066,10 @@ func (self *OxmInPortMasked) GetValue() Port {
 
 func (self *OxmInPortMasked) SetValue(v Port) {
 	self.Value = v
+}
+
+func (self *OxmInPortMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmInPortMasked) GetValueMask() Port {
@@ -25714,6 +27149,10 @@ func (self *OxmIpDscp) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *OxmIpDscp) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIpDscp) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -25773,6 +27212,10 @@ func (self *OxmIpDscpMasked) GetValue() uint8 {
 
 func (self *OxmIpDscpMasked) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *OxmIpDscpMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIpDscpMasked) GetValueMask() uint8 {
@@ -25852,6 +27295,10 @@ func (self *OxmIpEcn) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *OxmIpEcn) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIpEcn) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -25911,6 +27358,10 @@ func (self *OxmIpEcnMasked) GetValue() uint8 {
 
 func (self *OxmIpEcnMasked) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *OxmIpEcnMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIpEcnMasked) GetValueMask() uint8 {
@@ -25990,6 +27441,10 @@ func (self *OxmIpProto) SetValue(v IpPrototype) {
 	self.Value = v
 }
 
+func (self *OxmIpProto) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIpProto) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -26049,6 +27504,10 @@ func (self *OxmIpProtoMasked) GetValue() IpPrototype {
 
 func (self *OxmIpProtoMasked) SetValue(v IpPrototype) {
 	self.Value = v
+}
+
+func (self *OxmIpProtoMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIpProtoMasked) GetValueMask() uint8 {
@@ -26128,6 +27587,10 @@ func (self *OxmIpv4Dst) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *OxmIpv4Dst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIpv4Dst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -26187,6 +27650,10 @@ func (self *OxmIpv4DstMasked) GetValue() net.IP {
 
 func (self *OxmIpv4DstMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *OxmIpv4DstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIpv4DstMasked) GetValueMask() net.IP {
@@ -26266,6 +27733,10 @@ func (self *OxmIpv4Src) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *OxmIpv4Src) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIpv4Src) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -26325,6 +27796,10 @@ func (self *OxmIpv4SrcMasked) GetValue() net.IP {
 
 func (self *OxmIpv4SrcMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *OxmIpv4SrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIpv4SrcMasked) GetValueMask() net.IP {
@@ -26404,6 +27879,10 @@ func (self *OxmIpv6Dst) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *OxmIpv6Dst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIpv6Dst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -26463,6 +27942,10 @@ func (self *OxmIpv6DstMasked) GetValue() net.IP {
 
 func (self *OxmIpv6DstMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *OxmIpv6DstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIpv6DstMasked) GetValueMask() net.IP {
@@ -26542,6 +28025,10 @@ func (self *OxmIpv6Exthdr) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmIpv6Exthdr) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIpv6Exthdr) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -26601,6 +28088,10 @@ func (self *OxmIpv6ExthdrMasked) GetValue() uint16 {
 
 func (self *OxmIpv6ExthdrMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmIpv6ExthdrMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIpv6ExthdrMasked) GetValueMask() uint16 {
@@ -26680,6 +28171,10 @@ func (self *OxmIpv6Flabel) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmIpv6Flabel) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIpv6Flabel) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -26739,6 +28234,10 @@ func (self *OxmIpv6FlabelMasked) GetValue() uint32 {
 
 func (self *OxmIpv6FlabelMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmIpv6FlabelMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIpv6FlabelMasked) GetValueMask() uint32 {
@@ -26818,6 +28317,10 @@ func (self *OxmIpv6NdSll) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
+func (self *OxmIpv6NdSll) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIpv6NdSll) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -26877,6 +28380,10 @@ func (self *OxmIpv6NdSllMasked) GetValue() net.HardwareAddr {
 
 func (self *OxmIpv6NdSllMasked) SetValue(v net.HardwareAddr) {
 	self.Value = v
+}
+
+func (self *OxmIpv6NdSllMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIpv6NdSllMasked) GetValueMask() net.HardwareAddr {
@@ -26956,6 +28463,10 @@ func (self *OxmIpv6NdTarget) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *OxmIpv6NdTarget) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIpv6NdTarget) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -27015,6 +28526,10 @@ func (self *OxmIpv6NdTargetMasked) GetValue() net.IP {
 
 func (self *OxmIpv6NdTargetMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *OxmIpv6NdTargetMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIpv6NdTargetMasked) GetValueMask() net.IP {
@@ -27094,6 +28609,10 @@ func (self *OxmIpv6NdTll) SetValue(v net.HardwareAddr) {
 	self.Value = v
 }
 
+func (self *OxmIpv6NdTll) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIpv6NdTll) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -27153,6 +28672,10 @@ func (self *OxmIpv6NdTllMasked) GetValue() net.HardwareAddr {
 
 func (self *OxmIpv6NdTllMasked) SetValue(v net.HardwareAddr) {
 	self.Value = v
+}
+
+func (self *OxmIpv6NdTllMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIpv6NdTllMasked) GetValueMask() net.HardwareAddr {
@@ -27232,6 +28755,10 @@ func (self *OxmIpv6Src) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *OxmIpv6Src) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmIpv6Src) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -27291,6 +28818,10 @@ func (self *OxmIpv6SrcMasked) GetValue() net.IP {
 
 func (self *OxmIpv6SrcMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *OxmIpv6SrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmIpv6SrcMasked) GetValueMask() net.IP {
@@ -27370,6 +28901,10 @@ func (self *OxmMetadata) SetValue(v uint64) {
 	self.Value = v
 }
 
+func (self *OxmMetadata) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmMetadata) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -27429,6 +28964,10 @@ func (self *OxmMetadataMasked) GetValue() uint64 {
 
 func (self *OxmMetadataMasked) SetValue(v uint64) {
 	self.Value = v
+}
+
+func (self *OxmMetadataMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmMetadataMasked) GetValueMask() uint64 {
@@ -27508,6 +29047,10 @@ func (self *OxmMplsBos) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *OxmMplsBos) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmMplsBos) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -27567,6 +29110,10 @@ func (self *OxmMplsBosMasked) GetValue() uint8 {
 
 func (self *OxmMplsBosMasked) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *OxmMplsBosMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmMplsBosMasked) GetValueMask() uint8 {
@@ -27646,6 +29193,10 @@ func (self *OxmMplsLabel) SetValue(v uint32) {
 	self.Value = v
 }
 
+func (self *OxmMplsLabel) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmMplsLabel) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -27705,6 +29256,10 @@ func (self *OxmMplsLabelMasked) GetValue() uint32 {
 
 func (self *OxmMplsLabelMasked) SetValue(v uint32) {
 	self.Value = v
+}
+
+func (self *OxmMplsLabelMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmMplsLabelMasked) GetValueMask() uint32 {
@@ -27784,6 +29339,10 @@ func (self *OxmMplsTc) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *OxmMplsTc) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmMplsTc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -27843,6 +29402,10 @@ func (self *OxmMplsTcMasked) GetValue() uint8 {
 
 func (self *OxmMplsTcMasked) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *OxmMplsTcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmMplsTcMasked) GetValueMask() uint8 {
@@ -27932,6 +29495,10 @@ func (self *OxmOvsTcpFlags) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmOvsTcpFlags) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmOvsTcpFlags) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -28003,6 +29570,10 @@ func (self *OxmOvsTcpFlagsMasked) GetValue() uint16 {
 
 func (self *OxmOvsTcpFlagsMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmOvsTcpFlagsMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmOvsTcpFlagsMasked) GetValueMask() uint16 {
@@ -28084,6 +29655,10 @@ func (self *OxmSctpDst) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmSctpDst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmSctpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -28143,6 +29718,10 @@ func (self *OxmSctpDstMasked) GetValue() uint16 {
 
 func (self *OxmSctpDstMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmSctpDstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmSctpDstMasked) GetValueMask() uint16 {
@@ -28222,6 +29801,10 @@ func (self *OxmSctpSrc) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmSctpSrc) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmSctpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -28281,6 +29864,10 @@ func (self *OxmSctpSrcMasked) GetValue() uint16 {
 
 func (self *OxmSctpSrcMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmSctpSrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmSctpSrcMasked) GetValueMask() uint16 {
@@ -28360,6 +29947,10 @@ func (self *OxmTcpDst) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmTcpDst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmTcpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -28419,6 +30010,10 @@ func (self *OxmTcpDstMasked) GetValue() uint16 {
 
 func (self *OxmTcpDstMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmTcpDstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmTcpDstMasked) GetValueMask() uint16 {
@@ -28498,6 +30093,10 @@ func (self *OxmTcpSrc) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmTcpSrc) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmTcpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -28557,6 +30156,10 @@ func (self *OxmTcpSrcMasked) GetValue() uint16 {
 
 func (self *OxmTcpSrcMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmTcpSrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmTcpSrcMasked) GetValueMask() uint16 {
@@ -28636,6 +30239,10 @@ func (self *OxmTunnelId) SetValue(v uint64) {
 	self.Value = v
 }
 
+func (self *OxmTunnelId) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmTunnelId) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -28695,6 +30302,10 @@ func (self *OxmTunnelIdMasked) GetValue() uint64 {
 
 func (self *OxmTunnelIdMasked) SetValue(v uint64) {
 	self.Value = v
+}
+
+func (self *OxmTunnelIdMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmTunnelIdMasked) GetValueMask() uint64 {
@@ -28774,6 +30385,10 @@ func (self *OxmTunnelIpv4Dst) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *OxmTunnelIpv4Dst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmTunnelIpv4Dst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -28833,6 +30448,10 @@ func (self *OxmTunnelIpv4DstMasked) GetValue() net.IP {
 
 func (self *OxmTunnelIpv4DstMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *OxmTunnelIpv4DstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmTunnelIpv4DstMasked) GetValueMask() net.IP {
@@ -28912,6 +30531,10 @@ func (self *OxmTunnelIpv4Src) SetValue(v net.IP) {
 	self.Value = v
 }
 
+func (self *OxmTunnelIpv4Src) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmTunnelIpv4Src) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -28971,6 +30594,10 @@ func (self *OxmTunnelIpv4SrcMasked) GetValue() net.IP {
 
 func (self *OxmTunnelIpv4SrcMasked) SetValue(v net.IP) {
 	self.Value = v
+}
+
+func (self *OxmTunnelIpv4SrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmTunnelIpv4SrcMasked) GetValueMask() net.IP {
@@ -29050,6 +30677,10 @@ func (self *OxmUdpDst) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmUdpDst) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmUdpDst) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -29109,6 +30740,10 @@ func (self *OxmUdpDstMasked) GetValue() uint16 {
 
 func (self *OxmUdpDstMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmUdpDstMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmUdpDstMasked) GetValueMask() uint16 {
@@ -29188,6 +30823,10 @@ func (self *OxmUdpSrc) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmUdpSrc) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmUdpSrc) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -29247,6 +30886,10 @@ func (self *OxmUdpSrcMasked) GetValue() uint16 {
 
 func (self *OxmUdpSrcMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmUdpSrcMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmUdpSrcMasked) GetValueMask() uint16 {
@@ -29326,6 +30969,10 @@ func (self *OxmVlanPcp) SetValue(v uint8) {
 	self.Value = v
 }
 
+func (self *OxmVlanPcp) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmVlanPcp) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -29385,6 +31032,10 @@ func (self *OxmVlanPcpMasked) GetValue() uint8 {
 
 func (self *OxmVlanPcpMasked) SetValue(v uint8) {
 	self.Value = v
+}
+
+func (self *OxmVlanPcpMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmVlanPcpMasked) GetValueMask() uint8 {
@@ -29464,6 +31115,10 @@ func (self *OxmVlanVid) SetValue(v uint16) {
 	self.Value = v
 }
 
+func (self *OxmVlanVid) GetLength() uint16 {
+	return self.Length
+}
+
 func (self *OxmVlanVid) Serialize(encoder *openflow.Encoder) error {
 	if err := self.Oxm.Serialize(encoder); err != nil {
 		return err
@@ -29523,6 +31178,10 @@ func (self *OxmVlanVidMasked) GetValue() uint16 {
 
 func (self *OxmVlanVidMasked) SetValue(v uint16) {
 	self.Value = v
+}
+
+func (self *OxmVlanVidMasked) GetLength() uint16 {
+	return self.Length
 }
 
 func (self *OxmVlanVidMasked) GetValueMask() uint16 {
