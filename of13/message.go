@@ -9581,6 +9581,11 @@ func (self *PacketOut) GetActions() []openflow.IAction {
 }
 
 func (self *PacketOut) SetActions(v []openflow.IAction) {
+	actionsLen := uint16(0)
+	for _, elem := range v {
+		actionsLen += elem.GetLen()
+	}
+	self.ActionsLen = actionsLen
 	self.Actions = v
 }
 
